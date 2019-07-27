@@ -10,7 +10,7 @@
     {% elif third_week %}
         رزرو دوهفته آینده
     {% else %}
-    رزرو سه هفته آینده
+        رزرو سه هفته آینده
     {% endif %}
 {% endblock %}
 {% block body %}
@@ -98,9 +98,16 @@
                                         {% for key ,value in shanbe.items %}
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'shanbe' and hour.open == x.open or key == x.id and hour.day == 'shanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <div class="col">
-                                                    <form name="{{ hour.id }}"
-                                                          action="{% url 'Main:accept' select_gym.slug %}" method="post"
-                                                          id="target">
+                                                    <form style="width: 100%" name="{{ hour.id }}"
+                                                          action="
+
+                                                                  {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                      {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+                                                          method="post"
+                                                          id="target" class="col">
+
                                                         {% csrf_token %}
                                                         <input type="text" name="day" id="day" hidden value="{{ day }}">
                                                         <input type="text" name="status" id="status" hidden
@@ -119,8 +126,13 @@
                                                                value="{{ hour.price }}">
                                                         <input type="text" name="paidmoney" hidden id="paidmoney"
                                                                value="{{ hour.price }}">
-                                                        <input type="submit" style="width:100%;border: none;"
-                                                               value="{{ hour.price }} تومان" class="col">
+
+                                                        <button type="submit" style="width:100%;border: none;"
+                                                                value="{{ hour.price }} تومان"
+                                                                class="col">{{ hour.price }}
+                                                            تومان
+                                                        </button>
+
                                                     </form>
                                                 </div>
                                             {% endif %}
@@ -171,9 +183,16 @@
 
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'yeshanbe' and hour.open == x.open or key == x.id and hour.day == 'yeshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <div class="col">
-                                                    <form name="{{ hour.id }}"
-                                                          action="{% url 'Main:accept' select_gym.slug %}" method="post"
-                                                          id="target">
+                                                    <form style="width: 100%" name="{{ hour.id }}"
+                                                          action="
+
+                                                                  {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                      {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+                                                          method="post"
+                                                          id="target" class="col">
+
                                                         {% csrf_token %}
                                                         <input type="text" name="day" id="day" hidden value="{{ day }}">
                                                         <input type="text" name="status" id="status" hidden
@@ -192,8 +211,13 @@
                                                                value="{{ hour.price }}">
                                                         <input type="text" name="paidmoney" hidden id="paidmoney"
                                                                value="{{ hour.price }}">
-                                                        <input type="submit" style="width:100%;border: none;"
-                                                               value="{{ hour.price }} تومان" class="col">
+
+                                                        <button type="submit" style="width:100%;border: none;"
+                                                                value="{{ hour.price }} تومان"
+                                                                class="col">{{ hour.price }}
+                                                            تومان
+                                                        </button>
+
                                                     </form>
                                                 </div>
                                             {% endif %}
@@ -246,9 +270,18 @@
 
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'doshanbe' and hour.open == x.open or key == x.id and hour.day == 'doshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <div class="col">
-                                                    <form name="{{ hour.id }}"
-                                                          action="{% url 'Main:accept' select_gym.slug %}" method="post"
-                                                          id="target">
+                                                    <form style="width: 100%" name="{{ hour.id }}"
+                                                          action="
+
+
+                                                                  {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                      {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+
+                                                                      {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+                                                          method="post"
+                                                          id="target" class="col">
+
                                                         {% csrf_token %}
                                                         <input type="text" name="day" id="day" hidden value="{{ day }}">
                                                         <input type="text" name="status" id="status" hidden
@@ -267,8 +300,13 @@
                                                                value="{{ hour.price }}">
                                                         <input type="text" name="paidmoney" hidden id="paidmoney"
                                                                value="{{ hour.price }}">
-                                                        <input type="submit" style="width:100%;border: none;"
-                                                               value="{{ hour.price }} تومان" class="col">
+
+                                                        <button type="submit" style="width:100%;border: none;"
+                                                                value="{{ hour.price }} تومان"
+                                                                class="col">{{ hour.price }}
+                                                            تومان
+                                                        </button>
+
                                                     </form>
                                                 </div>
                                             {% endif %}
@@ -320,9 +358,20 @@
 
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'seshanbe' and hour.open == x.open or key == x.id and hour.day == 'seshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <div class="col">
-                                                    <form name="{{ hour.id }}"
-                                                          action="{% url 'Main:accept' select_gym.slug %}" method="post"
-                                                          id="target">
+                                                    <form style="width: 100%" name="{{ hour.id }}"
+                                                          action="
+
+
+
+                                                                  {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                      {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+
+
+                                                                      {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+                                                          method="post"
+                                                          id="target" class="col">
+
                                                         {% csrf_token %}
                                                         <input type="text" name="day" id="day" hidden value="{{ day }}">
                                                         <input type="text" name="status" id="status" hidden
@@ -341,8 +390,13 @@
                                                                value="{{ hour.price }}">
                                                         <input type="text" name="paidmoney" hidden id="paidmoney"
                                                                value="{{ hour.price }}">
-                                                        <input type="submit" style="width:100%;border: none;"
-                                                               value="{{ hour.price }} تومان" class="col">
+
+                                                        <button type="submit" style="width:100%;border: none;"
+                                                                value="{{ hour.price }} تومان"
+                                                                class="col">{{ hour.price }}
+                                                            تومان
+                                                        </button>
+
                                                     </form>
                                                 </div>
                                             {% endif %}
@@ -395,9 +449,22 @@
 
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'charshanbe' and hour.open == x.open or key == x.id and hour.day == 'charshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <div class="col">
-                                                    <form name="{{ hour.id }}"
-                                                          action="{% url 'Main:accept' select_gym.slug %}" method="post"
-                                                          id="target">
+                                                    <form style="width: 100%" name="{{ hour.id }}"
+                                                          action="
+
+
+
+
+                                                                  {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                      {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+
+
+
+                                                                      {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+                                                          method="post"
+                                                          id="target" class="col">
+
                                                         {% csrf_token %}
                                                         <input type="text" name="day" id="day" hidden value="{{ day }}">
                                                         <input type="text" name="status" id="status" hidden
@@ -416,8 +483,13 @@
                                                                value="{{ hour.price }}">
                                                         <input type="text" name="paidmoney" hidden id="paidmoney"
                                                                value="{{ hour.price }}">
-                                                        <input type="submit" style="width:100%;border: none;"
-                                                               value="{{ hour.price }} تومان" class="col">
+
+                                                        <button type="submit" style="width:100%;border: none;"
+                                                                value="{{ hour.price }} تومان"
+                                                                class="col">{{ hour.price }}
+                                                            تومان
+                                                        </button>
+
                                                     </form>
                                                 </div>
                                             {% endif %}
@@ -470,9 +542,22 @@
 
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'panjshanbe' and hour.open == x.open or key == x.id and hour.day == 'panjshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <div class="col">
-                                                    <form name="{{ hour.id }}"
-                                                          action="{% url 'Main:accept' select_gym.slug %}" method="post"
-                                                          id="target">
+                                                    <form style="width: 100%" name="{{ hour.id }}"
+                                                          action="
+
+
+
+
+                                                                  {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                      {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                      {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+
+
+
+                                                                      {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+                                                          method="post"
+                                                          id="target" class="col">
+
                                                         {% csrf_token %}
                                                         <input type="text" name="day" id="day" hidden value="{{ day }}">
                                                         <input type="text" name="status" id="status" hidden
@@ -491,8 +576,13 @@
                                                                value="{{ hour.price }}">
                                                         <input type="text" name="paidmoney" hidden id="paidmoney"
                                                                value="{{ hour.price }}">
-                                                        <input type="submit" style="width:100%;border: none;"
-                                                               value="{{ hour.price }} تومان" class="col">
+
+                                                        <button type="submit" style="width:100%;border: none;"
+                                                                value="{{ hour.price }} تومان"
+                                                                class="col">{{ hour.price }}
+                                                            تومان
+                                                        </button>
+
                                                     </form>
                                                 </div>
                                             {% endif %}
@@ -546,7 +636,17 @@
                                             {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'jome' and hour.open == x.open or key == x.id and hour.day == 'jome' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
                                                 <form style="width: 100%" name="{{ hour.id }}"
                                                       action="
-                                                              {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/{{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/{{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/{{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
+
+
+
+
+                                                              {% if user.is_authenticated %}{% url 'Main:accept' select_gym.slug %}{% elif first_week %}/Accounts/login/?next=/first_week_reservation/
+                                                                  {{ select_gym.slug }}{% elif secon_week %}/Accounts/login/?next=/second_week_reservasion/
+                                                                  {{ select_gym.slug }}{% elif third_week %}/Accounts/login/?next=/third_week_reservasion/
+
+
+
+                                                                  {{ select_gym.slug }}{% elif fourth_week %}/Accounts/login/?next=/fourth_week_reservasion/{{ select_gym.slug }}{% endif %}"
                                                       method="post"
                                                       id="target" class="col">
 
