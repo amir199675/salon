@@ -1,0 +1,212 @@
+{% extends 'partial/dashboard_header.html' %}
+{% load static %}
+{% block title %}
+اضافه کردن به گروه ها
+{% endblock %}
+{% block body %}
+    <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
+
+
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title ">تمام افرادی که ثبت نام کرده اند</h3>
+                    </div>
+                    <div>
+  							<span class="m-subheader__daterange" id="m_dashboard_daterangepicker">
+
+				</span>
+                    </div>
+                </div>
+            </div>
+            <div class="m-content">
+
+                <div id="demo">
+
+                    <div class="form-search-wrap" data-aos="fade-up" data-aos-delay="200">
+
+                        <form method="post">
+                            <div style="margin-bottom: 30px" class="row align-items-center">
+
+                                <div class="col-lg-12 mb-4 mb-xl-0 col-xl-2">
+                                    <div class="select-wrap">
+                                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                        <select class="form-control rounded" name="" id="">
+                                            <option style="text-align: right;direction: rtl" value="">جنسیت</option>
+                                            <option style="text-align: right;direction: rtl" value=""><i
+                                                    class="icon icon-male">مرد</i></option>
+                                            <option style="text-align: right;direction: rtl" value=""><i>زن</i></option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mb-4 mb-xl-0 col-xl-2">
+                                    <div class="select-wrap">
+                                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                        <select class="form-control rounded" name="" id="">
+                                            <option value="">همه دسته ها</option>
+                                            <option value="">سالن ورزش</option>
+                                            <option value="">زمین تنیس</option>
+                                            <option value="">پینت بال</option>
+                                            <option value="">زمین چمن</option>
+                                            <option value="">بدمینتون</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mb-4 mb-xl-0 col-xl-2">
+                                    <div class="select-wrap">
+                                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                        <select class="form-control rounded" name="" id="">
+                                            <option style="text-align: right;direction: rtl" value="">منطقه</option>
+                                            <option style="text-align: right;direction: rtl" value="">۱</option>
+                                            <option style="text-align: right;direction: rtl" value="">۲</option>
+                                            <option style="text-align: right;direction: rtl" value="">۳</option>
+                                            <option style="text-align: right;direction: rtl" value="">۴</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-12 mb-4 mb-xl-0 col-xl-2">
+                                    <div class="select-wrap">
+                                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                        <select class="form-control rounded" name="" id="">
+                                            <option style="text-align: right;direction: rtl" value="">شهرها</option>
+                                            <option style="text-align: right;direction: rtl" value="">دامغان</option>
+                                            <option style="text-align: right;direction: rtl" value="">شاهرود</option>
+                                            <option style="text-align: right;direction: rtl" value="">تهران</option>
+                                            <option style="text-align: right;direction: rtl" value="">نیشابور</option>
+                                            <option style="text-align: right;direction: rtl" value="">مشهد</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mb-4 mb-xl-0 col-xl-2">
+                                    <div class="select-wrap">
+                                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                        <select class="form-control rounded" name="" id="">
+                                            <option style="text-align: right;direction: rtl" value="">استان ها</option>
+                                            <option style="text-align: right;direction: rtl" value="">سمنان</option>
+                                            <option style="text-align: right;direction: rtl" value="">خراسان</option>
+                                            <option style="text-align: right;direction: rtl" value="">تهران</option>
+                                            <option style="text-align: right;direction: rtl" value="">گیلان</option>
+                                            <option style="text-align: right;direction: rtl" value="">مازندران</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xl-2 ml-auto text-right">
+                                    <input type="submit" class="btn btn-primary btn-block rounded" value="جستجو کنید">
+                                </div>
+
+
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+
+                        <!-- Responsive table starts here -->
+                        <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+                        <div class="table-responsive-vertical shadow-z-1">
+                            <!-- Table starts here -->
+
+                            <table width="100%" class="flat-table flat-table-1">
+                                <thead>
+                                <th>تعداد</th>
+                                <th style="text-align: right">نام و نام خانوادگی</th>
+                                <th style="text-align: right">شماره تماس</th>
+                                <th style="text-align: right">کدملی</th>
+                                <th style="text-align: right">نقش</th>
+                                <th style="text-align: right">گروه</th>
+
+
+                                <th style="text-align: right">انتخاب</th>
+
+                                </thead>
+                                <tbody>
+
+                                {% for user in users %}
+
+
+
+                                    <tr>
+                                        <td data-title="ID">{{ forloop.counter }}</td>
+                                        <td data-title="Name">{{ user.name }}</td>
+                                        <td data-title="Name">
+                                            {{ user.phone_number }}
+                                        </td>
+
+                                        <td data-title="Status">{{ user.national_number }}</td>
+                                        <td data-title="Status">
+                                            {% for rol in user.role.select_related %}{{ rol }},{% endfor %}</td>
+                                        <td data-title="Status">
+                                            {% for group in user.group.select_related %}{{ group }}
+                                                ،{% endfor %}</td>
+                                        <td><input type="checkbox" name="groups" value="{{ user.id }}">
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                                {% for group in groups %}
+                                        <div style="text-align: center;margin-bottom: 20px" class="col-xs-12">
+                                            <button type="submit" class="btn btn-danger" name="{{ group.name }}">اضافه کردن به
+                                                لیست {{ group.name }}
+                                            </button>
+                                        </div>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </form>
+                    <!-- Table Constructor change table classes, you don't need it in your project -->
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--</div>-->
+
+    </div>
+    <!-- end::Body -->
+
+
+    <!-- begin::Footer -->
+    <!-- end::Footer -->
+
+
+    <!-- end:: Page -->
+
+    <!-- end::Scroll Top -->            <!-- begin::Quick Nav -->
+    <!-- begin::Quick Nav -->
+    <!--begin::Base Scripts -->
+    <script src="{% static 'dashboard-css/assets/vendors/base/vendors.bundle.js' %}" type="text/javascript"></script>
+    <script src="{% static 'dashboard-css/assets/demo/demo2/base/scripts.bundle.js' %}" type="text/javascript"></script>
+    <!--end::Base Scripts -->
+
+
+    <!--begin::Page Vendors -->
+    <script src="{% static 'dashboard-css/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js' %}"
+            type="text/javascript"></script>
+    <!--end::Page Vendors -->
+
+
+
+
+
+    <!--begin::Page Snippets -->
+    <script src="{% static 'dashboard-css/assets/app/js/dashboard.js' %}" type="text/javascript"></script>
+    <!--end::Page Snippets -->
+
+    </body>
+    <!-- end::Body -->
+    </html>
+{% endblock %}

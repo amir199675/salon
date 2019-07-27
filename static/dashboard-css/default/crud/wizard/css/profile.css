@@ -1,0 +1,298 @@
+*{
+    padding: 0px;
+    margin:0px;
+    box-sizing:border-box;
+}
+
+
+
+
+.btn-pink{
+    color:rgb(236,0,140);
+    background-color: #fff;
+    outline: none;
+    border: 1px solid #fff;
+    border-radius:3px;
+    padding: 5px 10px;
+}
+.btn-pink:hover{
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    color:#fff;
+    background-color: rgb(236,0,140);
+    border: 1px solid #fff;
+
+}
+#content-profile{
+    width: 100%;
+    background-color: #fff;
+    position: relative;
+
+}
+#header-content-profile{
+    width: 100%;
+    position: relative;
+    color: #fff;
+    overflow:hidden;
+    height: 680px;
+    background: url("../images/bgpic.png")  no-repeat ;
+    background-size: 100% 100%;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    margin: 0px 0px 20px 0px;
+    
+}
+
+
+#header-content-profile #info-header-content-profile{
+     position: absolute;
+    bottom: 5px;
+    right: 7%;
+}
+
+#header-content-profile #pic-header-content-profile{
+     position: absolute;
+     width: 100%;
+     bottom: -10px;
+     right: 45%;
+     
+    }
+    
+
+    
+#header-content-profile #contact-header-content-profile{
+     position: absolute;
+     bottom: 5px;
+     left: 7%;
+     
+     
+}
+#header-content-profile #pic-header-content-profile img{
+    width:200px;
+    height: 200px;
+
+}
+.upper{
+    background-color: rgb(236,0,140);
+    padding: 10px;
+    border-radius: 5px;
+    text-align:center;
+    font-size: 25px;
+    border: 1px solid #fff;
+    
+}
+
+
+
+
+
+
+
+#upper-header-content-profile{
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+#explain-user-content-profile{
+    position: relative;
+    width: 90%;
+    font-size:1.6em;
+    text-align: justify;
+    color:rgb(129,129,129);
+    margin: auto;
+    padding: 10px 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width:1200px){
+    #header-content-profile {
+        height: 600px;
+    }
+
+}
+@media screen and (max-width:991px){
+    #info-header-content-profile{
+       
+       right: 4%;
+   }
+   #header-content-profile {
+    height: 550px;
+}
+
+#header-content-profile  .upper{
+    font-size: 1em;
+ 
+}  
+   #pic-header-content-profile{
+       position: absolute;
+        right: 30%;
+        
+       }
+       #pic-header-content-profile img{
+       width: 170px;
+       height: 170px;
+       }
+       
+   
+       
+   #contact-header-content-profile{
+        
+        left: 4%;
+        
+        
+   }
+   
+#header-content-profile #pic-header-content-profile img{
+    width:170px;
+    height: 170px;
+
+}
+}
+@media screen and (max-width:767px) {
+    
+    
+#header-content-profile #pic-header-content-profile img{
+    width:140px;
+    height: 140px;
+
+}
+#header-content-profile{
+    height: 300px;
+}
+    #info-header-content-profile{
+       padding: 5px;
+        right: 2%;
+        font-size: 20px;
+    }
+    
+    #pic-header-content-profile{
+        position: absolute;
+         right: 45%;
+         
+        }
+        #pic-header-content-profile img{
+        width: 120px;
+        height: 120px;
+        }
+        
+    
+        
+    #contact-header-content-profile{
+         padding: 5px;
+         left: 2%;
+         
+        font-size: 20px;
+         
+         
+    }
+    #explain-user-content-profile {
+
+        font-size: 1.4em;
+    
+    }
+}
+@media screen and (max-width:576px){
+    
+    #explain-user-content-profile {
+
+        font-size: 1.2em;
+    
+    }
+    #pic-header-content-profile{
+        display: none;
+         
+        }
+    #projects-user-content-profile h1{ font-size: 1.4em;}
+
+    #header-content-profile .upper{
+        display: none;
+    }
+    #upper-header-content-profile{
+        color: #fff;
+        display:block;
+        width: 75%;
+        margin: auto;
+        padding:0px;
+    }
+
+}
+@media screen and (max-width:420px){
+    
+    #explain-user-content-profile {
+
+        font-size: 1em;
+    
+    }
+#header-content-profile{
+    height: 220px;
+}
+   
+    #upper-header-content-profile .upper{
+        margin: 10px 0px;
+        font-size: 0.9em;
+    }
+    #upper-header-content-profile .upper .btn-pink {
+       margin: 0px;
+    }
+    .btn-pink{
+        padding: 5px 15px;
+    }
+    #projects-user-content-profile h1{ font-size: 1.2em;}
+
+}
+@media screen and (max-width:320px){
+    #upper-header-content-profile{
+        width: 95%;
+        margin: auto;
+        padding:10px;
+    }
+    #upper-header-content-profile .upper{
+        margin: 10px 0px;
+        font-size: 0.9em;
+    }
+
+    #explain-user-content-profile {
+
+        font-size: 0.9em;
+    
+    }
+    
+#header-content-profile{
+    
+    margin: 0px 0px 10px 0px;
+}
+#upper-header-content-profile {
+
+    padding: 3px;
+
+}
+}

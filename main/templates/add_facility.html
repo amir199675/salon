@@ -1,0 +1,109 @@
+{% extends 'partial/dashboard_header.html' %}
+
+{% load static %}
+{% block head %}
+    <!--begin::Base Styles -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <!--begin::Page Vendors -->
+    <!--<link href="assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />-->
+    <link href="{% static 'dashboard-css/assets/vendors/custom/fullcalendar/fullcalendar.bundle.rtl.css' %}" rel="stylesheet" type="text/css" />
+    <link href='http://www.fontonline.ir/css/BYekan.css' rel='stylesheet' type='text/css'>
+
+    <!--end::Page Vendors -->
+
+
+    <!--<link href="assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />-->
+    <link href="{% static 'dashboard-css/assets/vendors/base/vendors.bundle.rtl.css' %}" rel="stylesheet" type="text/css" />
+
+    <!--<link href="assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css" />-->
+    <link href="{% static 'dashboard-css/assets/demo/demo2/base/style.bundle.rtl.css' %}" rel="stylesheet" type="text/css" />
+
+    <!--end::Base Styles -->
+
+    <link rel="shortcut icon" href="{% static 'dashboard-css/assets/demo/demo2/media/img/logo/favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'dashboard-css/assets/app/add_events.css' %}">
+
+
+{% endblock %}
+{% block title %}
+اضافه کردن امکانات جدید
+{% endblock %}
+{% block body %}
+    <div class="m-content m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
+
+
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title ">اضافه کردن امکانات جدید</h3>
+                    </div>
+                    <div>
+  							<span class="m-subheader__daterange" id="m_dashboard_daterangepicker">
+
+				</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <!--</div>-->
+
+    </div>
+    <!-- end::Body -->
+
+
+    <!-- begin::Footer -->
+    <!-- end::Footer -->
+
+
+</div>
+<!-- end:: Page -->
+		<!-- begin::Quick Nav -->
+<ul class="m-nav-sticky" style="margin-top: 30px;">
+    <li class="m-nav-sticky__item" data-toggle="m-tooltip" title="Purchase" data-placement="left">
+        <a href="https://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes" target="_blank"><i class="la la-cart-arrow-down"></i></a>
+    </li>
+    <li class="m-nav-sticky__item" data-toggle="m-tooltip" title="Documentation" data-placement="left">
+        <a href="https://keenthemes.com/metronic/documentation.html" target="_blank"><i class="la la-code-fork"></i></a>
+    </li>
+    <li class="m-nav-sticky__item" data-toggle="m-tooltip" title="Support" data-placement="left">
+        <a href="https://keenthemes.com/forums/forum/support/metronic5/" target="_blank"><i class="la la-life-ring"></i></a>
+    </li>
+</ul>
+<!-- begin::Quick Nav -->
+<!--begin::Base Scripts -->
+<script src="{% static 'dashboard-css/assets/vendors/base/vendors.bundle.js' %}" type="text/javascript"></script>
+<script src="{% static 'dashboard-css/assets/demo/demo2/base/scripts.bundle.js' %}" type="text/javascript"></script>
+<!--end::Base Scripts -->
+
+
+<!--begin::Page Vendors -->
+<script src="{% static 'dashboard-css/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js' %}" type="text/javascript"></script>
+<!--end::Page Vendors -->
+
+
+
+
+
+<!--begin::Page Snippets -->
+<script src="{% static 'dashboard-css/assets/app/js/dashboard.js' %}" type="text/javascript"></script>
+<!--end::Page Snippets -->
+
+</body>
+<!-- end::Body -->
+</html>
+{% endblock %}

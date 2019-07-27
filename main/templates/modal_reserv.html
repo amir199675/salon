@@ -1,0 +1,665 @@
+{% extends 'partial/reserve-header.html' %}
+{% load main_tags %}
+{% load static %}
+{% block title %}
+تایید پرداخت
+{% endblock %}
+{% block body %}
+    <div class="site-blocks-cover inner-page-cover overlay"
+         style="background-image: url({% static 'main-css/images/hero_1.jpg' %});"
+         data-aos="fade" data-stellar-background-ratio="0.5">
+        <div class="container">
+            <div class="row align-items-center justify-content-center text-center">
+
+                <div class="col-md-10" data-aos="fade-up" data-aos-delay="400">
+
+
+                    <div class="row justify-content-center mt-5">
+                        <div class="col-md-8 text-center">
+                            <h1>رزرو {{ select_gym.name }}</h1>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="direction: rtl" class="modalContent modalReserveTable">
+
+        <div class="loading" style="display: none;">
+            <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        </div>
+        <div style="width: 92%;margin-right: 50px;margin-top: 50px" class="reserveTable ">
+            <div class="reservePage active" data-week="0">
+                <div class="row headRow">
+                    <div class="col headCol"></div>
+                    {% for day,dic in day_of_week.items %}
+                        {% if day == 'shanbe' %}
+                            <div class="col" data-day="1"> شنبه <span> {{ dic|tojalali }} </span></div>{% endif %}
+                        {% if day == 'yeshanbe' %}
+                            <div class="col" data-day="2"> یکشنبه <span> {{ dic|tojalali }}</span></div>{% endif %}
+                        {% if day == 'doshanbe' %}
+                            <div class="col" data-day="3"> دوشنبه <span> {{ dic|tojalali }}</span></div>{% endif %}
+                        {% if day == 'seshanbe' %}
+                            <div class="col" data-day="4"> سه شنبه <span>{{ dic|tojalali }}</span></div>{% endif %}
+                        {% if day == 'charshanbe' %}
+                            <div class="col" data-day="5"> چهارشنبه <span> {{ dic|tojalali }}</span></div>{% endif %}
+                        {% if day == 'panjshanbe' %}
+                            <div class="col" data-day="6"> پنج شنبه <span> {{ dic|tojalali }} </span></div>{% endif %}
+                        {% if day == 'jome' %}
+                            <div class="col" data-day="7"> جمعه <span> {{ dic|tojalali }}</span></div>{% endif %}
+                    {% endfor %}
+                    <div class="clear"></div>
+                </div>
+
+                {% for x in hours_open %}
+                    <div class="row">
+                        <div class="col headCol">{{ x.close }} تا {{ x.open }}</div>
+                        {% for day , date in day_of_week.items %}
+                            {% if day == 'shanbe' %}
+
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in shanbe_e.items %}
+                                                {% if order.hour_id.day == 'shanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'shanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'shanbe' %}
+                                        {% for key ,value in shanbe.items %}
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'shanbe' and hour.open == x.open or key == x.id and hour.day == 'shanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in shanbe_t.items %}
+                                    {% for ke ,val in shanbe.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if day == 'yeshanbe' %}
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in yeshanbe_e.items %}
+                                                {% if order.hour_id.day == 'yeshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'yeshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'yeshanbe' %}
+                                        {% for key ,value in yeshanbe.items %}
+
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'yeshanbe' and hour.open == x.open or key == x.id and hour.day == 'yeshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in yeshanbe_t.items %}
+                                    {% for ke ,val in yeshanbe.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endif %}
+
+
+                            {% if day == 'doshanbe' %}
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in doshanbe_e.items %}
+
+                                                {% if order.hour_id.day == 'doshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'doshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'doshanbe' %}
+                                        {% for key ,value in doshanbe.items %}
+
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'doshanbe' and hour.open == x.open or key == x.id and hour.day == 'doshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in doshanbe_t.items %}
+                                    {% for ke ,val in doshanbe.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                            {% endif %}
+
+                            {% if day == 'seshanbe' %}
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in seshanbe_e.items %}
+                                                {% if order.hour_id.day == 'seshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'seshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'seshanbe' %}
+                                        {% for key ,value in seshanbe.items %}
+
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'seshanbe' and hour.open == x.open or key == x.id and hour.day == 'seshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in seshanbe_t.items %}
+                                    {% for ke ,val in seshanbe.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                            {% endif %}
+
+
+                            {% if day == 'charshanbe' %}
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in charshanbe_e.items %}
+                                                {% if order.hour_id.day == 'charshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'charshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'charshanbe' %}
+                                        {% for key ,value in charshanbe.items %}
+
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'charshanbe' and hour.open == x.open or key == x.id and hour.day == 'charshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in charshanbe_t.items %}
+                                    {% for ke ,val in charshanbe.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                            {% endif %}
+
+
+                            {% if day == 'panjshanbe' %}
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in panjshanbe_e.items %}
+                                                {% if order.hour_id.day == 'panjshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'panjshanbe' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'panjshanbe' %}
+                                        {% for key ,value in panjshanbe.items %}
+
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'panjshanbe' and hour.open == x.open or key == x.id and hour.day == 'panjshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in panjshanbe_t.items %}
+                                    {% for ke ,val in panjshanbe.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                            {% endif %}
+
+
+                            {% if day == 'jome' %}
+                                {% if date|todate < now|todate or date|todate == now|todate and x.open < now|totime %}
+                                    <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                         data-price="65000"
+                                         data-time="38"
+                                         data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تاریخ گذشته
+                                    </div>
+                                {% endif %}
+                                {% for hour in hours %}
+                                    {% if orders_count %}
+                                        {% for order in orders %}
+                                            {#                                            {{ order.order_date }},{{ date|todate }}#}
+                                            {% for k , v in jome_e.items %}
+                                                {% if order.hour_id.day == 'jome' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserved' %}
+                                                    <div class="col reserved">رزرو شده</div>
+                                                {% endif %}
+                                                {% if order.hour_id.day == 'jome' and k == x.id and v == True and order.order_date == date|todate and order.hour_id.day == hour.day and order.hour_id.open == x.open and x.open == hour.open and order.hour_id.open == hour.open and order.status == 'Reserving' %}
+                                                    <div class="col late onrezerv"> درحال
+                                                        رزرو
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for hour in hours %}
+                                    {% if hour.day == 'jome' %}
+                                        {% for key ,value in jome.items %}
+
+                                            {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'jome' and hour.open == x.open or key == x.id and hour.day == 'jome' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+
+                                                <div class="col">
+                                                    <form action="" method="post" id="target">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="day" id="day" hidden value="{{ day }}">
+                                                        <input type="text" name="status" id="status" hidden
+                                                               value="Reserving">
+                                                        <input type="text" name="description" id="description" hidden
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="myuser" hidden id="myuser"
+                                                               value="{{ request.user }}">
+                                                        <input type="text" name="hourid" hidden id="hourid"
+                                                               value="{{ hour.id }}">
+                                                        <input type="text" name="date" hidden id="date"
+                                                               value="{{ date|todate }}">
+                                                        <input type="text" name="gymid" hidden id="gymid"
+                                                               value="{{ select_gym.id }}">
+                                                        <input type="text" name="totalprice" hidden id="totalprice"
+                                                               value="{{ hour.price }}">
+                                                        <input type="text" name="paidmoney" hidden id="paidmoney"
+                                                               value="{{ hour.price }}">
+                                                        <p id="ptag">{{ hour.price }}
+                                                            تومان
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key , value in jome_t.items %}
+                                    {% for ke ,val in jome.items %}
+                                        {% if ke == x.id and val == True and key == x.id and value == True %}
+                                            <div class="col late pastDate" data-dayid="22" data-timeid="38"
+                                                 data-price="65000"
+                                                 data-time="38"
+                                                 data-day="1" data-start="3" data-end="9" data-date="1398/2/14">تعطیل
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                            {% endif %}
+
+
+                        {% endfor %}
+
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+
+    {% if reserve %}
+        <div style="direction: rtl; display: block; padding-right: 16px;" class="modal show" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">پرداخت</h4>
+                    </div>
+                    <div style="text-align: right;direction: rtl;width: 50%"
+                         class="modal-body">
+                        <form action="{% url 'zarinpal:request' %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" hidden value="{{ s_day }}" name="day">
+                            <input type="text" hidden value="{{ s_description }}" name="description">
+                            <input type="text" hidden value="{{ s_gym_id }}" name="gymid">
+                            <input type="text" hidden value="{{ s_hour_id }}" name="hourid">
+                            <input type="text" hidden value="{{ s_myuser_id }}" name="myuserid">
+                            <input type="text" hidden value="{{ s_order_date }}" name="orderdate">
+                            <input type="text" hidden value="{{ s_paid_money }}" name="paidmoney">
+                            <input type="text" hidden value="{{ s_status }}" name="status">
+                            <input type="text" hidden value="{{ s_total_price }}" name="totalprice">
+                            <input style="width:200%"
+                                   type="text" name=""
+                                   placeholder="لطفا کد تخفيف خود را وارد کنيد"
+                                   id="">
+                            <div style="margin-top: 20px;width: 240%"
+                                 class="checkbox">
+                                <label>خريد شما
+                                    از اين سايت به منزله تاييد
+                                    <a
+                                            href="#">قوانين </a>سايت
+                                    مي باشد</label>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="an-hover"
+                                        style="border-radius:10px"
+                                        type="submit"
+                                        class="btn btn-default">
+                                    پرداخت
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% include 'partial/reserve-css.html' %}
+
+
+    <script>
+        $("#ptag").click(function () {
+            $("#target").submit();
+        });
+    </script>
+
+
+
+    {#        {% csrf_token %}#}
+    {##}
+    {#    <script>#}
+    {#         $(document).ready(function() {#}
+    {#             $('#ptag').click(function() {#}
+    {#                 var data = new FormData();#}
+    {#                 var day = $('#day').val();#}
+    {#                 data.append('day', day);#}
+    {#                 $.ajax({#}
+    {#                     type: 'POST',#}
+    {#                     url: '',#}
+    {#                     data: data,#}
+    {#                     processData: false,#}
+    {#                     contentType: false,#}
+    {#                     success: function(json) {#}
+    {#                         alert(json);#}
+    {#                     }#}
+    {#                 })#}
+    {#             });#}
+    {#         });#}
+    {#var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();#}
+    {#      </script>#}
+
+    {% if reserve %}
+        <div class="modal-backdrop fade show"></div>
+    {% endif %}
+{% endblock %}
