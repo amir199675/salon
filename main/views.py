@@ -316,7 +316,7 @@ def Gym_Single(request, slug):
     return render(request, 'gym_single.html', context)
 
 
-def First_Week_Reservation(request, slug):
+def First_Week_Reservation(request,slug):
     select_gym = Gym.objects.get(slug=slug)
     hour_day_distinct = Hour.objects.filter(Q(gym_id__slug=slug)).distinct('day')
 

@@ -30,10 +30,15 @@ def send_request(request):
         s_total_price = request.POST['totalprice']
         gym = Gym.objects.get(id=s_gym_id)
         slug = gym.slug
-        CallbackURL = 'http://localhost:8000/verify'
-        s_order_date = s_order_date.replace(',', '')
-        order_date = datetime.strptime(s_order_date, '%B %d %Y')
+        CallbackURL = 'http://salon-yab.ir/verify'
 
+        s_order_date = s_order_date.replace(',', '')
+        s_order_date = s_order_date.replace('.', '')
+
+        try:
+            order_date = datetime.strptime(s_order_date, '%B %d %Y')
+        except:
+            order_date = datetime.strptime(s_order_date, '%b %d %Y')
         result = client.service.PaymentRequest(MERCHANT, amount, description, email, mobile, CallbackURL)
         if result.Status == 100:
             try:
@@ -75,3 +80,4 @@ def verify(request):
         order.delete()
 
         return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
+
