@@ -70,7 +70,7 @@ class Gym(models.Model):
     name = models.CharField(max_length=64)
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
     address = models.TextField()
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='gym_pictures/')
     latitude = models.TextField()
     longitude = models.TextField()
     slug = models.CharField(max_length=255, unique=True)
