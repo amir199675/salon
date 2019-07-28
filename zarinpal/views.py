@@ -10,16 +10,16 @@ from main.models import Gym
 MERCHANT = '3ee469e4-cb8d-11e8-8e1b-000c295eb8fc'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 amount = 1000  # Toman / Required
-description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
+description = "کد تخفیفی اعمال نشده است"  # Required
 email = 'email@example.com'  # Optional
 mobile = '09123456789'  # Optional
 CallbackURL = 'http://localhost:8000/dashboard/' # Important: need to edit for realy server.
 
 def send_request(request):
     if request.method == 'POST':
+        discount_code = request.POST['discount_code']
         amount = request.POST['paidmoney']
         mobile = request.user
-
         s_day = request.POST['day']
         s_status = request.POST['status']
         s_description = request.POST['description']
@@ -28,9 +28,32 @@ def send_request(request):
         s_hour_id = request.POST['hourid']
         s_order_date = request.POST['orderdate']
         s_total_price = request.POST['totalprice']
+        s_select_gym = request.POST['select_gym']
+        select_gym = Gym.objects.get(slug=s_select_gym)
+        description = "کد تخفیفی اعمال نشده است"  # Required
+        user_logged = MyUser.objects.get(phone_number=request.user)
         gym = Gym.objects.get(id=s_gym_id)
+        coupon = ''
+        if discount_code != '':
+            try:
+                coupon= Coupon.objects.get(code=discount_code)
+            except:
+                pass
+            if coupon :
+                # if coupon.minimum_amount <= int(amount):
+                if coupon.group_id:
+                    groups_in_coupon = coupon.group_id.all()
+                    gyms_in_coupon = coupon.gym_id.all()
+                    for gym in gyms_in_coupon:
+                        if gym.slug == select_gym.slug:
+                            for group in groups_in_coupon:
+                                users_in_group = group.user_id.all()
+                                for user in users_in_group:
+                                    if user == user_logged:
+                                        amount = int(amount) - int(coupon.amount)
+                                        description = "کد تخفیف شما اعمال گردید"
         slug = gym.slug
-        CallbackURL = 'http://salon-yab.ir/verify'
+        CallbackURL = 'http://127.0.0.1:8000/verify'
 
         s_order_date = s_order_date.replace(',', '')
         s_order_date = s_order_date.replace('.', '')

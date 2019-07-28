@@ -23,10 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'd#j=xug=#l0qy5$lybh@%uk8a(as2)@3-f4pz9sqfddcwu*tox'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-#ALLOWED_HOSTS = ['www.salon-yab.ir', 'salon-yab.ir', 'http://salon-yab.ir/', 'http://salon-yab.ir/', '130.185.76.161']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.salon-yab.ir', 'salon-yab.ir', 'http://salon-yab.ir/', 'http://salon-yab.ir/', '130.185.76.161']
 
 LOGIN_REDIRECT_URL = '../../dashboard/'
 
@@ -102,9 +101,9 @@ WSGI_APPLICATION = 'salon_yab.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "pushsalonyab",
+        'NAME': "salonyab",
         'PASSWORD' : 'j+AXw.79',
-        'USER' : 'postgres',
+        'USER' : 'amir',
         'PORT' : 5432
     }
 }

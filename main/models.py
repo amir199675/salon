@@ -70,7 +70,7 @@ class Gym(models.Model):
     name = models.CharField(max_length=64)
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
     address = models.TextField()
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='gym_pictures/')
     latitude = models.TextField()
     longitude = models.TextField()
     slug = models.CharField(max_length=255, unique=True)
@@ -246,9 +246,9 @@ class Coupon(models.Model):
     date_expires = models.DateTimeField()
     usage_limit = models.IntegerField()
     minimum_amount = models.IntegerField()
-    users = models.TextField()
-    gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    groups = models.TextField()
+    user_id = models.ManyToManyField(MyUser,related_name='myuser',null=True,blank=True)
+    gym_id = models.ManyToManyField(Gym, related_name='gym' , null=True,blank=True)
+    group_id = models.ManyToManyField(Group,related_name='group',null=True,blank=True)
 
     def __str__(self):
         return self.code
