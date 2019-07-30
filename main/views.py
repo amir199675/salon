@@ -2031,6 +2031,9 @@ def Dashboard(request):
         try:
             roles_user = Role.objects.filter(user_id=user_logged_in)
             roles_user_count = roles_user.count()
+            for role_user in roles_user:
+                if role_user.name == 'superuser':
+                    orders = Order.objects.filter(order_date__gte=datetime.today())
         except Role.DoesNotExist:
             roles_user = None
 

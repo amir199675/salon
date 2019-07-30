@@ -29,109 +29,113 @@
 
 
                 <div class="m-portlet ">
-                    {% if user_logged_in_rol == 'teacher' %}
-                    {% endif %}
-                    {% if user_logged_in_rol == 'superuser' %}
-                        <div class="m-portlet__body  m-portlet__body--no-padding">
-                            <div class="row m-row--no-padding m-row--col-separator-xl">
-                                <div class="col-md-12 col-lg-6 col-xl-3">
-                                    <!--begin::Total Profit-->
-                                    <div class="m-widget24">
-                                        <div class="m-widget24__item">
-                                            <h4 class="m-widget24__title">
-                                                تعداد کاربران
-                                            </h4><br>
-                                            <span class="m-widget24__desc">
+                    {% if roles_user_count %}
+                        {% for role_user in roles_user %}
+                            {% if role_user.name == 'superuser' %}
+                                <div class="m-portlet__body  m-portlet__body--no-padding">
+                                    <div class="row m-row--no-padding m-row--col-separator-xl">
+                                        <div class="col-md-12 col-lg-6 col-xl-3">
+                                            <!--begin::Total Profit-->
+                                            <div class="m-widget24">
+                                                <div class="m-widget24__item">
+                                                    <h4 class="m-widget24__title">
+                                                        تعداد کاربران
+                                                    </h4><br>
+                                                    <span class="m-widget24__desc">
                                                 تعداد کل کاربران
 				                            </span>
-                                            <span class="m-widget24__stats m--font-brand">
+                                                    <span class="m-widget24__stats m--font-brand">
 				                                {{ user_counter }}
                                             </span>
-                                            <div class="m--space-10"></div>
-                                            <div class="progress m-progress--sm">
-                                                <div class="progress-bar m--bg-brand" role="progressbar"
-                                                     style="width: 78%;"
-                                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
+                                                    <div class="m--space-10"></div>
+                                                    <div class="progress m-progress--sm">
+                                                        <div class="progress-bar m--bg-brand" role="progressbar"
+                                                             style="width: 78%;"
+                                                             aria-valuenow="50" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
 
+                                                </div>
+                                            </div>
+                                            <!--end::Total Profit-->
                                         </div>
-                                    </div>
-                                    <!--end::Total Profit-->
-                                </div>
-                                <div class="col-md-12 col-lg-6 col-xl-3">
-                                    <!--begin::New Feedbacks-->
-                                    <div class="m-widget24">
-                                        <div class="m-widget24__item">
-                                            <h4 class="m-widget24__title">
-                                                تعداد کل سالن ها
-                                            </h4><br>
-                                            <span class="m-widget24__desc">
+                                        <div class="col-md-12 col-lg-6 col-xl-3">
+                                            <!--begin::New Feedbacks-->
+                                            <div class="m-widget24">
+                                                <div class="m-widget24__item">
+                                                    <h4 class="m-widget24__title">
+                                                        تعداد کل سالن ها
+                                                    </h4><br>
+                                                    <span class="m-widget24__desc">
 				            کل سالن های ثبت نام شده
 				        </span>
-                                            <span class="m-widget24__stats m--font-info">
+                                                    <span class="m-widget24__stats m--font-info">
 				            {{ gyms_counter }}
 				        </span>
-                                            <div class="m--space-10"></div>
-                                            <div class="progress m-progress--sm">
-                                                <div class="progress-bar m--bg-info" role="progressbar"
-                                                     style="width: 84%;"
-                                                     aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
+                                                    <div class="m--space-10"></div>
+                                                    <div class="progress m-progress--sm">
+                                                        <div class="progress-bar m--bg-info" role="progressbar"
+                                                             style="width: 84%;"
+                                                             aria-valuenow="50" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
 
+                                                </div>
+                                            </div>
+                                            <!--end::New Feedbacks-->
                                         </div>
-                                    </div>
-                                    <!--end::New Feedbacks-->
-                                </div>
-                                <div class="col-md-12 col-lg-6 col-xl-3">
-                                    <!--begin::New Orders-->
-                                    <div class="m-widget24">
-                                        <div class="m-widget24__item">
-                                            <h4 class="m-widget24__title">
-                                                تعداد مربیان
-                                            </h4><br>
-                                            <span class="m-widget24__desc">
+                                        <div class="col-md-12 col-lg-6 col-xl-3">
+                                            <!--begin::New Orders-->
+                                            <div class="m-widget24">
+                                                <div class="m-widget24__item">
+                                                    <h4 class="m-widget24__title">
+                                                        تعداد مربیان
+                                                    </h4><br>
+                                                    <span class="m-widget24__desc">
 				            تعداد کل مربیان ثبت نام شده
 				        </span>
-                                            <span class="m-widget24__stats m--font-danger">
+                                                    <span class="m-widget24__stats m--font-danger">
 				            {{ teachers_counter }}
 				        </span>
-                                            <div class="m--space-10"></div>
-                                            <div class="progress m-progress--sm">
-                                                <div class="progress-bar m--bg-danger" role="progressbar"
-                                                     style="width: 69%;" aria-valuenow="50" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
+                                                    <div class="m--space-10"></div>
+                                                    <div class="progress m-progress--sm">
+                                                        <div class="progress-bar m--bg-danger" role="progressbar"
+                                                             style="width: 69%;" aria-valuenow="50" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
 
+                                                </div>
+                                            </div>
+                                            <!--end::New Orders-->
                                         </div>
-                                    </div>
-                                    <!--end::New Orders-->
-                                </div>
-                                <div class="col-md-12 col-lg-6 col-xl-3">
-                                    <!--begin::New Users-->
-                                    <div class="m-widget24">
-                                        <div class="m-widget24__item">
-                                            <h4 class="m-widget24__title">
-                                                تعداد سفارش ها
-                                            </h4><br>
-                                            <span class="m-widget24__desc">
+                                        <div class="col-md-12 col-lg-6 col-xl-3">
+                                            <!--begin::New Users-->
+                                            <div class="m-widget24">
+                                                <div class="m-widget24__item">
+                                                    <h4 class="m-widget24__title">
+                                                        تعداد سفارش ها
+                                                    </h4><br>
+                                                    <span class="m-widget24__desc">
 				            تعداد کل سفارش های گرفته شده
 				        </span>
-                                            <span class="m-widget24__stats m--font-success">
+                                                    <span class="m-widget24__stats m--font-success">
 				            {{ orders_counter }}
 				        </span>
-                                            <div class="m--space-10"></div>
-                                            <div class="progress m-progress--sm">
-                                                <div class="progress-bar m--bg-success" role="progressbar"
-                                                     style="width: 90%;" aria-valuenow="50" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
-                                            </div>
+                                                    <div class="m--space-10"></div>
+                                                    <div class="progress m-progress--sm">
+                                                        <div class="progress-bar m--bg-success" role="progressbar"
+                                                             style="width: 90%;" aria-valuenow="50" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
 
+                                                </div>
+                                            </div>
+                                            <!--end::New Users-->
                                         </div>
                                     </div>
-                                    <!--end::New Users-->
                                 </div>
-                            </div>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                     {% endif %}
                 </div>
 
@@ -153,7 +157,7 @@
                                 <td>{{ order.total_price }}</td>
                             </tr>
                         {% else %}
-                        <div class="fa-warning badge-warning">سالنی رزرو نشده است</div>
+                            <div class="fa-warning badge-warning">سالنی رزرو نشده است</div>
                         {% endif %}
                     {% endfor %}
                     </tbody>
