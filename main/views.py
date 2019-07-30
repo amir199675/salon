@@ -32,6 +32,7 @@ from django.core.management.base import BaseCommand
 
 from rest_framework import generics
 
+
 #
 #
 # register = template.Library()
@@ -292,6 +293,75 @@ def Gym_List(request):
     }
 
     return render(request, 'gym_list.html', context)
+
+
+def Select_Category(request,category):
+    gyms = Gym.objects.filter(category_id__name=category)
+
+    counter_comments = {}
+
+    categories = Category.objects.all()
+
+    # dar inja ba dictionary esm province city va area ro gereftam
+    province_gym = {}
+    area_gym = {}
+    city_gym = {}
+    gym_search_area = Area.objects.all().distinct('name')
+    gym_search_province = Province.objects.all().distinct('name')
+    gym_search_city = City.objects.all().distinct('name')
+
+    for area in gym_search_area:
+        area_gym[area.name] = area.name
+
+    for city in gym_search_city:
+        city_gym[city.name] = city.name
+
+    for province in gym_search_province:
+        province_gym[province.name] = province.name
+
+    paginator = Paginator(gyms, 10)
+    page = request.GET.get('page')
+    gyms_list = paginator.get_page(page)
+
+    for gym in gyms:
+        counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
+
+    context = {
+
+        'counter_comments': counter_comments,
+        'area_gym': area_gym,
+        'province_gym': province_gym,
+        'city_gym': city_gym,
+        'categories': categories,
+        'gyms': gyms_list,
+        'category':category
+    }
+
+    return render(request, 'list_by_type.html', context)
+
+def Favorite(request):
+
+    if request.method == 'POST' and 'favorite' in request.POST:
+        fav = request.POST['favo']
+        user = request.user
+        favorite = Favourite.objects.get(myuser_id=MyUser.objects.get(phone_number=user),
+                                         gym_id=Gym.objects.get(id=fav))
+        favorite.delete()
+        return redirect('Main:favorite_list')
+
+    gyms = Favourite.objects.filter(myuser_id__phone_number=request.user)
+    paginator = Paginator(gyms, 10)
+    page = request.GET.get('page')
+    gyms_list = paginator.get_page(page)
+
+    context = {
+
+        'gyms': gyms_list
+    }
+
+    return render(request, 'favorite.html', context)
+
+
 
 
 def Gym_Single(request, slug):
@@ -1957,20 +2027,19 @@ def Dashboard(request):
         user_phone_number = request.user
         user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
         orders = Order.objects.filter(myuser_id=request.user)
+        roles_user_count = 0
         try:
-            user_logged_in_rols = Role_MyUser.objects.get(myuser_id__phone_number=user_phone_number)
-            user_logged_in_rol = user_logged_in_rols.role_id.name
-        except Role_MyUser.DoesNotExist:
-            user_logged_in_rols = None
-            user_logged_in_rol = None
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
 
         # admin access
         gyms_counter = Gym.objects.all().count()
         users_counter = MyUser.objects.all().count()
         orders_counter = Order.objects.all().count()
-        teachers_counter = Role_MyUser.objects.filter(role_id__name='teacher').count()
-
         roles = Role.objects.all()
+        teachers_counter = Role.objects.filter(name='مربی').count()
         context = {
             'user_counter': users_counter,
             'roles': roles,
@@ -1978,13 +2047,13 @@ def Dashboard(request):
             'orders_counter': orders_counter,
             'teachers_counter': teachers_counter,
             'gyms_counter': gyms_counter,
-            'user_logged_in_rol': user_logged_in_rol,
-            'user_logged_in_rols': user_logged_in_rols,
+            'roles_user':roles_user,
             'orders':orders,
+            'roles_user_count':roles_user_count,
         }
         return render(request, 'dashboard.html', context)
     else:
-        return redirect('Account:login')
+        return redirect('/Accounts/login/?next=/dashboard')
 
 
 def Create_Gym(request):
@@ -2060,44 +2129,10 @@ def Add_Role_Group(request):
 
 
 def Edite_Gym_info(request):
+
     gyms = Gym.objects.all()
 
     return render(request, 'all_gyms.html', locals())
-
-
-def Edit_Profile_Teacher(request):
-    if request.method == 'POST' and 'save_form' in request.POST:
-        name = request.POST['name']
-        department_name = request.POST['department_name']
-        job = request.POST['job']
-        national_number = request.POST['national_number']
-        text = request.POST['text']
-        phone_number = request.POST['phone_number']
-
-        user_logged_in = MyUser.objects.get(id=request.user.id)
-        user_logged_in.national_number = national_number
-        user_logged_in.phone_number = phone_number
-        user_logged_in.name = name
-        user_logged_in.save()
-
-        user_profile = Coach_Profile.objects.get(user_id=request.user)
-        user_profile.text = text
-        user_profile.job = job
-        user_profile.department_name = department_name
-        user_profile.save()
-
-        return redirect('Main:edit_profile')
-
-    if request.user:
-        coach_profiles = Coach_Profile.objects.all()
-        for coach_profile in coach_profiles:
-            if coach_profile.user_id == request.user:
-                coach = Coach_Profile.objects.get(user_id=request.user)
-                return render(request, 'couchprofile.html', locals())
-            else:
-                return redirect('Main:dashboard')
-
-    return redirect('Account:login')
 
 
 def Add_Facility(request):
@@ -2109,73 +2144,103 @@ def Add_Facility(request):
 
 
 
-def Favorite(request):
 
-    if request.method == 'POST' and 'favorite' in request.POST:
-        fav = request.POST['favo']
-        user = request.user
-        favorite = Favourite.objects.get(myuser_id=MyUser.objects.get(phone_number=user),
-                                         gym_id=Gym.objects.get(id=fav))
-        favorite.delete()
-        return redirect('Main:favorite_list')
+def Edit_Profile_Teacher(request):
+    if request.user.is_authenticated:
+        user_logged_in = MyUser.objects.get(id__exact=request.user.id)
 
-    gyms = Favourite.objects.filter(myuser_id__phone_number=request.user)
-    paginator = Paginator(gyms, 10)
-    page = request.GET.get('page')
-    gyms_list = paginator.get_page(page)
-
-    context = {
-
-        'gyms': gyms_list
-    }
-
-    return render(request, 'favorite.html', context)
+        roles_user = Role.objects.filter(user_id__exact=user_logged_in)
+        roles_user_count = 0
+        roles_user_count = roles_user.count()
+        for role in roles_user:
+            if role.name ==  'مربی':
+                coach_profiles = Coach_Profile.objects.all()
 
 
-def select_category(request,category):
-    gyms = Gym.objects.filter(category_id__name=category)
 
-    counter_comments = {}
+                if request.method == 'POST' and 'save_form' in request.POST:
+                    name = request.POST['name']
+                    department_name = request.POST['department_name']
+                    job = request.POST['job']
+                    national_number = request.POST['national_number']
+                    text = request.POST['text']
+                    phone_number = request.POST['phone_number']
+                    picture = request.POST['picture']
 
-    categories = Category.objects.all()
+                    user_logged_in.national_number = national_number
+                    user_logged_in.phone_number = phone_number
+                    user_logged_in.name = name
 
-    # dar inja ba dictionary esm province city va area ro gereftam
-    province_gym = {}
-    area_gym = {}
-    city_gym = {}
-    gym_search_area = Area.objects.all().distinct('name')
-    gym_search_province = Province.objects.all().distinct('name')
-    gym_search_city = City.objects.all().distinct('name')
+                    user_logged_in.save()
+                    user_profile = None
+                    try:
+                        user_profile = Coach_Profile.objects.get(user_id=user_logged_in)
+                    except:
+                        user_profile = Coach_Profile.objects.create(user_id=user_logged_in)
+                    user_profile.job = job
+                    user_profile.text = text
+                    user_profile.department_name = department_name
+                    user_profile.picture = picture
+                    user_profile.save()
 
-    for area in gym_search_area:
-        area_gym[area.name] = area.name
+                    return redirect('Main:edit_profile')
 
-    for city in gym_search_city:
-        city_gym[city.name] = city.name
+                if user_logged_in:
+                    try:
+                        coach = Coach_Profile.objects.get(user_id=user_logged_in)
 
-    for province in gym_search_province:
-        province_gym[province.name] = province.name
+                    except:
+                        user_profile = Coach_Profile.objects.create(user_id = user_logged_in)
+                        coach = Coach_Profile.objects.get(user_id = user_logged_in)
 
-    paginator = Paginator(gyms, 10)
-    page = request.GET.get('page')
-    gyms_list = paginator.get_page(page)
+                    context={
+                        'coach':coach,
+                        'coach_profiles': coach_profiles,
+                        'roles_user_count':roles_user_count,
+                        'roles_user':roles_user
 
-    for gym in gyms:
-        counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
+                    }
+                else:
+                    context = {
+                        'coach_profiles': coach_profiles,
 
-    context = {
-
-        'counter_comments': counter_comments,
-        'area_gym': area_gym,
-        'province_gym': province_gym,
-        'city_gym': city_gym,
-        'categories': categories,
-        'gyms': gyms_list,
-        'category':category
-    }
-
-    return render(request, 'list_by_type.html', context)
+                    }
+                return render(request,'couchprofile.html',context)
+        return redirect('Main:dashboard')
+    else:
+        return redirect('/Accounts/login/?next=/dashboard/edit_profile/')
 
 
+
+def Students(request):
+    if request.user.is_authenticated:
+        user_logged_in = MyUser.objects.get(phone_number=request.user)
+        roles_user = Role.objects.filter(user_id__exact=user_logged_in)
+        roles_user_count = 0
+        roles_user_count = roles_user.count()
+        all_user = MyUser.objects.all()
+        class_users = {}
+        users = []
+        for role in roles_user:
+            if role.name == 'مربی':
+                training_classes = Training_Class.objects.filter(coach_id__user_id=user_logged_in)
+                for training_class in training_classes:
+                    st = MyUser.objects.filter(students=training_class)
+                    for student in st:
+                        users.append(student.phone_number)
+                    class_users[training_class.name] = users
+                    users = []
+
+                context = {
+                    'class_users':class_users,
+                    'all_user':all_user,
+                    'roles_user':roles_user,
+                    'roles_user_count':roles_user_count
+                }
+                return render(request,'students.html',context)
+            else:
+                return redirect('Main:dashboard')
+    else:
+        return redirect('Accounts/login/?next=/dashboard/students/')
 
 

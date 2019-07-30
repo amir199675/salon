@@ -35,10 +35,8 @@ def send_request(request):
         gym = Gym.objects.get(id=s_gym_id)
         coupon = ''
         if discount_code != '':
-            try:
-                coupon= Coupon.objects.get(code=discount_code)
-            except:
-                pass
+            coupon= Coupon.objects.get(code__exact=discount_code)
+
             if coupon :
                 # if coupon.minimum_amount <= int(amount):
                 if coupon.group_id:
@@ -90,14 +88,14 @@ def verify(request):
         order.status = 'Reserved'
         order.save()
         result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], amount)
-        return redirect('Main:reservation' ,  order.gym_id.slug)
-        # if result.Status == 100:
-        #     return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
-        # elif result.Status == 101:
-        #     return HttpResponse('Transaction submitted : ' + str(result.Status))
-        # else:
-        #
-        #     return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
+        # return redirect('Main:reservation' ,  order.gym_id.slug)
+        if result.Status == 100:
+            return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
+        elif result.Status == 101:
+            return HttpResponse('Transaction submitted : ' + str(result.Status))
+        else:
+
+            return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
     else:
         order = Order.objects.get(id=order_id)
         order.delete()

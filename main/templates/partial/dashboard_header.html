@@ -145,7 +145,7 @@
                                                 <div class="dropdown-content">
                                                     <a href="classyads/classyads/index.html">صفحه اصلی</a>
                                                     <a href="new_project.html">ساخت سالن جدید</a>
-                                                    <a href="#">خروج از حساب</a>
+                                                    <a href="{% url 'Account:logout' %}">خروج از حساب</a>
                                                 </div>
                                             </div>
                                             <style>
@@ -263,38 +263,43 @@
 
                         <div id="m_header_menu"
                              class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light ">
+                            {% if roles_user_count %}
+                                {% for role_user in roles_user %}
+                                    {% if role_user.name == 'مربی' %}
 
-                            {% if user_logged_in_rol == 'teacher' %}
-
-                                <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-                                <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                    <a href="{% url 'main:edit_profile' %}" class="m-menu__link ">
-                                        <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text">پروفایل مربی</span>
-                                    </a>
-                                </li>
+                                        <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                            <a href="{% url 'Main:edit_profile' %}" class="m-menu__link ">
+                                                <span class="m-menu__item-here"></span>
+                                                <span class="m-menu__link-text">پروفایل مربی</span>
+                                            </a>
+                                        </li>
 
 
-                                <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                    <a href="all.html" class="m-menu__link ">
-                                        <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text">دانش آموزان</span>
-                                    </a>
-                                </li>
+                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                            <a href="all.html" class="m-menu__link ">
+                                                <span class="m-menu__item-here"></span>
+                                                <span class="m-menu__link-text">دانش آموزان</span>
+                                            </a>
+                                        </li>
 
-                                <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                    <a href="alluser.html" class="m-menu__link ">
-                                        <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text">کلاس ها</span>
-                                    </a>
-                                </li>
+                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                            <a href="alluser.html" class="m-menu__link ">
+                                                <span class="m-menu__item-here"></span>
+                                                <span class="m-menu__link-text">کلاس ها</span>
+                                            </a>
+                                        </li>
 
-                                <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                    <a href="add_event.html" class="m-menu__link ">
-                                        <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text">کلاس جدید</span>
-                                    </a>
-                                </li>
+                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                            <a href="add_event.html" class="m-menu__link ">
+                                                <span class="m-menu__item-here"></span>
+                                                <span class="m-menu__link-text">کلاس جدید</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+
+                                {% endfor %}
                             {% else %}
                                 <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
                                     <li class="m-menu__item  m-menu__item " aria-haspopup="true">
@@ -327,12 +332,11 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- end::Horizontal Menu -->
-                    <!--begin::Search-->
-                    <!--end::Search-->            </div>
+                </div>
             </div>
         </div>
     </header><!-- end::Header -->
 
     {% block body %}
+
     {% endblock %}

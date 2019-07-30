@@ -19,8 +19,6 @@ class TicketForm(forms.ModelForm):
         model = Ticket
         fields = ('name','family_name','email','title','text')
 
-
-#
 # class CoachProfileForm(forms.ModelForm):
 #
 #

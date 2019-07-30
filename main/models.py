@@ -2,6 +2,8 @@ from django.db import models
 from Account.models import MyUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime
+
 
 
 # Create your models here.
@@ -198,15 +200,6 @@ class Role(models.Model):
         return self.name
 
 
-class Role_MyUser(models.Model):
-    id = models.AutoField(primary_key=True)
-    myuser_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    role_id = models.ForeignKey(Role, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.myuser_id.name + ' ' + self.role_id.name
-
-
 class Comment(models.Model):
     STATUS_CHOICE = (
         ('Show', 'show'),
@@ -301,7 +294,7 @@ class Coach_Profile(models.Model):
     job = models.CharField(max_length=255)
     department_name = models.CharField(max_length=255)
     text = models.TextField()
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='coach_pictures/',default='coach_pictures/avatar.png')
     user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
@@ -321,9 +314,10 @@ class Training_Class(models.Model):
     price = models.TextField()
     hour_id = models.ForeignKey(Hour, on_delete=models.CASCADE)
     slug = models.CharField(max_length=64, null=True, blank=True)
+    user_id = models.ManyToManyField(MyUser,related_name='students',null=True,blank=True)
 
     def __str__(self):
-        return self.name + ' ' + self.coach_id.name
+        return self.name + ' ' + self.coach_id.user_id.name
 
 
 class Training_Class_MyUser(models.Model):
@@ -339,3 +333,13 @@ class Training_Class_MyUser(models.Model):
 # 	if created:
 # 		Province.objects.create(user_id = instance)
 #
+
+
+
+
+@receiver(post_save, sender=Training_Class)
+def add_order(sender,instance,created, **kwargs):
+    if created:
+        Order.objects.create(myuser_id=instance.coach_id.user_id,status='Reserved',description='Reserved',order_date=datetime.date(instance.date_start),gym_id=instance.gym_id,hour_id=instance.hour_id,total_price='100',paid_money='100')
+
+

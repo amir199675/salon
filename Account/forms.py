@@ -36,11 +36,11 @@ class MyUserForm(forms.ModelForm):
 
 
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'style': 'padding-right: 50px', 'class': 'class1 input100', 'placeholder': '      رمز عبور',
+        attrs={'style': 'padding-right: 50px','type':'password', 'class': 'class1 input100', 'placeholder': '      رمز عبور',
                'name': 'password'}))
 
     re_password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'style': 'padding-right: 50px', 'class': 'class1 input100', 'placeholder': '      تکرار رمز عبور',
+        attrs={'style': 'padding-right: 50px','type':'password', 'class': 'class1 input100', 'placeholder': '      تکرار رمز عبور',
                'name': 're_password'}))
 
 
