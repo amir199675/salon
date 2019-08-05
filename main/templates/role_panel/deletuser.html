@@ -1,4 +1,4 @@
-{% extends 'partial/dashboard_header.html' %}
+{% extends 'role_panel/partial/dashboard_header.html' %}
 {% load static %}
 {% block title %}
     حذف کاربران
@@ -138,6 +138,7 @@
 
                                 <th style="text-align: right">انتخاب نقش</th>
                                 <th style="text-align: right">انتخاب گروه</th>
+                                <th style="text-align: right">انتخاب کاربر</th>
                                 </thead>
                                 <tbody>
 
@@ -158,9 +159,10 @@
                                             <td data-title="Status">
                                                 {% for group in user.group.select_related %}{{ group }}
                                                     ،{% endfor %}</td>
-                                            <td><input type="checkbox" name="roll" value="{% for rol in user.role.select_related %}{{ user.id }}Amir:D{% endfor %}">
+                                            <td><input type="checkbox" name="roll" value="{{ user.id }}Amir:D">
                                             </td>
-                                            <td><input type="checkbox" name="groupp" value="{% for group in user.group.select_related %}{{ user.id }}Amir:D{% endfor %}">
+                                            <td><input type="checkbox" name="groupp" value="{{ user.id }}Amir:D">
+                                            </td><td><input type="checkbox" name="select_user" value="{{ user.id }}Amir:D">
                                             </td>
                                         </tr>
 

@@ -1,0 +1,192 @@
+{% extends 'role_panel/partial/dashboard_header.html' %}
+{% load static %}
+{% block title %}
+    اضافه کردن منطقه جدید
+{% endblock %}
+<!-- begin::Body -->
+{% block body %}
+    <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
+
+
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+                        <h3 class="m-subheader__title ">اضافه کردن منطقه جدید</h3>
+                    </div>
+                    <div>
+  							<span class="m-subheader__daterange" id="m_dashboard_daterangepicker">
+
+				</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-content">
+
+                <div id="demo">
+
+
+                    <div style="text-align: center;margin-bottom: 20px" class="col-xs-12">
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">اضافه کردن
+                            منطقه
+                        </button>
+                    </div>
+
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">اضافه کردن منطقه جدید
+                                            ها</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" name="area_add" class="form-control"
+                                               placeholder="وارد کنید ....">
+                                    </div>
+                                    <div class="modal-body">
+                                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                        <select class="form-control rounded" name="city" id="">
+                                            <option value="" disabled>انتخاب شهر</option>
+                                            {% for city in cities %}
+
+                                                <option value="{{ city.id }}">{{ city.name }}</option>
+
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <!-- Responsive table starts here -->
+                    <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <div class="alert-danger">توجه داشته باشید منطقه هایی که برای آنها سالن اضافه شده اند، ابتدا
+                            میبایست سالن آنها پاک شود.
+                        </div>
+                        <div class="table-responsive-vertical shadow-z-1">
+                            <!-- Table starts here -->
+                            <table width="100%" class="flat-table flat-table-1">
+                                <thead style="text-align: center">
+                                <th>شماره</th>
+                                <th>نام منطقه</th>
+                                <th>نام شهر ، استان</th>
+                                <th>انتخاب</th>
+
+                                </thead>
+                                <tbody style="text-align: center">
+                                {% for area in areas %}
+                                    <tr>
+                                        <td data-title="ID">{{ forloop.counter }}</td>
+                                        <td data-title="Name">{{ area.name }}</td>
+                                        <td data-title="Name">{{ area.city_id.province_id.name }}
+                                            , {{ area.city_id.name }}</td>
+                                        <td><input type="checkbox" name="ids" value="{{ area.id }}Amir:D"></td>
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div style="text-align: center;margin-bottom: 20px" class="col-xs-12">
+                            <button class="btn btn-danger">پاک کردن
+                            </button>
+                        </div>
+                    </form>
+                    <!-- Table Constructor change table classes, you don't need it in your project -->
+                    {#                    <div class="pagination flex-m flex-w p-t-26">#}
+                    {#                        {% if provinces.has_next %}#}
+                    {#                            {% if provinces.has_previous %}#}
+                    {#                                <a href="{% url 'Main:add_province' %}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>#}
+                    {#                                <a href="?page={{ provinces.previous_page_number }}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4">back</a>#}
+                    {#                                <a href="?page={{ provinces.next_page_number }}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4">next</a>#}
+                    {#                                <a href="?page={{ provinces.paginator.num_pages }}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4">{{ provinces.paginator.num_pages }}</a>#}
+                    {#                            {% else %}#}
+                    {#                                <a href="{% url 'Main:add_province' %}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>#}
+                    {#                                <a href="?page={{ provinces.next_page_number }}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4">next</a>#}
+                    {#                                <a href="?page={{ provinces.paginator.num_pages }}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4">{{ provinces.paginator.num_pages }}</a>#}
+                    {#                            {% endif %}#}
+                    {#                        {% else %}#}
+                    {#                            {% if provinces.has_previous %}#}
+                    {#                                <a href="{% url 'Main:add_province' %}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4 active-pagination">1</a>#}
+                    {#                                <a href="?page={{ provinces.previous_page_number }}"#}
+                    {#                                   class="item-pagination flex-c-m trans-0-4">back</a>#}
+                    {#                            {% endif %}#}
+                    {#                        {% endif %}#}
+                    {#                    </div>#}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--</div>-->
+
+    </div>
+    <!-- end::Body -->
+
+
+    <!-- begin::Footer -->
+    <!-- end::Footer -->
+
+
+
+    <!-- end:: Page -->
+
+    <!-- begin::Scroll Top -->
+    <div id="m_scroll_top" class="m-scroll-top">
+        <i class="la la-arrow-up"></i>
+    </div>
+
+    <!-- end::Scroll Top -->            <!-- begin::Quick Nav -->
+    <!-- begin::Quick Nav -->
+    <!--begin::Base Scripts -->
+    <script src="{% static 'dashboard-css/assets/vendors/base/vendors.bundle.js' %}" type="text/javascript"></script>
+    <script src="{% static 'dashboard-css/assets/demo/demo2/base/scripts.bundle.js' %}" type="text/javascript"></script>
+    <!--end::Base Scripts -->
+
+
+    <!--begin::Page Vendors -->
+    <script src="{% static 'dashboard-css/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js' %}"
+            type="text/javascript"></script>
+    <!--end::Page Vendors -->
+
+
+
+
+
+    <!--begin::Page Snippets -->
+    <script src="{% static 'dashboard-css/assets/app/js/dashboard.js' %}" type="text/javascript"></script>
+    <!--end::Page Snippets -->
+
+
+    </body>
+    <!-- end::Body -->
+    </html>
+{% endblock %}

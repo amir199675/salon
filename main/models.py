@@ -83,7 +83,7 @@ class Gym(models.Model):
     description = models.TextField()
     sex = models.CharField(choices=SEX_CHOICE, default='مرد', max_length=32)
     famous = models.CharField(max_length=32, choices=FAMOUS_CHOICE, default='None')
-    category_id = models.ManyToManyField(Category,blank=True,null=True)
+    category_id = models.ManyToManyField(Category,related_name='categories',blank=True,null=True)
 
     def __str__(self):
         return self.name + ' ' + self.address

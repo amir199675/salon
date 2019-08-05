@@ -32,10 +32,17 @@ urlpatterns = [
 	path('dashboard/creat_gym/',views.Create_Gym , name = 'create_gym'),
 	path('dashboard/delete_role_group/',views.Delete_Role_Group,name = 'delete_role_group'),
 	path('dashboard/edit_profile/',views.Edit_Profile_Teacher,name = 'edit_profile'),
-	path('dashboard/add_role_group/',views.Add_Role_Group,name = 'add_role_group'),
+	path('dashboard/all_users/',views.All_Users,name = 'all_users'),
 	path('dashboard/edit_gyms_info/',views.Edite_Gym_info,name='edit_gyms_info'),
 	path('dashboard/add_facility/',views.Add_Facility , name = 'add_facility'),
 	path('dashboard/students/',views.Students, name = 'students'),
+	path('dashboard/add_province/',views.Add_province, name = 'add_province'),
+	path('dashboard/add_city/',views.Add_city, name = 'add_city'),
+	path('dashboard/add_area/',views.Add_area, name = 'add_area'),
+	path('dashboard/add_category/',views.Add_gym_type, name = 'add_gym_type'),
+	path('dashboard/teachers/',views.Teachers, name = 'teachers'),
+	path('dashboard/edit_profile/<slug>/', views.Teachers_Details, name='teachers_details'),
+	path('dashboard/requests/', views.Requests, name='requests'),
 
 	path('teachers/<slug>/', views.Coach_Profile, name='coach_profile'),
 

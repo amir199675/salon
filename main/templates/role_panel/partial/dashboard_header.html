@@ -300,61 +300,61 @@
                                     {% elif role_user.name == 'superuser' %}
                                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:dashboard' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">سالن ها</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:all_users' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">کاربران</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_province' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">استان جدید</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_city' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">شهر جدید</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_area' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">منطقه جدید</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_facility' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">ویژگی جدید</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_gym_type' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">نوع سالن جدید</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:teachers' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">پروفایل مربی</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:requests' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">درخواست ها</span>
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:delete_role_group' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">حذف کاربران</span>
                                                 </a>

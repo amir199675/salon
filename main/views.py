@@ -32,6 +32,9 @@ from django.core.management.base import BaseCommand
 
 from rest_framework import generics
 
+from django.core.files.storage import FileSystemStorage
+
+
 
 #
 #
@@ -1946,7 +1949,7 @@ def Work_Request(request):
                 context = {
                     'tf': tf,
                 }
-                return render(request, 'worker.html', context)
+                return redirect('Main:work_request')
         else:
 
             tf = TicketForm()
@@ -2026,37 +2029,125 @@ def Dashboard(request):
     if request.user.is_authenticated:
         user_phone_number = request.user
         user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
-        orders = Order.objects.filter(myuser_id=request.user)
         roles_user_count = 0
         try:
             roles_user = Role.objects.filter(user_id=user_logged_in)
             roles_user_count = roles_user.count()
-            for role_user in roles_user:
-                if role_user.name == 'superuser':
-                    orders = Order.objects.filter(order_date__gte=datetime.today())
         except Role.DoesNotExist:
             roles_user = None
 
         # admin access
-        gyms_counter = Gym.objects.all().count()
-        users_counter = MyUser.objects.all().count()
-        orders_counter = Order.objects.all().count()
-        roles = Role.objects.all()
-        teachers_counter = Role.objects.filter(name='مربی').count()
-        context = {
-            'user_counter': users_counter,
-            'roles': roles,
-            'user_logged_in': user_logged_in,
-            'orders_counter': orders_counter,
-            'teachers_counter': teachers_counter,
-            'gyms_counter': gyms_counter,
-            'roles_user':roles_user,
-            'orders':orders,
-            'roles_user_count':roles_user_count,
-        }
-        return render(request, 'dashboard.html', context)
+        for role in roles_user:
+            if role.name == 'superuser':
+
+                gyms = Gym.objects.all().order_by('area_id')
+                paginator = Paginator(gyms, 10)
+                page = request.GET.get('page')
+                gyms_list = paginator.get_page(page)
+
+                orders = Order.objects.filter(order_date__gte=datetime.today())
+                gyms_counter = Gym.objects.all().count()
+                users_counter = MyUser.objects.all().count()
+                orders_counter = Order.objects.all().count()
+                roles = Role.objects.all()
+                teachers_counter = Role.objects.filter(name='مربی').count()
+                context = {
+                    'gyms':gyms_list,
+                    'user_counter': users_counter,
+                    'roles': roles,
+                    'user_logged_in': user_logged_in,
+                    'orders_counter': orders_counter,
+                    'teachers_counter': teachers_counter,
+                    'gyms_counter': gyms_counter,
+                    'roles_user':roles_user,
+                    'orders':orders,
+                    'roles_user_count':roles_user_count,
+                    'superuser':True,
+                }
+                return render(request, 'role_panel/dashboard.html', context)
+
     else:
         return redirect('/Accounts/login/?next=/dashboard')
+
+
+def All_Users(request):
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                users = MyUser.objects.all().order_by('name')
+                paginator = Paginator(users, 10)
+                page = request.GET.get('page')
+                user_list = paginator.get_page(page)
+                rols = Role.objects.all()
+                groups = Group.objects.all()
+                if request.method == 'POST':
+                    for group in groups:
+                        if group.name in request.POST:
+                            user_list = request.POST.getlist('select')
+                            d = ''
+                            for ids in user_list:
+                                d += ids
+                            list_split = d.split('Amir:D')
+                            for user in list_split:
+                                if user != '':
+                                    user_select = None
+                                    try:
+                                        user_select = MyUser.objects.get(pk=user)
+                                    except:
+                                        user_select= None
+
+                                    add_group = Group.objects.get(name = group.name)
+                                    add_group.user_id.add(user_select)
+                                    add_group.save()
+                            return redirect('Main:all_users')
+                    for role in rols:
+                        if role.name in request.POST:
+                            user_list = request.POST.getlist('select')
+                            d = ''
+                            for ids in user_list:
+                                d += ids
+                            list_split = d.split('Amir:D')
+                            for user in list_split:
+                                if user != '':
+                                    user_select = None
+                                    try:
+                                        user_select = MyUser.objects.get(pk=user)
+                                    except:
+                                        user_select= None
+
+                                    add_role = Role.objects.get(name = role.name)
+                                    add_role.user_id.add(user_select)
+                                    add_role.save()
+                            return redirect('Main:all_users')
+
+
+                rols = Role.objects.all()
+                groups = Group.objects.all()
+                context = {
+                    'users': user_list,
+                    'rols':rols,
+                    'groups':groups,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user,
+
+                }
+                return render(request, 'role_panel/alluser.html', context)
+            return redirect('Main:dashboard')
+    else:
+        return redirect('/Accounts/login/?next=/dashboard/all_users')
+
+
+
 
 
 def Create_Gym(request):
@@ -2065,70 +2156,73 @@ def Create_Gym(request):
 
 
 def Delete_Role_Group(request):
-    if request.method == 'POST' and 'delete_form' in request.POST:
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
 
-        for str in request.POST.getlist('roll'):
-            try:
-                list_splited = str.split('Amir:D')
-                delete_rol = Role.objects.get(user_id=MyUser.objects.get(pk=int(list_splited[1])), name=list_splited[0])
-                delete_rol.delete()
-            except:
-                return redirect('Main:delete_role_group')
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                if request.method == 'POST' and 'delete_form' in request.POST:
+                    if request.POST.getlist('roll'):
+                        user_list = request.POST.getlist('roll')
+                        d = ''
+                        for ids in user_list:
+                            d += ids
+                        list_split = d.split('Amir:D')
 
-        for str in request.POST.getlist('groupp'):
-            try:
-                list_splited = str.split('Amir:D')
-                delete_group = Group.objects.get(user_id=MyUser.objects.get(pk=int(list_splited[1])),
-                                                 name=list_splited[0])
-                delete_group.delete()
-            except:
-                return redirect('Main:delete_role_group')
+                        for user_id in list_split:
+                            if user_id != '':
+                                user = MyUser.objects.get(pk=user_id)
+                                delete_roles = Role.objects.filter(user_id=user)
+                                for delete_role in delete_roles:
+                                    delete_role.user_id.remove(user)
+                        return redirect('Main:delete_role_group')
+                    if request.POST.getlist('groupp'):
+                        user_list = request.POST.getlist('groupp')
+                        d = ''
+                        for ids in user_list:
+                            d += ids
+                            list_split = d.split('Amir:D')
 
-        return redirect('Main:delete_role_group')
+                            for user_id in list_split:
+                                if user_id != '':
+                                    user = MyUser.objects.get(pk=user_id)
+                                    delete_groups = Group.objects.filter(user_id=user)
+                                    for delete_group in delete_groups:
+                                        delete_group.user_id.remove(user)
+                            return redirect('Main:delete_role_group')
+                    if request.POST.getlist('select_user'):
+                        user_list = request.POST.getlist('select_user')
+                        d = ''
+                        for ids in user_list:
+                            d += ids
+                            list_split = d.split('Amir:D')
 
-    if request.method == 'GET' and 'search_form' in request.GET:
-        rol = request.GET['rol']
-        group = request.GET['group']
-        national_number = request.GET['national_number']
-        phone_number = request.GET['phone_number']
-
-        rols = Role.objects.all().distinct('name')
-        groups = Group.objects.all().distinct('name')
-
-        users = MyUser.objects.filter(Q(group__name=group) | Q(role__name=rol) | Q(national_number=national_number) | Q(
-            phone_number=phone_number))
-        return render(request, 'deletuser.html', locals())
-
-    users = MyUser.objects.all()
-    rols = Role.objects.all().distinct('name')
-    groups = Group.objects.all().distinct('name')
-
-    return render(request, 'deletuser.html', locals())
-
-
-def Add_Role_Group(request):
-    rols = Role.objects.all().distinct('name')
-    groups = Group.objects.all().distinct('name')
-    users = MyUser.objects.all()
-    if request.method == 'POST':
-        for group in groups:  # baraye har groh ke entekhab mikone chon name dar template {{ group.name }} tarif shode
-            if group.name in request.POST:
-                for user in request.POST.getlist('groups'):
-                    try:
-                        Group.objects.get(user_id=user, name=group.name)
-                    except:
-                        selected = user
-                        add_group = Group.objects.create(name=group.name)
-                        add_group.user_id.add(selected)
-                        add_group.save()
-
-        return redirect('Main:add_role_group')
-
-    users = MyUser.objects.all()
-    rols = Role.objects.all().distinct('name')
-    groups = Group.objects.all().distinct('name')
-
-    return render(request, 'alluser.html', locals())
+                            for user_id in list_split:
+                                if user_id != '':
+                                    delete_user = MyUser.objects.get(pk=user_id)
+                                    delete_user.delete()
+                            return redirect('Main:delete_role_group')
+                users = MyUser.objects.all()
+                rols = Role.objects.all()
+                groups = Group.objects.all()
+                context = {
+                    'groups':groups,
+                    'rols':rols,
+                    'users':users,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user
+                }
+                return render(request, 'role_panel/deletuser.html', context)
+    else:
+        return redirect('/Accounts/login/?next=/dashboard/delete_role_group')
 
 
 def Edite_Gym_info(request):
@@ -2139,14 +2233,375 @@ def Edite_Gym_info(request):
 
 
 def Add_Facility(request):
-    facilities = Facility.objects.all()
-    context = {
-        'facilities': facilities
-    }
-    return render(request, 'add_facility.html', context)
+    if request.method == 'POST' and 'facility_add' in request.POST:
+        facility = request.POST['facility_add']
+        add_facility = Facility.objects.create(name=facility)
+        return redirect('Main:add_facility')
+
+    if request.method == 'POST' and 'ids' in request.POST:
+        ids = request.POST.getlist('ids')
+        str=''
+        for id in ids:
+            str += id
+        str = str.split('Amir:D')
+        for id in str:
+            if id !='':
+                facility = Facility.objects.get(pk=id)
+                facility.delete()
+        return redirect('Main:add_facility')
+
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                facilities = Facility.objects.all()
+                context = {
+                    'facilities': facilities,
+                    'roles_user':roles_user,
+                    'roles_user_count':roles_user_count
+                }
+                return render(request, 'role_panel/newfacility.html', context)
+            else:
+                return redirect('Main:dashboard')
+    else:
+        return HttpResponse ('/Accounts/login/?next=/dashboard/add_facility/')
 
 
+def Add_province(request):
+    if request.method == 'POST' and 'province_add' in request.POST: #for add
+        province = request.POST['province_add']
+        try:
+            add_province = Province.objects.get(name=province)
+        except:
+            add_province = Province.objects.create(name=province)
+        return redirect('Main:add_province')
 
+    if request.method == 'POST' and 'ids' in request.POST: #for delete
+        ids = request.POST.getlist('ids')
+        str=''
+        for id in ids:
+            str += id
+        str = str.split('Amir:D')
+        for id in str:
+            if id !='':
+                province = Province.objects.get(pk=id)
+                try:
+                    province.delete()
+                except:
+                    pass
+        return redirect('Main:add_province')
+
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                provinces = Province.objects.all()
+                # paginator = Paginator(provinces, 2)
+                # page = request.GET.get('page')
+                # provinces = paginator.get_page(page)
+                context = {
+                    'provinces': provinces,
+                    'roles_user':roles_user,
+                    'roles_user_count':roles_user_count
+                }
+                return render(request, 'role_panel/newprovince.html', context)
+            else:
+                return redirect('Main:dashboard')
+    else:
+        return HttpResponse ('/Accounts/login/?next=/dashboard/add_province/')
+
+
+def Add_city(request):
+    if request.method == 'POST' and 'city_add' in request.POST:
+        city = request.POST['city_add']
+        province_id = request.POST['province']
+        try:
+            add_city = City.objects.get(province_id__id=province_id,name=city)
+        except:
+            add_city= City.objects.create(province_id_id=province_id,name = city)
+        return redirect('Main:add_city')
+
+    if request.method == 'POST' and 'ids' in request.POST:
+        ids = request.POST.getlist('ids')
+        str = ''
+        for id in ids:
+            str += id
+        str = str.split('Amir:D')
+        for id in str:
+            if id != '':
+                city = City.objects.get(pk=id)
+                try:
+                    city.delete()
+                except:
+                    pass
+        return redirect('Main:add_city')
+
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                cities = City.objects.all().order_by('province_id__name')
+                provinces = Province.objects.all().order_by('name')
+                context = {
+                    'cities':cities,
+                    'provinces':provinces,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user
+                }
+                return render(request,'role_panel/newcity.html',context)
+
+def Add_area(request):
+    if request.method == 'POST' and 'area_add' in request.POST:
+        area = request.POST['area_add']
+        province_id = request.POST['city']
+        try:
+            add_area = Area.objects.get(city_id__id=province_id,name=area)
+        except:
+            add_area= City.objects.create(city_id_id=province_id,name = area)
+        return redirect('Main:add_area')
+
+    if request.method == 'POST' and 'ids' in request.POST:
+        ids = request.POST.getlist('ids')
+        str = ''
+        for id in ids:
+            str += id
+        str = str.split('Amir:D')
+        for id in str:
+            if id != '':
+                area = Area.objects.get(pk=id)
+                try:
+                    area.delete()
+                except:
+                    pass
+        return redirect('Main:add_area')
+
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                areas = Area.objects.all().order_by('city_id__name')
+                cities = City.objects.all().order_by('name')
+                context = {
+                    'cities':cities,
+                    'areas':areas,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user
+                }
+                return render(request,'role_panel/neware.html',context)
+
+def Add_gym_type(request):
+    if request.method == 'POST' and 'gym_type_add' in request.POST:
+        gym_type = request.POST['gym_type_add']
+        try:
+            add_gym_type = Category.objects.get(name=gym_type)
+        except:
+            add_gym_type = Category.objects.create(name=gym_type)
+        return redirect('Main:add_gym_type')
+
+    if request.method == 'POST' and 'ids' in request.POST:
+        ids = request.POST.getlist('ids')
+        str=''
+        for id in ids:
+            str += id
+        str = str.split('Amir:D')
+        for id in str:
+            if id !='':
+                category = Category.objects.get(pk=id)
+                try:
+                    category.delete()
+                except:
+                    pass
+        return redirect('Main:add_gym_type')
+
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                gym_types = Category.objects.all()
+                # paginator = Paginator(provinces, 2)
+                # page = request.GET.get('page')
+                # provinces = paginator.get_page(page)
+                context = {
+                    'gym_types': gym_types,
+                    'roles_user':roles_user,
+                    'roles_user_count':roles_user_count
+                }
+                return render(request, 'role_panel/gymcategory.html', context)
+            else:
+                return redirect('Main:dashboard')
+    else:
+        return HttpResponse ('/Accounts/login/?next=/dashboard/add_category/')
+
+def Teachers(request):
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                rol = Role.objects.get(name='مربی')
+                teachers = MyUser.objects.filter(role=rol)
+
+                context = {
+                    'teachers' :teachers,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user
+                }
+                return render(request,'role_panel/teachers.html',context)
+
+def Teachers_Details(request,slug):
+    select_user = MyUser.objects.get(pk=slug)
+    try:
+        coach = Coach_Profile.objects.get(user_id=select_user)
+    except:
+        coach = Coach_Profile.objects.create(user_id=select_user)
+    if request.method == 'POST' and 'save_form' in request.POST:
+
+        name = request.POST['name']
+        department_name = request.POST['department_name']
+        job = request.POST['job']
+        national_number = request.POST['national_number']
+        text = request.POST['text']
+        phone_number = request.POST['phone_number']
+
+
+        try:
+            picture = request.FILES['picture']
+        except:
+            picture = coach.picture
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        select_user.national_number = national_number
+        select_user.phone_number = phone_number
+        select_user.name = name
+        try:
+            select_user.save()
+        except:
+            context = {
+                'error':True,
+                'message':'کد ملی وارد شده صحیح نیست.',
+                'select_user': select_user,
+                'coach': coach,
+                'roles_user': roles_user,
+                'roles_user_count': roles_user_count
+            }
+            return render(request,'role_panel/teacher_profile.html',context)
+        coach = Coach_Profile.objects.get(user_id=select_user)
+
+        coach.job = job
+        coach.text = text
+        coach.department_name = department_name
+        coach.picture = picture
+        coach.save()
+
+        return redirect('Main:teachers_details' , select_user.id)
+
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                select_user = MyUser.objects.get(pk=slug)
+
+                coach = Coach_Profile.objects.get(user_id = select_user)
+
+                context = {
+                    'select_user':select_user,
+                    'coach':coach,
+                    'roles_user':roles_user,
+                    'roles_user_count':roles_user_count
+                }
+                return render(request,'role_panel/teacher_profile.html',context)
+
+def Requests(request):
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        for role in roles_user:
+            if role.name == 'superuser':
+                requests = Ticket.objects.all()
+
+                context = {
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user,
+                    'requests':requests,
+                }
+                return render(request,'role_panel/requests.html',context)
 
 def Edit_Profile_Teacher(request):
     if request.user.is_authenticated:
@@ -2168,7 +2623,7 @@ def Edit_Profile_Teacher(request):
                     national_number = request.POST['national_number']
                     text = request.POST['text']
                     phone_number = request.POST['phone_number']
-                    picture = request.POST['picture']
+                    picture = request.FILES['picture']
 
                     user_logged_in.national_number = national_number
                     user_logged_in.phone_number = phone_number
@@ -2188,26 +2643,20 @@ def Edit_Profile_Teacher(request):
 
                     return redirect('Main:edit_profile')
 
-                if user_logged_in:
-                    try:
-                        coach = Coach_Profile.objects.get(user_id=user_logged_in)
+                try:
+                    coach = Coach_Profile.objects.get(user_id=user_logged_in)
+                except:
+                    user_profile = Coach_Profile.objects.create(user_id = user_logged_in)
+                    coach = Coach_Profile.objects.get(user_id = user_logged_in)
 
-                    except:
-                        user_profile = Coach_Profile.objects.create(user_id = user_logged_in)
-                        coach = Coach_Profile.objects.get(user_id = user_logged_in)
+                context={
+                    'coach':coach,
+                    'coach_profiles': coach_profiles,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user
 
-                    context={
-                        'coach':coach,
-                        'coach_profiles': coach_profiles,
-                        'roles_user_count':roles_user_count,
-                        'roles_user':roles_user
+                }
 
-                    }
-                else:
-                    context = {
-                        'coach_profiles': coach_profiles,
-
-                    }
                 return render(request,'couchprofile.html',context)
         return redirect('Main:dashboard')
     else:
