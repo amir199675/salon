@@ -84,6 +84,7 @@ class Gym(models.Model):
     sex = models.CharField(choices=SEX_CHOICE, default='مرد', max_length=32)
     famous = models.CharField(max_length=32, choices=FAMOUS_CHOICE, default='None')
     category_id = models.ManyToManyField(Category,related_name='categories',blank=True,null=True)
+    user_id = models.ForeignKey(MyUser,on_delete=models.CASCADE,null=True,blank=True)
 
     def __str__(self):
         return self.name + ' ' + self.address
@@ -176,6 +177,7 @@ class Group(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     user_id = models.ManyToManyField(MyUser, related_name='group', null=True, blank=True)
+    gym_id = models.ManyToManyField(Gym,related_name='group',null=True,blank=True)
 
     def __str__(self):
         return self.name
@@ -259,7 +261,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=32, choices=STATUS_CHOICE, default='Not Paid')
     description = models.TextField()
-    myuser_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    myuser_id = models.ForeignKey(MyUser, on_delete=models.CASCADE,related_name='order')
     gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
     hour_id = models.ForeignKey(Hour, on_delete=models.CASCADE)
     order_date = models.DateField()
@@ -308,7 +310,7 @@ class Training_Class(models.Model):
     name = models.CharField(max_length=255)
     date_start = models.DateTimeField()
     date_expire = models.DateTimeField()
-    coach_id = models.ForeignKey(Coach_Profile, on_delete=models.CASCADE)
+    coach_id = models.ForeignKey(Coach_Profile, on_delete=models.CASCADE,related_name='training_class')
     gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
     number_of_session = models.IntegerField()
     price = models.TextField()
@@ -342,4 +344,13 @@ def add_order(sender,instance,created, **kwargs):
     if created:
         Order.objects.create(myuser_id=instance.coach_id.user_id,status='Reserved',description='Reserved',order_date=datetime.date(instance.date_start),gym_id=instance.gym_id,hour_id=instance.hour_id,total_price='100',paid_money='100')
 
+@receiver(post_save,sender=Gym)
+def add_group(sender,instance,created,**kwargs):
+    if created:
+        user = instance.user_id
+        user_role = Role.objects.get(user_id=user)
 
+        if user_role.name == 'آموزش پرورش':
+            add_to = Group.objects.get(name = 'آموزش پرورش')
+            add_to.gym_id.add(instance)
+            add_to.save()

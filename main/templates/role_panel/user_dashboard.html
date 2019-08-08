@@ -1,0 +1,149 @@
+{% extends 'role_panel/partial/dashboard_header.html' %}
+{% load static %}
+{% load main_tags %}
+{% block title %}
+    داشبور
+{% endblock %}
+{% block body %}
+
+    <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
+
+
+        <div class="m-grid__item m-grid__item--fluid m-wrapper">
+
+            <!-- BEGIN: Subheader -->
+            <div class="m-subheader ">
+                <div class="d-flex align-items-center">
+                    <div class="mr-auto">
+
+                            <h3 class="m-subheader__title ">تمام سالن ها</h3>
+
+                    </div>
+                    <div>
+  							<span class="m-subheader__daterange" id="m_dashboard_daterangepicker">
+
+				</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Subheader -->
+            <div class="m-content">
+                <table style="width: 100%" class="flat-table flat-table-2">
+                    <thead>
+                    <th>اسم سالن</th>
+                    <th>زمان رزرو</th>
+                    <th>آدرس</th>
+                    <th>شماره تماس سالن</th>
+                    </thead>
+                    <tbody>
+
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.gym_id.name }}</td>
+
+                            <td>{{ order.hour_id.open|iran }},{{ order.order_date|tojalali }}</td>
+                            <td>{{ order.gym_id.address }}</td>
+                            <td>{{ order.gym_id.phone }}</td>
+                        </tr>
+
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% if orders.has_next %}
+                    <a href="?page={{ orders.number }}">{{ orders.number }}</a>
+                    <a href="?page={{ orders.next_page_number }}">{{ orders.next_page_number }}</a>
+
+                    <span class="more-page">...</span>
+                    <a href="?page={{ orders.paginator.num_pages }}">{{ orders.paginator.num_pages }}</a>
+                {% endif %}
+                {% if orders.has_previous %}
+
+                    <a href="?page={{ orders.previous_page_number }}">{{ orders.previous_page_number }}</a>
+                    <span class="more-page">...</span>
+                    <a href="?page={{ orders.paginator.num_pages }}">{{ orders.paginator.num_pages }}</a>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .flat-table {
+            margin-bottom: 20px;
+            border-collapse: collapse;
+            font-family: 'Lato', Calibri, Arial, sans-serif;
+            border: none;
+            border-radius: 3px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+        }
+
+        .flat-table th, .flat-table td {
+            box-shadow: inset 0 -1px rgba(0, 0, 0, 0.25),
+            inset 0 1px rgba(0, 0, 0, 0.25);
+        }
+
+        .flat-table th {
+            font-weight: normal;
+            -webkit-font-smoothing: antialiased;
+            padding: 1em;
+            color: rgba(0, 0, 0, 0.45);
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+            font-size: 1.5em;
+        }
+
+        .flat-table td {
+            color: #f7f7f7;
+            padding: 0.7em 1em 0.7em 1.15em;
+            text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+            font-size: 1.4em;
+        }
+
+        .flat-table tr {
+            -webkit-transition: background 0.3s, box-shadow 0.3s;
+            -moz-transition: background 0.3s, box-shadow 0.3s;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .flat-table-1 {
+            background: #336ca6;
+        }
+
+        .flat-table-1 tr:hover {
+            background: rgba(0, 0, 0, 0.19);
+        }
+
+        .flat-table-2 tr:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .flat-table-2 {
+            background: #f06060;
+        }
+
+        .flat-table-3 {
+            background: #52be7f;
+        }
+
+        .flat-table-3 tr:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <script src="{% static 'dashboard-css/assets/vendors/base/vendors.bundle.js' %}" type="text/javascript"></script>
+    <script src="{% static 'dashboard-css/assets/demo/demo2/base/scripts.bundle.js' %}" type="text/javascript"></script>
+    <!--end::Base Scripts -->
+
+
+    <!--begin::Page Vendors -->
+    <script src="{% static 'dashboard-css/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js' %}"
+            type="text/javascript"></script>
+    <!--end::Page Vendors -->
+
+
+    <!--begin::Page Snippets -->
+    <script src="{% static 'dashboard-css/assets/app/js/dashboard.js' %}" type="text/javascript"></script>
+
+
+{% endblock %}

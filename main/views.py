@@ -2065,9 +2065,155 @@ def Dashboard(request):
                     'superuser':True,
                 }
                 return render(request, 'role_panel/dashboard.html', context)
+            elif role.name == 'آموزش پرورش':
+                gyms = Gym.objects.filter(area_id__city_id__name=user_logged_in.city,group__name = 'آموزش پرورش').order_by('area_id')
+                paginator = Paginator(gyms, 10)
+                page = request.GET.get('page')
+                gyms_list = paginator.get_page(page)
+
+                orders = Order.objects.filter(gym_id__area_id__city_id__name=user_logged_in.city,order_date__gte=datetime.today())
+                gyms_counter = Gym.objects.filter(area_id__city_id__name=user_logged_in.city,group__name = 'آموزش پرورش').count()
+                amoozesh_parvaresh = None
+                try:
+                    amoozesh_parvaresh = Group.objects.get(name = 'آموزش پرورش')
+                except:
+                    pass
+                users_counter = None
+                try:
+
+                    users_counter = MyUser.objects.filter(group = amoozesh_parvaresh ,city=user_logged_in.city).count()
+                except:
+                    pass
+                orders_counter = Order.objects.filter(coupon_id__group_id__name='آموزش پرورش',gym_id__area_id__city_id__name = user_logged_in.city).count()
+                roles = Role.objects.all()
+                teachers_counter = MyUser.objects.filter(role__name = 'مربی',city = user_logged_in.city).count()
+                context = {
+                    'gyms': gyms_list,
+                    'user_counter': users_counter,
+                    'roles': roles,
+                    'user_logged_in': user_logged_in,
+                    'orders_counter': orders_counter,
+                    'teachers_counter': teachers_counter,
+                    'gyms_counter': gyms_counter,
+                    'roles_user': roles_user,
+                    'orders': orders,
+                    'roles_user_count': roles_user_count,
+                }
+                return render(request, 'role_panel/dashboard.html', context)
+            elif role.name == 'سالن دار':
+                orders = Order.objects.filter(gym_id__user_id=user_logged_in).order_by('order_date')
+                paginator = Paginator(orders, 10)
+                page = request.GET.get('page')
+                orders_list = paginator.get_page(page)
+                gym = Gym.objects.get(user_id=user_logged_in)
+                users_counter = MyUser.objects.filter(order__gym_id = gym ).distinct('phone_number').count()
+                orders_counter = Order.objects.filter(gym_id__user_id=user_logged_in).count()
+                teachers_counter = Coach_Profile.objects.filter(training_class__gym_id=gym).distinct('user_id').count()
+                context = {
+                    'orders': orders_list,
+                    'user_counter': users_counter,
+                    'user_logged_in': user_logged_in,
+                    'orders_counter': orders_counter,
+                    'teachers_counter': teachers_counter,
+                    'roles_user': roles_user,
+                    'roles_user_count': roles_user_count,
+
+                }
+                return render(request, 'role_panel/salondar_dashboard.html', context)
+
+            elif role.name == 'مسئول منطقه':
+                gyms = Gym.objects.filter(area_id__city_id__name=user_logged_in.city).order_by('area_id')
+                paginator = Paginator(gyms, 10)
+                page = request.GET.get('page')
+                gyms_list = paginator.get_page(page)
+
+                orders = Order.objects.filter(order_date__gte=datetime.today(),gym_id__area_id__city_id__name = user_logged_in.city)
+                gyms_counter = gyms.count()
+                users = MyUser.objects.filter(city = user_logged_in.city).order_by('name')
+
+                users_counter = users.count()
+                orders_counter = orders.count()
+                roles = Role.objects.all()
+                teachers_counter = MyUser.objects.filter(role__name='مربی',city=user_logged_in.city).count()
+                context = {
+                    'gyms': gyms_list,
+                    'user_counter': users_counter,
+                    'roles': roles,
+                    'user_logged_in': user_logged_in,
+                    'orders_counter': orders_counter,
+                    'teachers_counter': teachers_counter,
+                    'gyms_counter': gyms_counter,
+                    'roles_user': roles_user,
+                    'orders': orders,
+                    'roles_user_count': roles_user_count,
+                    'superuser': True,
+                }
+                return render(request, 'role_panel/dashboard.html', context)
+        orders = Order.objects.filter(myuser_id = user_logged_in)
+        paginator = Paginator(orders, 10)
+        page = request.GET.get('page')
+        orders_list = paginator.get_page(page)
+        context = {
+            'orders' : orders_list,
+        }
+        return render(request,'role_panel/user_dashboard.html', context)
 
     else:
         return redirect('/Accounts/login/?next=/dashboard')
+
+
+def Salon_Dar_Classes(request):
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        for role in roles_user:
+            if role.name == 'سالن دار':
+                training_classes = Training_Class.objects.filter(gym_id__user_id=user_logged_in).order_by('date_start')
+                paginator = Paginator(training_classes, 10)
+                page = request.GET.get('page')
+                training_classes_list = paginator.get_page(page)
+                # gym = Gym.objects.get(user_id=user_logged_in)
+                # users_counter = MyUser.objects.filter(order__gym_id=gym).distinct('phone_number').count()
+                # orders_counter = Order.objects.filter(gym_id__user_id=user_logged_in).count()
+                # teachers_counter = Coach_Profile.objects.filter(training_class__gym_id=gym).distinct('user_id').count()
+                context = {
+                    'training_classes': training_classes_list,
+                    # 'user_counter': users_counter,
+                    'user_logged_in': user_logged_in,
+                    # 'orders_counter': orders_counter,
+                    # 'teachers_counter': teachers_counter,
+                    'roles_user': roles_user,
+                    'roles_user_count': roles_user_count,
+
+                }
+                return render(request, 'role_panel/salondar_classes.html', context)
+            else:
+                return redirect('/Accounts/login/?next=/dashboard')
+
+def User_Classes(request):
+    if request.user.is_authenticated:
+        user_phone_number = request.user
+        user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+        roles_user_count = 0
+        try:
+            roles_user = Role.objects.filter(user_id=user_logged_in)
+            roles_user_count = roles_user.count()
+        except Role.DoesNotExist:
+            roles_user = None
+
+        # admin access
+        classes = Training_Class.objects.filter(user_id=user_logged_in)
+        context ={
+            'training_classes':classes
+        }
+        return render(request,'role_panel/salondar_classes.html',context)
 
 
 def All_Users(request):
@@ -2129,19 +2275,131 @@ def All_Users(request):
                                     add_role.user_id.add(user_select)
                                     add_role.save()
                             return redirect('Main:all_users')
-
-
-                rols = Role.objects.all()
-                groups = Group.objects.all()
+                groups = Group.objects.filter(name='آموزش پرورش')
                 context = {
                     'users': user_list,
-                    'rols':rols,
+                    'groups': groups,
+                    'roles_user_count': roles_user_count,
+                    'roles_user': roles_user,
+                    'superuser':True
+                }
+                return render(request, 'role_panel/alluser.html', context)
+            elif role.name == 'آموزش پرورش':
+                users = MyUser.objects.filter(group__name='آموزش پرورش',city = user_logged_in.city).order_by('name')
+                paginator = Paginator(users, 10)
+                page = request.GET.get('page')
+                user_list = paginator.get_page(page)
+                rols = Role.objects.all()
+                groups = Group.objects.all()
+                if request.method == 'POST':
+                    for group in groups:
+                        if group.name in request.POST:
+                            user_list = request.POST.getlist('select')
+                            d = ''
+                            for ids in user_list:
+                                d += ids
+                            list_split = d.split('Amir:D')
+                            for user in list_split:
+                                if user != '':
+                                    user_select = None
+                                    try:
+                                        user_select = MyUser.objects.get(pk=user)
+                                    except:
+                                        user_select = None
+
+                                    add_group = Group.objects.get(name=group.name)
+                                    add_group.user_id.add(user_select)
+                                    add_group.save()
+                            return redirect('Main:all_users')
+                    for role in rols:
+                        if role.name in request.POST:
+                            user_list = request.POST.getlist('select')
+                            d = ''
+                            for ids in user_list:
+                                d += ids
+                            list_split = d.split('Amir:D')
+                            for user in list_split:
+                                if user != '':
+                                    user_select = None
+                                    try:
+                                        user_select = MyUser.objects.get(pk=user)
+                                    except:
+                                        user_select = None
+
+                                    add_role = Role.objects.get(name=role.name)
+                                    add_role.user_id.add(user_select)
+                                    add_role.save()
+                            return redirect('Main:all_users')
+
+                groups = Group.objects.filter(name = 'آموزش پرورش')
+                context = {
+                    'users': user_list,
                     'groups':groups,
                     'roles_user_count':roles_user_count,
                     'roles_user':roles_user,
 
                 }
                 return render(request, 'role_panel/alluser.html', context)
+
+
+            elif role.name == 'مسئول منطقه':
+
+                users = MyUser.objects.filter(city = user_logged_in.city).order_by('name')
+                paginator = Paginator(users, 10)
+                page = request.GET.get('page')
+                user_list = paginator.get_page(page)
+                rols = Role.objects.all()
+                groups = Group.objects.all()
+                if request.method == 'POST':
+                    for group in groups:
+                        if group.name in request.POST:
+                            user_list = request.POST.getlist('select')
+                            d = ''
+                            for ids in user_list:
+                                d += ids
+                            list_split = d.split('Amir:D')
+                            for user in list_split:
+                                if user != '':
+                                    user_select = None
+                                    try:
+                                        user_select = MyUser.objects.get(pk=user)
+                                    except:
+                                        user_select = None
+
+                                    add_group = Group.objects.get(name=group.name)
+                                    add_group.user_id.add(user_select)
+                                    add_group.save()
+                            return redirect('Main:all_users')
+                    for role in rols:
+                        if role.name in request.POST:
+                            user_list = request.POST.getlist('select')
+                            d = ''
+                            for ids in user_list:
+                                d += ids
+                            list_split = d.split('Amir:D')
+                            for user in list_split:
+                                if user != '':
+                                    user_select = None
+                                    try:
+                                        user_select = MyUser.objects.get(pk=user)
+                                    except:
+                                        user_select = None
+
+                                    add_role = Role.objects.get(name=role.name)
+                                    add_role.user_id.add(user_select)
+                                    add_role.save()
+                            return redirect('Main:all_users')
+
+                groups = Group.objects.all()
+                context = {
+                    'users': user_list,
+                    'groups':groups,
+                    'roles_user_count':roles_user_count,
+                    'roles_user':roles_user,
+
+                }
+                return render(request, 'role_panel/alluser.html', context)
+
             return redirect('Main:dashboard')
     else:
         return redirect('/Accounts/login/?next=/dashboard/all_users')
@@ -2168,7 +2426,7 @@ def Delete_Role_Group(request):
 
         # admin access
         for role in roles_user:
-            if role.name == 'superuser':
+            if role.name == 'superuser' or role.name == 'مسئول منطقه':
                 if request.method == 'POST' and 'delete_form' in request.POST:
                     if request.POST.getlist('roll'):
                         user_list = request.POST.getlist('roll')
@@ -2182,7 +2440,13 @@ def Delete_Role_Group(request):
                                 user = MyUser.objects.get(pk=user_id)
                                 delete_roles = Role.objects.filter(user_id=user)
                                 for delete_role in delete_roles:
-                                    delete_role.user_id.remove(user)
+                                    if role.name == 'مسئول منطقه':
+                                        if delete_role.name == 'superuser':
+                                            pass
+                                        else:
+                                            delete_role.user_id.remove(user)
+                                    else:
+                                        delete_role.user_id.remove(user)
                         return redirect('Main:delete_role_group')
                     if request.POST.getlist('groupp'):
                         user_list = request.POST.getlist('groupp')
@@ -2214,6 +2478,61 @@ def Delete_Role_Group(request):
                 rols = Role.objects.all()
                 groups = Group.objects.all()
                 context = {
+                    'groups': groups,
+                    'rols': rols,
+                    'users': users,
+                    'roles_user_count': roles_user_count,
+                    'roles_user': roles_user,
+                    'superuser': True
+
+                }
+                return render(request, 'role_panel/deletuser.html', context)
+            elif role.name == 'آموزش پرورش' :
+                if request.method == 'POST' and 'delete_form' in request.POST:
+                    if request.POST.getlist('roll'):
+                        user_list = request.POST.getlist('roll')
+                        d = ''
+                        for ids in user_list:
+                            d += ids
+                        list_split = d.split('Amir:D')
+
+                        for user_id in list_split:
+                            if user_id != '':
+                                user = MyUser.objects.get(pk=user_id)
+                                delete_roles = Role.objects.filter(user_id=user)
+                                for delete_role in delete_roles:
+                                    delete_role.user_id.remove(user)
+                        return redirect('Main:delete_role_group')
+                    if request.POST.getlist('groupp'):
+                        user_list = request.POST.getlist('groupp')
+                        d = ''
+                        for ids in user_list:
+                            d += ids
+                            list_split = d.split('Amir:D')
+
+                            for user_id in list_split:
+                                if user_id != '':
+                                    user = MyUser.objects.get(pk=user_id)
+                                    delete_group = Group.objects.get(user_id=user,name='آموزش پرورش')
+
+                                    delete_group.user_id.remove(user)
+                            return redirect('Main:delete_role_group')
+                    if request.POST.getlist('select_user'):
+                        user_list = request.POST.getlist('select_user')
+                        d = ''
+                        for ids in user_list:
+                            d += ids
+                            list_split = d.split('Amir:D')
+
+                            for user_id in list_split:
+                                if user_id != '':
+                                    delete_user = MyUser.objects.get(pk=user_id)
+                                    delete_user.delete()
+                            return redirect('Main:delete_role_group')
+                users = MyUser.objects.filter(group__name = 'آموزش پرورش',city = user_logged_in.city)
+                rols = Role.objects.filter(name='آموزش پرورش')
+                groups = Group.objects.filter(name='آموزش پرورش')
+                context = {
                     'groups':groups,
                     'rols':rols,
                     'users':users,
@@ -2221,6 +2540,7 @@ def Delete_Role_Group(request):
                     'roles_user':roles_user
                 }
                 return render(request, 'role_panel/deletuser.html', context)
+
     else:
         return redirect('/Accounts/login/?next=/dashboard/delete_role_group')
 
@@ -2497,9 +2817,31 @@ def Teachers(request):
                 context = {
                     'teachers' :teachers,
                     'roles_user_count':roles_user_count,
-                    'roles_user':roles_user
+                    'roles_user':roles_user,
+                    'superuser': True
+
                 }
                 return render(request,'role_panel/teachers.html',context)
+            elif role.name == 'آموزش پرورش':
+                teachers = MyUser.objects.filter(role__name='مربی',group__name='آموزش پرورش',city=user_logged_in.city)
+
+                context = {
+                    'teachers': teachers,
+                    'roles_user_count': roles_user_count,
+                    'roles_user': roles_user
+                }
+                return render(request, 'role_panel/teachers.html', context)
+
+            elif role.name == 'مسئول منطقه':
+                teachers = MyUser.objects.filter(role__name='مربی', city=user_logged_in.city)
+
+                context = {
+                    'teachers': teachers,
+                    'roles_user_count': roles_user_count,
+                    'roles_user': roles_user
+                }
+                return render(request, 'role_panel/teachers.html', context)
+
 
 def Teachers_Details(request,slug):
     select_user = MyUser.objects.get(pk=slug)
@@ -2579,6 +2921,19 @@ def Teachers_Details(request,slug):
                     'roles_user_count':roles_user_count
                 }
                 return render(request,'role_panel/teacher_profile.html',context)
+            elif role.name == 'مسئول منطقه':
+                select_user = MyUser.objects.get(pk=slug)
+
+                coach = Coach_Profile.objects.get(user_id=select_user)
+
+                context = {
+                    'select_user': select_user,
+                    'coach': coach,
+                    'roles_user': roles_user,
+                    'roles_user_count': roles_user_count
+                }
+                return render(request, 'role_panel/teacher_profile.html', context)
+
 
 def Requests(request):
     if request.user.is_authenticated:

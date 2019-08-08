@@ -123,7 +123,8 @@
                         <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
                         <div class="table-responsive-vertical shadow-z-1">
                             <!-- Table starts here -->
-                            <div class="alert-danger">توجه! کاربرانی که چندین نقش یا گروه دارند، با انتخاب پاک کردن نقش یا گروه، کلیه نقش یا گروه
+                            <div class="alert-danger">توجه! کاربرانی که چندین نقش یا گروه دارند، با انتخاب پاک کردن نقش
+                                یا گروه، کلیه نقش یا گروه
                                 آنها پاک میشود.
                             </div>
                             <table width="100%" class="flat-table flat-table-1">
@@ -132,11 +133,13 @@
                                 <th style="text-align: right">نام و نام خانوادگی</th>
                                 <th style="text-align: right">شماره تماس</th>
                                 <th style="text-align: right">کدملی</th>
+
                                 <th style="text-align: right">نقش</th>
                                 <th style="text-align: right">گروه</th>
 
-
+{% if superuser %}
                                 <th style="text-align: right">انتخاب نقش</th>
+                                {% endif %}
                                 <th style="text-align: right">انتخاب گروه</th>
                                 <th style="text-align: right">انتخاب کاربر</th>
                                 </thead>
@@ -159,10 +162,13 @@
                                             <td data-title="Status">
                                                 {% for group in user.group.select_related %}{{ group }}
                                                     ،{% endfor %}</td>
-                                            <td><input type="checkbox" name="roll" value="{{ user.id }}Amir:D">
+                                            {% if superuser %}
+                                                <td><input type="checkbox" name="roll" value="{{ user.id }}Amir:D">
+                                            {% endif %}
                                             </td>
                                             <td><input type="checkbox" name="groupp" value="{{ user.id }}Amir:D">
-                                            </td><td><input type="checkbox" name="select_user" value="{{ user.id }}Amir:D">
+                                            </td>
+                                            <td><input type="checkbox" name="select_user" value="{{ user.id }}Amir:D">
                                             </td>
                                         </tr>
 

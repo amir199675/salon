@@ -1,7 +1,7 @@
 {% extends 'role_panel/partial/dashboard_header.html' %}
 {% load static %}
 {% block title %}
-    اضافه کردن به گروه ها
+    پروفایل مربیان
 {% endblock %}
 {% block body %}
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
@@ -13,7 +13,7 @@
             <div class="m-subheader ">
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
-                        <h3 class="m-subheader__title ">تمام افرادی که ثبت نام کرده اند</h3>
+                        <h3 class="m-subheader__title ">تمام مربیان</h3>
                     </div>
                     <div>
   							<span class="m-subheader__daterange" id="m_dashboard_daterangepicker">
@@ -118,44 +118,36 @@
                             <table width="100%" class="flat-table flat-table-1">
                                 <thead>
                                 <th>تعداد</th>
-                                <th style="text-align: right">نام و نام خانوادگی</th>
-                                <th style="text-align: right">شماره تماس</th>
+                                <th style="text-align: right">نام کلاس</th>
+                                <th style="text-align: right">شماره مربی</th>
                                 <th style="text-align: right">کدملی</th>
 
-                                <th style="text-align: right">نقش</th>
 
-                                <th style="text-align: right">گروه</th>
-
-
-                                <th style="text-align: right">انتخاب</th>
+                                <th style="text-align: right">زمان های کلاس</th>
 
                                 </thead>
                                 <tbody>
 
-                                {% for user in users %}
-
-
+                                {% for training in training_classes %}
 
                                     <tr>
+
                                         <td data-title="ID">{{ forloop.counter }}</td>
-                                        <td data-title="Name">{{ user.name }}</td>
+
+                                        <td data-title="Name">{{ training.name }}</td>
+
                                         <td data-title="Name">
-                                            {{ user.phone_number }}
+                                            {{ training.coach_id.user_id.phone_number }}
+                                        </td>
+                                        <td data-title="Name">
+                                            {{ training.coach_id.user_id.national_number }}
                                         </td>
 
-                                        <td data-title="Status">{{ user.national_number }}</td>
                                         <td data-title="Status">
-                                            {% for rol in user.role.select_related %}{{ rol }},{% endfor %}</td>
-                                        <td data-title="Status">
-                                            {% for group in user.group.select_related %}{{ group }}
-                                                ،{% endfor %}</td>
-
-
-                                        <td>
-                                            <input type="checkbox" name="select" value="{{ user.id }}Amir:D">
+                                            {{ training.hour_id.open }}
                                         </td>
-
                                     </tr>
+
                                 {% endfor %}
 
 
@@ -163,26 +155,7 @@
                             </table>
 
                         </div>
-                        {% for group in groups %}
-                            <div style="text-align: center;margin-bottom: 20px" class="col-xs-12">
-                                <button type="submit" class="btn btn-success"
-                                        style="float: right;margin-left: 10px;margin-bottom: 5px"
-                                        name="{{ group.name }}">اضافه کردن
-                                    به
-                                    گروه {{ group.name }}
-                                </button>
-                            </div>
-                        {% endfor %}
-                        {% for role in rols %}
-                            <div style="text-align: center;margin-bottom: 20px" class="col-xs-12">
-                                <button type="submit" class="btn btn-accent"
-                                        style="float: right;margin-left: 10px;margin-bottom: 5px"
-                                        name="{{ role.name }}">اضافه کردن
-                                    به
-                                    لیست {{ role.name }}
-                                </button>
-                            </div>
-                        {% endfor %}
+
                     </form>
                     <!-- Table Constructor change table classes, you don't need it in your project -->
 

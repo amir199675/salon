@@ -43,6 +43,8 @@ urlpatterns = [
 	path('dashboard/teachers/',views.Teachers, name = 'teachers'),
 	path('dashboard/edit_profile/<slug>/', views.Teachers_Details, name='teachers_details'),
 	path('dashboard/requests/', views.Requests, name='requests'),
+	path('dashboard/classes/', views.Salon_Dar_Classes, name='salon_dar_classes'),
+	path('dashboard/user_classes/', views.User_Classes, name='user_classes'),
 
 	path('teachers/<slug>/', views.Coach_Profile, name='coach_profile'),
 
