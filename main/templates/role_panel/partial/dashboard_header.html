@@ -265,39 +265,8 @@
                              class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-light m-aside-header-menu-mobile--submenu-skin-light ">
                             {% if roles_user_count %}
                                 {% for role_user in roles_user %}
-                                    {% if role_user.name == 'مربی' %}
 
-                                        <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
-                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="{% url 'Main:edit_profile' %}" class="m-menu__link ">
-                                                    <span class="m-menu__item-here"></span>
-                                                    <span class="m-menu__link-text">پروفایل مربی</span>
-                                                </a>
-                                            </li>
-
-
-                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="all.html" class="m-menu__link ">
-                                                    <span class="m-menu__item-here"></span>
-                                                    <span class="m-menu__link-text">دانش آموزان</span>
-                                                </a>
-                                            </li>
-
-                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="alluser.html" class="m-menu__link ">
-                                                    <span class="m-menu__item-here"></span>
-                                                    <span class="m-menu__link-text">کلاس ها</span>
-                                                </a>
-                                            </li>
-
-                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
-                                                    <span class="m-menu__item-here"></span>
-                                                    <span class="m-menu__link-text">کلاس جدید</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    {% elif role_user.name == 'superuser' %}
+                                    {% if role_user.name == 'superuser' %}
                                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
                                                 <a href="{% url 'Main:dashboard' %}" class="m-menu__link ">
@@ -360,7 +329,7 @@
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_gym' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                 </a>
@@ -399,7 +368,7 @@
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="add_event.html" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_gym' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                 </a>
@@ -460,7 +429,7 @@
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="{% url 'Main:add_city' %}" class="m-menu__link ">
+                                                <a href="{% url 'Main:requests' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">درخواست ها</span>
                                                 </a>
@@ -472,13 +441,45 @@
                                                 </a>
                                             </li>
                                             <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="{% url 'Main:add_facility' %}" class="m-menu__link ">
+                                                <a href="{% url 'Main:add_gym' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                 </a>
                                             </li>
                                         </ul>
-
+                                    {% elif role_user.name == 'مربی' %}
+                                        <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:dashboard' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">لیست کلاس ها</span>
+                                                </a>
+                                            </li>
+                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:students' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">لیست دانش آموزان</span>
+                                                </a>
+                                            </li>
+                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:requests' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">تیکت های دانش آموزان</span>
+                                                </a>
+                                            </li>
+                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:select_gym_add_class' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">ساخت کلاس جدید</span>
+                                                </a>
+                                            </li>
+                                            <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:edit_profile' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">ویرایش پروفایل</span>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     {% endif %}
 
 

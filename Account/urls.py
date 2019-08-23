@@ -8,8 +8,8 @@ app_name = 'Account'
 
 urlpatterns = [
 	path('login/',views.Login,name = 'login'),
-	path('register/',views.Register,name = 'register'),
 	path('logout/',views.LogOut,name = 'logout'),
+	path('send_password/',views.Send_Password,name = 'send_password')
 ]
 
 

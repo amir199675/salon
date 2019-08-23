@@ -63,3 +63,23 @@ def iran(value,iran=None):
     iran = iran.replace('AM','صبح')
     iran = iran.replace('PM','عصر')
     return iran
+
+
+@register.filter(name='convert_weekday')
+def convert_weekday(value,convert_weekday=None):
+    if value == 'jome':
+        convert_weekday = 'جمعه'
+    elif value == 'shanbe':
+        convert_weekday = 'شنبه'
+    elif value == 'yeshanbe':
+        convert_weekday = 'یکشنبه'
+    elif value == 'doshanbe':
+        convert_weekday = 'دوشنبه'
+    elif value == 'seshanbe':
+        convert_weekday = 'سه شنبه'
+    elif value == 'charshanbe':
+        convert_weekday = 'چهارشنبه'
+    elif value == 'panjshanbe':
+        convert_weekday = 'پنجشنبه'
+
+    return convert_weekday

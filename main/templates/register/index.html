@@ -186,15 +186,16 @@ m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-le
                         <div class="m-login__forget-password">
                             <div class="m-login__head">
                                 <div class="class6 m-login__desc">
-                                    لطفا پیامک دریافتی را وارد نمایید
+                                    لطفا شماره تلفن همراه خورد را وارد کنید
                                 </div>
                             </div>
                             <br>
-                            <form class="m-login__form m-form" action="">
+                            <form class="m-login__form m-form" action="{% url 'Account:send_password' %}" method="post">
+                                {% csrf_token %}
                                 <div class="wrap-input100 validate-input">
                                     <input style="padding-right: 50px" class="class1 input100" type="text"
-                                           name="emaill"
-                                           placeholder="     تاییدیه پیامک">
+                                           name="phone_number"
+                                           placeholder="     شماره تلفن همراه">
                                     <span class="focus-input100"></span>
                                     <span class="span1 symbol-input100">
 							<i style="font-size: 20px" class="fas fa-phone"></i>
@@ -202,11 +203,8 @@ m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-le
                                 </div>
                                 <br>
                                 <div class="logo m-login__form-action">
-                                    <button id="m_login_forget_password_submit"
-                                            class="class4 btn btn-lg  m-btn m-btn--pill m-btn--custom m-btn--air">
-                                        ارسال
-                                        پیامک
-                                    </button>
+                                    <input type="submit" id="m_login_signup" value="ارسال پیامک" name="send_sms"
+                                           class="class5 btn btn-lg m-btn m-btn--pill m-btn--custom m-btn--air  m-login__btn">
                                     <button type="submit" id="m_login_forget_password_cancel" name="verification"
                                             class="class4 btn btn-lg  m-btn m-btn--pill m-btn--custom">ورود
                                     </button>

@@ -74,8 +74,7 @@
             <nav class="site-navigation position-relative text-right" role="navigation">
 
               <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
-                <li>                    <input style="text-align: right;margin-right: 11px" type="text" class="form-control rounded" placeholder="دنبال چه نوع سالني هستيد؟">
-                </li>
+
                 <li>
                   <a href="{% url 'Main:work_request' %}">درخواست همکاري</a>
                   <!--<ul class="dropdown">-->
@@ -102,7 +101,7 @@
                     {% else %}
 
                 <li class="ml-xl-3 login"><a href="{% url 'Account:login' %}"><span class="border-left pl-xl-4"></span>ورود</a></li>
-                <li><a href="{% url 'Account:register' %}">ثبت نام</a></li>
+                <li><a href="{% url 'Account:login' %}">ثبت نام</a></li>
                 {% endif %}
               </ul>
             </nav>

@@ -1,10 +1,16 @@
 {% extends 'partial/header.html' %}
 {% load static %}
 {% block title %}
-سالن یاب
+    سالن یاب
 {% endblock %}
 {% block link %}
-{% include 'partial/index-header.html' %}
+    {% include 'partial/index-header.html' %}
+    <link rel="stylesheet"
+          href="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+          href="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/assets/owl.theme.default.min.css">
+    <script src="https://owlcarousel2.github.io/OwlCarousel2/assets/vendors/jquery.min.js"></script>
+    <script src="https://owlcarousel2.github.io/OwlCarousel2/assets/owlcarousel/owl.carousel.js"></script>
 {% endblock %}
 {% block body %}
     <div class="site-blocks-cover overlay" style="background-image: url({% static 'pictures/main.jpg' %});"
@@ -59,9 +65,9 @@
                                         <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
                                         <select class="form-control rounded" name="area" id="">
                                             <option style="text-align: right;direction: rtl" value="">منطقه</option>
-                                            {% for name,dic in area_gym.items %}
+                                            {% for area in areas %}
                                                 <option style="text-align: right;direction: rtl"
-                                                        value="{{ dic }}">{{ dic }}</option>
+                                                        value="{{ area.name }}">{{ area.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -73,9 +79,9 @@
                                         <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
                                         <select class="form-control rounded" name="city" id="">
                                             <option style="text-align: right;direction: rtl" value="">شهرها</option>
-                                            {% for name,dic in city_gym.items %}
+                                            {% for city in cities %}
                                                 <option style="text-align: right;direction: rtl"
-                                                        value="{{ dic }}">{{ dic }}</option>
+                                                        value="{{ city.name }}">{{ city.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -85,9 +91,9 @@
                                         <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
                                         <select class="form-control rounded" name="province" id="">
                                             <option style="text-align: right;direction: rtl" value="">استان ها</option>
-                                            {% for name,dic in province_gym.items %}
+                                            {% for province in provinces %}
                                                 <option style="text-align: right;direction: rtl"
-                                                        value="{{ dic }}">{{ dic }}</option>
+                                                        value="{{ province.name }}">{{ province.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -229,14 +235,24 @@
 
                         <div class="d-block d-md-flex listing">
                             <a href="{% url 'Main:gym_single' salon.slug %}" class="img d-block"
-                               style="background-image: url('{{ salon.picture.url }}')"></a>
+                               style="background-image: url('{{ salon.picture.url }}');height: 230px;width: 192.7px"></a>
                             <div class="lh-content">
                                 <span class="category">{{ salon.area_id.name }}</span>
                                 <form action="" method="post">
                                     {% csrf_token %}
                                     <input type="text" hidden value="{{ salon.id }}" name="fav">
 
-                                    <button class="bookmark" type="submit" name="favorite"><span class="{% for favorite in favorites %}{% if salon.id == favorite.gym_id.id %}icon-heart{% else %}icon-add{% endif %}{% endfor %}"></span></button>
+                                    <button class="bookmark" type="submit" name="favorite"><span class="
+
+
+
+
+
+
+
+
+                                            {% for favorite in favorites %}{% if salon.id == favorite.gym_id.id %}icon-heart{% else %}icon-add{% endif %}{% endfor %}"></span>
+                                    </button>
                                 </form>
                                 <h3 style="text-align: right"><a
                                         href="{% url 'Main:gym_single' salon.slug %}">{{ salon.name }}</a></h3>
@@ -266,76 +282,116 @@
     </div>
 
 
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-7 text-center border-primary">
+                <h2 class="font-weight-light text-primary">کلاس های آموزشی</h2>
+            </div>
 
+        </div>
 
+        {% if training_classes_count %}
+            <div class="owl-carousel">
 
+                {% for training_class in training_classes %}
 
+                    <div class="item">
+                        <a href="#">
+                            <img width="270px" height="192.85px" src="{{ training_class.picture.url }}" alt="{{ training_class.name }}"><i
+                                aria-hidden="true">
+                            <button class="btn btn-primary">{{ training_class.name }}</button>
+                        </i><i style="margin-top: 55px;" aria-hidden="true">
+                            <button class="btn btn-outline-danger">{{ training_class.coach_id.user_id.name }}</button>
+                        </i>
+                        </a>
 
-
-
-    <footer style="direction: rtl" class="site-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="row">
-                        <div style="text-align: right;float: right" class="col-md-6">
-                            <h2 class="footer-heading mb-4">درباره ما</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident rerum unde possimus
-                                molestias dolorem fuga, illo quis fugiat!</p>
-                        </div>
-
-                        <div class="col-md-3">
-                            <h2 style="text-align: right;" class="footer-heading mb-4">منو</h2>
-                            <ul class="list-unstyled">
-                                <li style="text-align: right"><a href="#">درباره ما</a></li>
-                                <li style="text-align: right"><a href="#">تماس با ما</a></li>
-                                <li style="text-align: right"><a href="#">تمامی سالن ها</a></li>
-
-                            </ul>
-                        </div>
-                        <div class="col-md-3">
-                            <h2 style="text-align: right" class="footer-heading mb-4">مارادنبال کنید</h2>
-                            <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
-                        </div>
                     </div>
-                </div>
-                <br>
-                <br>
+                {% endfor %}
 
-                <div class="col-md-3">
-                    <form action="#" method="post">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control border-secondary text-white bg-transparent"
-                                   placeholder="جستجو سالن ..." aria-label="" aria-describedby="button-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary text-white" type="button" id="button-addon2">جستجو
-                                </button>
+            </div>
+        {% endif %}
+        <br>
+        <script>$('.owl-carousel').owlCarousel({
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            loop: true,
+            margin: 50,
+            responsiveClass: true,
+            nav: true,
+            loop: true,
+            stagePadding: 100,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                568: {
+                    items: 2
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 3
+                }
+            }
+        })
+        $(document).ready(function () {
+            $('.popup-youtube').magnificPopup({
+                disableOn: 320,
+                type: 'iframe',
+                mainClass: 'mfp-fade',
+                removalDelay: 160,
+                preloader: false,
+                fixedContentPos: true
+            });
+        });
+        $('.item').magnificPopup({
+            delegate: 'a',
+        });</script>
+
+
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-7 text-center border-primary">
+                    <h2 class="font-weight-light text-primary">استخر ها</h2>
+                </div>
+
+            </div>
+            <div style="direction: rtl" class="row mt-5">
+                <div class="col-lg-6">
+                    {% for pool in pools %}
+                        <div class="d-block d-md-flex listing">
+                            <a href="listings-single.html" class="img d-block"
+                               style="background-image: url({{ pool.picture.url }})"></a>
+                            <div class="lh-content">
+                                <span class="category">مشهد</span>
+                                <a href="#" class="bookmark"><span class="icon-heart"></span></a>
+                                <h3 style="text-align: right"><a href="listings-single.html">سالن فرهیختگان</a></h3>
+                                <address style="text-align: right">مشهد خیابان فلان کوچه بهمان</address>
+                                <span style="text-align: right" class="review">(3 نظر)</span>
+
+                                <p style="text-align: right" class="mb-0">
+
+                                    <span class="icon-star text-secondary"></span>
+                                    <span class="icon-star text-warning"></span>
+                                    <span class="icon-star text-warning"></span>
+                                    <span class="icon-star text-warning"></span>
+                                    <span class="icon-star text-warning"></span>
+                                </p>
                             </div>
                         </div>
-                    </form>
+                    {% endfor %}
                 </div>
-            </div>
-            <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                    <div class="border-top pt-5">
-                        <p>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                            تمامی حقوق این سایت<i class="icon-heart" aria-hidden="true"></i> زیر نظر <a href="#"
-                                                                                                        target="_blank">سالن
-                            یاب</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
-                    </div>
-                </div>
-
             </div>
         </div>
-    </footer>
+
     </div>
+
+
+
+
+    {% include 'partial/footer.html' %}
 
     <script src="{% static 'main-css/js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'main-css/js/jquery-migrate-3.0.1.min.js' %}"></script>

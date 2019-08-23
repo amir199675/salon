@@ -137,11 +137,23 @@
                                 <th style="text-align: right">نقش</th>
                                 <th style="text-align: right">گروه</th>
 
-{% if superuser %}
-                                <th style="text-align: right">انتخاب نقش</th>
+                                {% if superuser %}
+                                    <th style="text-align: right">انتخاب نقش</th>
+                                {% else %}
+                                    {% for role in roles_user %}
+                                        {% if role.name == 'آموزش پرورش' %}
+                                            <th style="text-align: right">انتخاب نقش مربی</th>
+                                        {% elif role.name == 'مسئول منطقه' %}
+                                            <th style="text-align: right">انتخاب نقش</th>
+                                        {% endif %}
+                                    {% endfor %}
                                 {% endif %}
                                 <th style="text-align: right">انتخاب گروه</th>
-                                <th style="text-align: right">انتخاب کاربر</th>
+                                {% for role in roles_user %}
+                                    {% if role.name == 'superuser' or role.name == 'مسئول منطقه' %}
+                                        <th style="text-align: right">انتخاب کاربر</th>
+                                    {% endif %}
+                                {% endfor %}
                                 </thead>
                                 <tbody>
 
@@ -162,14 +174,17 @@
                                             <td data-title="Status">
                                                 {% for group in user.group.select_related %}{{ group }}
                                                     ،{% endfor %}</td>
-                                            {% if superuser %}
                                                 <td><input type="checkbox" name="roll" value="{{ user.id }}Amir:D">
-                                            {% endif %}
                                             </td>
                                             <td><input type="checkbox" name="groupp" value="{{ user.id }}Amir:D">
                                             </td>
-                                            <td><input type="checkbox" name="select_user" value="{{ user.id }}Amir:D">
-                                            </td>
+                                            {% for role in roles_user %}
+                                                {% if role.name == 'superuser' or role.name == 'مسئول منطقه' %}
+                                                    <td><input type="checkbox" name="select_user"
+                                                               value="{{ user.id }}Amir:D">
+                                                    </td>
+                                                {% endif %}
+                                            {% endfor %}
                                         </tr>
 
                                     {% endif %}

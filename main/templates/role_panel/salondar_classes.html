@@ -1,5 +1,6 @@
 {% extends 'role_panel/partial/dashboard_header.html' %}
 {% load static %}
+{% load main_tags %}
 {% block title %}
     پروفایل مربیان
 {% endblock %}
@@ -132,19 +133,20 @@
 
                                     <tr>
 
-                                        <td data-title="ID">{{ forloop.counter }}</td>
+                                        <td data-title="ID"><a style="color: white;text-decoration: none; " href="{% url 'Main:edit_class' training.id %}" >{{ forloop.counter }}
+                                        </a></td>
 
-                                        <td data-title="Name">{{ training.name }}</td>
+                                        <td data-title="Name"><a style="color: white;text-decoration: none; " href="{% url 'Main:edit_class' training.id %}" >{{ training.name }}</a> </td>
 
                                         <td data-title="Name">
-                                            {{ training.coach_id.user_id.phone_number }}
+                                            <a style="color: white;text-decoration: none; " href="{% url 'Main:edit_class' training.id %}" >{{ training.coach_id.user_id.phone_number }}</a>
                                         </td>
                                         <td data-title="Name">
-                                            {{ training.coach_id.user_id.national_number }}
+                                            <a style="color: white;text-decoration: none; " href="{% url 'Main:edit_class' training.id %}" >{{ training.coach_id.user_id.national_number }}</a>
                                         </td>
 
                                         <td data-title="Status">
-                                            {{ training.hour_id.open }}
+                                            <a style="color: white;text-decoration: none; " href="{% url 'Main:edit_class' training.id %}" >{{ training.hour_id.open|iran }}   ({{ training.hour_id.day|convert_weekday }})</a>
                                         </td>
                                     </tr>
 

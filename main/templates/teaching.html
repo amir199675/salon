@@ -1,13 +1,15 @@
 {% extends 'partial/header.html' %}
 {% load static %}
 {% block title %}
-کلاس ها
+    کلاس ها
 {% endblock %}
 {% block link %}
-{% include 'partial/index-header.html' %}
+    {% include 'partial/index-header.html' %}
 {% endblock %}
 {% block body %}
-    <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url({% static 'pictures/trainig.jpg' %});" data-aos="fade" data-stellar-background-ratio="0.5">
+    <div class="site-blocks-cover inner-page-cover overlay"
+         style="background-image: url({% static 'pictures/trainig.jpg' %});" data-aos="fade"
+         data-stellar-background-ratio="0.5">
         <div class="container">
             <div class="row align-items-center justify-content-center text-center">
 
@@ -35,96 +37,109 @@
 
                         {% for class in classes %}
 
-                        <div class="col-lg-6">
+                            <div class="col-lg-6">
 
-                            <div class="d-block d-md-flex listing vertical">
-                                <a href="listings-single.html" class="img d-block" style="background-image: url('images/09659990011717971060.jpg')"></a>
-                                <div class="lh-content">
-                                    <span style="text-align: right" class="category">{{ class.gym_id.area_id.city_id.name }}</span>
-                                    <a href="#" class="bookmark"><span class="icon-heart"></span></a>
-                                    <h3 style="text-align: right"><a href="#">{{ class.gym_id.name }}</a></h3>
-                                    <address style="text-align: right">{{ class.gym_id.address }}</address>
-                                    <span class="review">{% for name,dic  in counter_comments.items %}{% if name == class.gym_id.name %} {{ dic }} نظر {% endif %}{% endfor %}</span>
+                                <div class="d-block d-md-flex listing vertical">
+                                    <a href="listings-single.html" class="img d-block"
+                                       style="background-image: url('images/09659990011717971060.jpg')"></a>
+                                    <div class="lh-content">
+                                        <span style="text-align: right"
+                                              class="category">{{ class.gym_id.area_id.city_id.name }}</span>
+                                        <a href="#" class="bookmark"><span class="icon-heart"></span></a>
+                                        <h3 style="text-align: right"><a href="#">{{ class.name }}</a></h3>
+                                        <address style="text-align: right">{{ class.gym_id.address }}</address>
+                                        <span class="review">{% for name,dic  in counter_comments.items %}
+                                            {% if name == class.gym_id.name %} {{ dic }} نظر
+                                            {% endif %}{% endfor %}</span>
 
-                                    <p style="text-align: right" class="mb-0">
-                                        <span class="icon-star text-warning"></span>
-                                        <span class="icon-star text-warning"></span>
-                                        <span class="icon-star text-warning"></span>
-                                        <span class="icon-star text-warning"></span>
-                                        <span class="icon-star text-secondary"></span>
-                                    </p>
+                                        <p style="text-align: right" class="mb-0">
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-secondary"></span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </div>
+                            </div>
 
                         {% endfor %}
 
                     </div>
 
-                    <div class="col-12 mt-5 text-center">
-                        <div class="custom-pagination">
-                            <span>1</span>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <span class="more-page">...</span>
-                            <a href="#">10</a>
+                    <div class="custom-pagination">
+
+                            {% if classes.has_next %}
+                                <a href="?page={{ classes.number }}">{{ classes.number }}</a>
+                                <a href="?page={{ classes.next_page_number }}">{{ classes.next_page_number }}</a>
+
+                                <span class="more-page">...</span>
+                                <a href="?page={{ classes.paginator.num_pages }}">{{ classes.paginator.num_pages }}</a>
+                            {% endif %}
+                            {% if classes.has_previous %}
+
+                                <a href="?page={{ classes.previous_page_number }}">{{ classes.previous_page_number }}</a>
+                                <span class="more-page">...</span>
+                                <a href="?page={{ classes.paginator.num_pages }}">{{ classes.paginator.num_pages }}</a>
+                            {% endif %}
                         </div>
-                    </div>
 
                 </div>
                 <div class="col-lg-3 ml-auto">
 
                     <div class="mb-5">
                         <h3 style="text-align: right" class="h5 text-black mb-3">فیلتر</h3>
-                        <form action="#" method="post">
+
+
+                        <form action="{% url 'Main:classes_list' %}" method="get" id="select_province">
 
                             <div class="form-group">
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                                    <select  class="form-control rounded" name="" id="">
+
+                                    {% csrf_token %}
+
+                                    <select class="form-control rounded" name="province" id="">
                                         <option style="text-align: right;direction: rtl" value="">استان ها</option>
-                                        <option style="text-align: right;direction: rtl" value="">سمنان</option>
-                                        <option style="text-align: right;direction: rtl" value="">خراسان</option>
-                                        <option style="text-align: right;direction: rtl" value="">تهران</option>
-                                        <option style="text-align: right;direction: rtl" value="">گیلان</option>
-                                        <option style="text-align: right;direction: rtl" value="">مازندران</option>
+                                        {% for province in provinces %}
+                                            <option style="text-align: right;direction: rtl" name="province"
+                                                    value="{{ province.name }}">{{ province.name }}</option>
+                                        {% endfor %}
                                     </select>
+
                                 </div>
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                                    <select  class="form-control rounded" name="" id="">
+                                    <select class="form-control rounded" name="city" id="">
                                         <option style="text-align: right;direction: rtl" value="">شهرها</option>
-                                        <option style="text-align: right;direction: rtl" value="">دامغان</option>
-                                        <option style="text-align: right;direction: rtl" value="">شاهرود</option>
-                                        <option style="text-align: right;direction: rtl" value="">تهران</option>
-                                        <option style="text-align: right;direction: rtl" value="">نیشابور</option>
-                                        <option style="text-align: right;direction: rtl" value="">مشهد</option>
+                                        {% for city in cities %}
+                                            <option style="text-align: right;direction: rtl"
+                                                    value="{{ city.name }}">{{ city.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                                    <select  class="form-control rounded" name="" id="">
+                                    <select class="form-control rounded" name="area" id="">
                                         <option style="text-align: right;direction: rtl" value="">منطقه</option>
-                                        <option style="text-align: right;direction: rtl" value="">۱</option>
-                                        <option style="text-align: right;direction: rtl" value="">۲</option>
-                                        <option style="text-align: right;direction: rtl" value="">۳</option>
-                                        <option style="text-align: right;direction: rtl" value="">۴</option>
+                                        {% for area in areas %}
+                                            <option style="text-align: right;direction: rtl"
+                                                    value="{{ area.name }}">{{ area.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                                    <select class="form-control rounded" name="" id="">
+                                    <select class="form-control rounded" name="category" id="">
                                         <option value="">همه دسته ها</option>
-                                        <option value="">سالن ورزش</option>
-                                        <option value="">زمین تنیس</option>
-                                        <option value="">پینت بال</option>
-                                        <option value="">زمین چمن</option>
-                                        <option value="">بدمینتون</option>
+                                        {% for category in categories %}
+                                            <option value="{{ category.category_id.name }}">{{ category.category_id.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <style>
-                                    .select-wrap, .wrap-icon{
+                                    .select-wrap, .wrap-icon {
                                         margin-top: 10px;
                                     }
                                 </style>
@@ -136,16 +151,22 @@
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
                                     <select class="form-control rounded" name="" id="">
-                                        <option selected disabled  value="">انتخاب مربی</option>
-                                        <option value="">امین علی نژاد</option>
-                                        <option value="">امیر درخشان فر</option>
-                                        <option value="">حسین عسگری</option>
-                                        <option value="">محمد قادری</option>
-                                        <option value="">بهنام صیدآبای</option>
+                                        <option selected disabled value="">انتخاب مربی</option>
+                                        {% for teacher in teachers %}
+                                        <option value="">{{ teacher.coach_id.user_id.name }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
+                            <div class="row align-items-center">
+                                <div class="col-lg-12 ml-auto text-right">
+                                    <input type="submit" value="جستجو کنید" name="search_gym"
+                                           class="btn btn-primary btn-block rounded">
+                                </div>
+                            </div>
                         </form>
+
+
                     </div>
 
 
@@ -197,81 +218,24 @@
 
 
 
+    {% include 'partial/footer.html' %}
+    </div>
 
-    <footer style="direction: rtl" class="site-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="row">
-                        <div style="text-align: right;float: right" class="col-md-6">
-                            <h2 class="footer-heading mb-4">درباره ما</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident rerum unde possimus molestias dolorem fuga, illo quis fugiat!</p>
-                        </div>
+    <script src="{% static 'main-css/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery-migrate-3.0.1.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery-ui.js' %}"></script>
+    <script src="{% static 'main-css/js/popper.min.js' %}"></script>
+    <script src="{% static 'main-css/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'main-css/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery.stellar.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'main-css/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'main-css/js/aos.js' %}"></script>
+    <script src="{% static 'main-css/js/rangeslider.min.js' %}"></script>
 
-                        <div class="col-md-3">
-                            <h2 style="text-align: right;" class="footer-heading mb-4">منو</h2>
-                            <ul class="list-unstyled">
-                                <li style="text-align: right"><a href="index.html">صفحه اصلی</a></li>
-                                <li style="text-align: right"><a href="listings.html">تمامی سالن ها</a></li>
-                                <li style="text-align: right"><a href="teaching.html">کلاس های آموزشی</a></li>
-                                <li style="text-align: right"><a href="worker.html">درخواست همکاری</a></li>
+    <script src="{% static 'main-css/js/main.js' %}"></script>
 
-                            </ul>
-                        </div>
-                        <div class="col-md-3">
-                            <h2 style="text-align: right" class="footer-heading mb-4">مارادنبال کنید</h2>
-                            <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                            <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-
-                <div class="col-md-3">
-                    <form action="#" method="post">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="جستجو سالن ..." aria-label="" aria-describedby="button-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary text-white" type="button" id="button-addon2">جستجو</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                    <div class="border-top pt-5">
-                        <p>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> تمامی حقوق این سایت<i class="icon-heart" aria-hidden="true"></i> زیر نظر <a href="#" target="_blank" >سالن یاب</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </footer>
-</div>
-
-<script src="{% static 'main-css/js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery-migrate-3.0.1.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery-ui.js' %}"></script>
-<script src="{% static 'main-css/js/popper.min.js' %}"></script>
-<script src="{% static 'main-css/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'main-css/js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery.stellar.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery.countdown.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery.magnific-popup.min.js' %}"></script>
-<script src="{% static 'main-css/js/bootstrap-datepicker.min.js' %}"></script>
-<script src="{% static 'main-css/js/aos.js' %}"></script>
-<script src="{% static 'main-css/js/rangeslider.min.js' %}"></script>
-
-<script src="{% static 'main-css/js/main.js' %}"></script>
-
-</body>
-</html>
+    </body>
+    </html>
 {% endblock %}

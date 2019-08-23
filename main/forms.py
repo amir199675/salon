@@ -8,8 +8,8 @@ class TicketForm(forms.ModelForm):
 
     email = forms.EmailField(widget=forms.EmailInput(attrs={'style': 'text-align: right', 'id': 'email', 'class': 'form-control','name':'email' }))
 
-    title = forms.CharField(widget=forms.TextInput(
-        attrs={'style': 'text-align: right', 'id': 'subject', 'class': 'form-control', 'name': 'title'}))
+    # title = forms.CharField(widget=forms.TextInput(
+    #     attrs={'style': 'text-align: right', 'id': 'subject', 'class': 'form-control', 'name': 'title'}))
 
     text = forms.CharField(widget=forms.Textarea(
         attrs={'style': 'text-align: right', 'id': 'message', 'class': 'form-control',
@@ -17,7 +17,7 @@ class TicketForm(forms.ModelForm):
 
     class Meta:
         model = Ticket
-        fields = ('name','family_name','email','title','text')
+        fields = ('name','family_name','email','text')
 
 # class CoachProfileForm(forms.ModelForm):
 #

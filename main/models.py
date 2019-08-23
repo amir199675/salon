@@ -1,8 +1,8 @@
 from django.db import models
 from Account.models import MyUser
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save , m2m_changed , post_delete
 from django.dispatch import receiver
-from datetime import datetime
+from datetime import datetime , timedelta
 
 
 
@@ -52,6 +52,18 @@ class Category(models.Model):
         return self.name
 
 
+
+class Facility(models.Model):
+    id = models.AutoField(primary_key=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+
 class Gym(models.Model):
     STATUS_CHOICE = (
         ('Active', 'active'),
@@ -73,21 +85,27 @@ class Gym(models.Model):
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
     address = models.TextField()
     picture = models.ImageField(upload_to='gym_pictures/')
-    latitude = models.TextField()
-    longitude = models.TextField()
+    latitude = models.TextField(null=True,blank=True)
+    longitude = models.TextField(null=True,blank=True)
     slug = models.CharField(max_length=255, unique=True)
     status = models.CharField(choices=STATUS_CHOICE, default='Inactive', max_length=255)
-    score = models.FloatField()
-    phone = models.CharField(max_length=11)
-    mobile = models.CharField(max_length=11)
+    score = models.FloatField(null=True,blank=True)
+    phone = models.CharField(max_length=11,null=True,blank=True)
+    mobile = models.CharField(max_length=11,null=True,blank=True)
     description = models.TextField()
-    sex = models.CharField(choices=SEX_CHOICE, default='مرد', max_length=32)
-    famous = models.CharField(max_length=32, choices=FAMOUS_CHOICE, default='None')
+    sex = models.CharField(choices=SEX_CHOICE, default='مرد', max_length=32,null=True,blank=True)
+    famous = models.CharField(max_length=32, choices=FAMOUS_CHOICE, default='None',null=True,blank=True)
     category_id = models.ManyToManyField(Category,related_name='categories',blank=True,null=True)
     user_id = models.ForeignKey(MyUser,on_delete=models.CASCADE,null=True,blank=True)
+    facility_id = models.ManyToManyField(Facility,related_name='facilities',blank=True,null=True)
+
 
     def __str__(self):
         return self.name + ' ' + self.address
+
+    def save(self, *args, **kwargs):
+        self.slug = self.name.replace(' ', '_')
+        super(Gym, self).save(*args, **kwargs)
 
 
 class Slid(models.Model):
@@ -109,16 +127,6 @@ class Gym_Category(models.Model):
 
     def __str__(self):
         return self.gym_id.name + ' ' + self.category_id.name
-
-
-class Facility(models.Model):
-    id = models.AutoField(primary_key=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 
 class Hour(models.Model):
@@ -289,6 +297,7 @@ class Ticket(models.Model):
     status = models.TextField(null=True, blank=True)
     email = models.EmailField()
 
+from PIL import Image
 
 
 class Coach_Profile(models.Model):
@@ -302,24 +311,45 @@ class Coach_Profile(models.Model):
     def __str__(self):
         return self.user_id.name + ' ' + self.job
 
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     img = Image.open(self.picture.path)
+    #     output_size = (500, 500)
+    #     img.thumbnail(output_size)
+    #     img.save(self.picture.path)
 
 class Training_Class(models.Model):
+    SEX_CHOICE = (
+        ('مرد', 'man'),
+        ('زن', 'woman')
+    )
     id = models.AutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255)
+    text = models.TextField()
     date_start = models.DateTimeField()
     date_expire = models.DateTimeField()
+    picture = models.ImageField(upload_to='training-class-pic/')
     coach_id = models.ForeignKey(Coach_Profile, on_delete=models.CASCADE,related_name='training_class')
     gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    category_id = models.ForeignKey(Category,on_delete=models.CASCADE,null=True,blank=True)
     number_of_session = models.IntegerField()
     price = models.TextField()
     hour_id = models.ForeignKey(Hour, on_delete=models.CASCADE)
     slug = models.CharField(max_length=64, null=True, blank=True)
     user_id = models.ManyToManyField(MyUser,related_name='students',null=True,blank=True)
+    sex = models.CharField(choices=SEX_CHOICE,default='مرد',max_length=32)
+
+
 
     def __str__(self):
         return self.name + ' ' + self.coach_id.user_id.name
+
+    def save(self, *args, **kwargs):
+        self.slug = self.name.replace(' ', '_')
+        super(Training_Class, self).save(*args, **kwargs)
+
 
 
 class Training_Class_MyUser(models.Model):
@@ -342,15 +372,123 @@ class Training_Class_MyUser(models.Model):
 @receiver(post_save, sender=Training_Class)
 def add_order(sender,instance,created, **kwargs):
     if created:
-        Order.objects.create(myuser_id=instance.coach_id.user_id,status='Reserved',description='Reserved',order_date=datetime.date(instance.date_start),gym_id=instance.gym_id,hour_id=instance.hour_id,total_price='100',paid_money='100')
+        start_date = datetime.date(instance.date_start)
+        end_date = datetime.date(instance.date_expire)
+        day = instance.hour_id.day
+        if day == 'doshanbe':
+            numday =  0
+        elif day == 'seshanbe':
+            numday = 1
+        elif day == 'charshanbe':
+            numday = 2
+        elif day == 'panjshanbe' :
+            numday= 3
+        elif day == 'jome':
+            numday = 4
+        elif day == 'shanbe':
+            numday = 5
+        elif day == 'yeshanbe':
+            numday == 6
+
+        amir = True
+        while(amir):
+            if start_date <= end_date :
+                start_date = start_date + timedelta(days=1)
+
+                if start_date.weekday() == numday:
+
+                    Order.objects.create(myuser_id=instance.coach_id.user_id,status='Reserved',description='Training class',order_date=start_date,gym_id=instance.gym_id,hour_id=instance.hour_id,total_price=instance.price,paid_money=instance.price)
+            else:
+                amir = False
+
 
 @receiver(post_save,sender=Gym)
 def add_group(sender,instance,created,**kwargs):
     if created:
-        user = instance.user_id
-        user_role = Role.objects.get(user_id=user)
+        user = None
+        User_role = None
+        try:
+            user = instance.user_id
+            user_role = Role.objects.get(user_id=user)
+            if user_role.name == 'آموزش پرورش':
+                add_to = Group.objects.get(name='آموزش پرورش')
+                add_to.gym_id.add(instance)
+                add_to.save()
+        except:
+            pass
+#
+@receiver(m2m_changed,sender = Role.user_id.through)
+def create_profile(sender,instance,action,reverse,pk_set,**kwargs):
 
-        if user_role.name == 'آموزش پرورش':
-            add_to = Group.objects.get(name = 'آموزش پرورش')
-            add_to.gym_id.add(instance)
-            add_to.save()
+    if action == "post_add":
+        user = pk_set
+        role = Role.objects.get(name='مربی')
+        try:
+            for use in user:
+                m = MyUser.objects.get(pk=use)
+                profile = Coach_Profile.objects.get(user_id=MyUser.objects.get(pk = use))
+
+        except:
+            for use in user:
+                m = MyUser.objects.get(pk=use)
+                profile = Coach_Profile.objects.create(user_id=MyUser.objects.get(pk=use))
+
+    if action == "post_remove":
+
+        user = pk_set
+
+        try:
+            for use in user:
+                profile = Coach_Profile.objects.filter(user_id__pk=use)
+                profile.delete()
+        except:
+            pass
+
+@receiver(m2m_changed,sender = Role.user_id.through)
+def add_to_gp(sender,instance,action,reverse,pk_set,**kwargs):
+
+    if action == "post_add":
+        user = pk_set
+        role = Role.objects.get(name='آموزش پرورش')
+        try:
+            for use in user:
+                m = MyUser.objects.get(pk=use)
+                group = Group.objects.get(user_id=MyUser.objects.get(pk = use))
+
+        except:
+            for use in user:
+                m = MyUser.objects.get(pk=use)
+                group = Group.objects.get(name = 'آموزش پرورش')
+                group.user_id.add(use)
+
+    if action == "post_remove":
+
+        user = pk_set
+
+        try:
+            for use in user:
+                group = Group.objects.get(user_id__pk=use,name = 'آموزش پرورش')
+                group.user_id.remove(use)
+                group.save()
+        except:
+            pass
+
+# def toppings_changed(sender,**kwargs):
+#     print('aaaaaaaaaaaaaaaaaaaa')
+#
+# m2m_changed.connect(toppings_changed, sender=Role.user_id)
+# def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
+#     print('sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
+#     # print(action)
+#     # print(instance.products.all())
+#     # print(instance.total)
+#     #if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
+#     products = instance.products.all()
+#     total = 0
+#     for x in products:
+#         total += x.price
+#     if instance.subtotal != total:
+#         instance.subtotal = total
+#         instance.save()
+#     print(total)
+# m2m_changed.connect(m2m_changed_cart_receiver, sender=Role.user_id.through)
