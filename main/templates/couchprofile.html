@@ -1,4 +1,4 @@
-{% extends 'partial/dashboard_header.html' %}
+{% extends 'role_panel/partial/dashboard_header.html' %}
 {% load static %}
 {% block title %}
     تصحیح پروفایل مربی
@@ -51,31 +51,24 @@
                                         <span class="m-nav__section-text">Section</span>
                                     </li>
                                     <li class="m-nav__item">
-                                        <a href="index.html" class="m-nav__link">
+                                        <a href="{% url 'Main:students' %}" class="m-nav__link">
                                             <i class="m-nav__link-icon flaticon-profile-1"></i>
                                             <span class="m-nav__link-title">
 								<span class="m-nav__link-wrap">      
 									<span class="m-nav__link-text">لیست شاگردان</span>
-									<span class="m-nav__link-badge"><span
-                                            class="m-badge m-badge--success">2</span></span>
-								</span>
+
 							</span>
                                         </a>
                                     </li>
+
                                     <li class="m-nav__item">
-                                        <a href="couchprofile.html" class="m-nav__link">
-                                            <i class="m-nav__link-icon flaticon-share"></i>
-                                            <span class="m-nav__link-text">پروفایل من</span>
-                                        </a>
-                                    </li>
-                                    <li class="m-nav__item">
-                                        <a href="new_project.html" class="m-nav__link">
+                                        <a href="{% url 'Main:select_gym_add_class'   %}" class="m-nav__link">
                                             <i class="m-nav__link-icon flaticon-chat-1"></i>
                                             <span class="m-nav__link-text">اضافه کردن کلاس</span>
                                         </a>
                                     </li>
                                     <li class="m-nav__item">
-                                        <a href="index.html" class="m-nav__link">
+                                        <a href="{% url 'Main:dashboard' %}" class="m-nav__link">
                                             <i class="m-nav__link-icon flaticon-graphic-2"></i>
                                             <span class="m-nav__link-text">داشبورد</span>
                                         </a>

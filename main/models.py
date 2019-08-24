@@ -158,13 +158,16 @@ class Hour(models.Model):
     id = models.AutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,null=True,blank=True)
     day = models.CharField(max_length=255, choices=STATUS_DAY, default='simple')
     open = models.TimeField()
     close = models.TimeField()
     price = models.TextField(default='')
     gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
     sans = models.CharField(max_length=32, null=True, blank=True, choices=STATUS_SANS)
+
+    class Meta:
+        unique_together = ('open','day',)
 
     def __str__(self):
         return str(self.open)+' '+self.day+' '+self.gym_id.name
@@ -393,13 +396,14 @@ def add_order(sender,instance,created, **kwargs):
         amir = True
         while(amir):
             if start_date <= end_date :
-                start_date = start_date + timedelta(days=1)
 
                 if start_date.weekday() == numday:
 
                     Order.objects.create(myuser_id=instance.coach_id.user_id,status='Reserved',description='Training class',order_date=start_date,gym_id=instance.gym_id,hour_id=instance.hour_id,total_price=instance.price,paid_money=instance.price)
             else:
                 amir = False
+
+            start_date = start_date + timedelta(days=1)
 
 
 @receiver(post_save,sender=Gym)

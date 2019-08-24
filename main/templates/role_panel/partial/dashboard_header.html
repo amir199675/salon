@@ -373,6 +373,12 @@
                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                 </a>
                                             </li>
+                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:select_gym_add_hour' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     {% elif role_user.name == 'سالن دار' %}
                                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
@@ -444,6 +450,12 @@
                                                 <a href="{% url 'Main:add_gym' %}" class="m-menu__link ">
                                                     <span class="m-menu__item-here"></span>
                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
+                                                </a>
+                                            </li>
+                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:select_gym_add_hour' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
                                                 </a>
                                             </li>
                                         </ul>

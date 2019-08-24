@@ -43,12 +43,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <meta name="viewport" content="initial-scale=1, width=device-width"/>
     <meta charset="utf-8"/>
 
-    <title>{% if edit %}
-        ویرایش کلاس
-    {% else %}
-        ثبت کلاس جدید
-    {% endif %}
-    </title>
+    <title>create a project</title>
     <meta name="description" content="Blank inner page examples">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
 
@@ -84,6 +79,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <link rel="shortcut icon"
           href="{% static 'dashboard-css/default/crud/wizard/assets/demo/demo12/media/img/logo/favicon.ico' %}"/>
+
 </head>
 <!-- end::Head -->
 
@@ -479,12 +475,14 @@ License: You must have a valid license purchased only from themeforest(the above
                                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                                 </a>
                                                             </li>
-                                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
-                                                <a href="{% url 'Main:select_gym_add_hour' %}" class="m-menu__link ">
-                                                    <span class="m-menu__item-here"></span>
-                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
-                                                </a>
-                                            </li>
+                                                            <li class="m-menu__item  m-menu__item "
+                                                                aria-haspopup="true">
+                                                                <a href="{% url 'Main:select_gym_add_hour' %}"
+                                                                   class="m-menu__link ">
+                                                                    <span class="m-menu__item-here"></span>
+                                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
+                                                                </a>
+                                                            </li>
                                                         </ul>
                                                     {% elif role_user.name == 'مربی' %}
                                                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
@@ -514,7 +512,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             </li>
                                                             <li class="m-menu__item  m-menu__item "
                                                                 aria-haspopup="true">
-                                                                <a href="{% url 'Main:add_class' %}"
+                                                                <a href="{% url 'Main:add_city' %}"
                                                                    class="m-menu__link ">
                                                                     <span class="m-menu__item-here"></span>
                                                                     <span class="m-menu__link-text">ساخت کلاس جدید</span>
@@ -595,7 +593,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- END: Subheader -->
         <div style="margin-top: 90px;" class="m-content">
             <div style="margin-top: 30px;" class="row">
-                <div class="col-xl-9">
+                <div class="col-xl-12">
 
                     <!--Begin::Main Portlet-->
                     <div class="m-portlet">
@@ -652,23 +650,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <div class="m-wizard__steps">
                                         <div class="m-wizard__step m-wizard__step--current"
                                              m-wizard-target="m_wizard_form_step_1">
-                                            <div class="m-wizard__step-info">
-                                                <a href="#" class="m-wizard__step-number">
-																<span>
-																	<span>کلاس</span>
-																</span>
-                                                </a>
-                                                <div class="m-wizard__step-line">
-                                                    <span></span>
-                                                </div>
-                                                <div class="m-wizard__step-label">
-                                                    {% if edit %}
-                                                        ویرایش کلاس
-                                                    {% else %}
-                                                        ثبت کلاس جدید
-                                                    {% endif %}
-                                                </div>
-                                            </div>
+
                                         </div>
 
 
@@ -688,9 +670,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <!--
             1) Use m-form--label-align-left class to alight the form input lables to the right
             2) Use m-form--state class to highlight input control borders on form validation
-        -->                     {% if error %}<div class="alert-danger"> {{ message }}</div>{% endif %}
-                                <br>
-                                <br>
+        -->
                                 <form action="" method="post" style="margin-top: -120px"
                                       class="m-form m-form--label-align-left- m-form--state-"
                                       enctype="multipart/form-data">
@@ -706,217 +686,340 @@ License: You must have a valid license purchased only from themeforest(the above
                                                     <div class="m-form__section m-form__section--first">
                                                         <div class="m-form__heading">
                                                         </div>
+
                                                         <div class="form-group m-form__group row">
-                                                            <label class="col-xl-12 col-lg-6 col-form-label">
-                                                                اسم کلاس را وارد کنید.
-                                                                <span style="color: red;font-size: 22px">*</span>
-                                                            </label>
-                                                            <div class="col-xl-12 col-lg-12">
-                                                                <input style="padding: 20px;border-radius: 10px"
-                                                                       type="text" name="name"
-                                                                       class="form-control m-input"
-                                                                       placeholder="اسم کلاس" value="{% if edit %}{{ select_training.name }}{% endif %}">
 
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <label class="col-xl-12 col-lg-6 col-form-label">
-                                                                مربی مربوطه را انتخاب کنید
-                                                                <span style="color: red;font-size: 22px">*</span>
-                                                            </label>
-                                                            <div class="col-xl-9 col-lg-9">
-                                                                <select style="border-radius: 10px" name="coach_id"
-                                                                        class="form-control m-input">
-                                                                    <option selected value="{% if edit %}{{ select_training.coach_id.id }}{% endif %}">
-                                                                        {% if edit %}
-                                                                            {{ select_training.coach_id.user_id.name }}
-                                                                        {% else %}
-                                                                            مربی مربوطه
-                                                                        {% endif %}
-                                                                    </option>
-                                                                    {% for coach in coaches %}
-                                                                        <option selected
-                                                                                value="{{ coach.id }}">{{ coach.user_id.name }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <label class="col-xl-12 col-lg-6 col-form-label">
-                                                                سانس مربوطه را انتخاب کنید
-                                                                <span style="color: red;font-size: 22px">*</span>
-                                                            </label>
-                                                            <div class="col-xl-9 col-lg-9">
-                                                                <select style="border-radius: 10px" name="hour_id"
-                                                                        class="form-control m-input">
-
-                                                                    <option selected value="{% if edit %}{{ select_training.hour_id.id}}{% endif %}">
-                                                                        {% if edit %}
-                                                                            {{ select_training.hour_id.day }}
-                                                                        {% else %}
-                                                                            سانس مربوطه
-                                                                        {% endif %}
-                                                                    </option>
-                                                                    {% for hour in hours %}
-                                                                        <option value="{{ hour.id }}">{{ hour.day }}
-                                                                            ({{ hour.open|iran }}
-                                                                            تا {{ hour.close|iran }})
-                                                                        </option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <label class="col-xl-12 col-lg-6 col-form-label">تعداد جلسات
-                                                                را وارد کنید
-                                                                <span style="color: red;font-size: 22px">*</span>
-                                                            </label>
-                                                            <div class="col-xl-12 col-lg-12">
-                                                                <input style="padding: 20px;border-radius: 10px"
-                                                                       type="number" name="number_of_session"
-                                                                       class="form-control m-input" placeholder=""
-                                                                       value="{% if edit %}{{ select_training.number_of_session }}{% endif %}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <label class="col-xl-12 col-lg-6 col-form-label">قیمت مورد
-                                                                نظر را وارد کنید
-                                                                <span style="color: red;font-size: 22px">*</span>
-                                                            </label>
-                                                            <div class="col-xl-12 col-lg-12">
-                                                                <input style="padding: 20px;border-radius: 10px"
-                                                                       type="number" name="price"
-                                                                       class="form-control m-input"
-                                                                       value="{% if edit %}{{ select_training.price }}{% endif %}">
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <div class="m-separator m-separator--dashed m-separator--lg"></div>
-
-
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <lable>تاریخ شروع کلاس:</lable>
-                                                            <input class="form-control" type="date" value="{% if edit %}{{ start }}{% endif %}" placeholder=""
-                                                                   name="start_date">
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <lable>تاریخ پایان کلاس:</lable>
-                                                            <input placeholder="تاریخ پایان کلاس" class="form-control"
-                                                                   type="date" value="{% if edit %}{{ end }}{% endif %}" name="end_date">
-                                                        </div>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div style="margin-top: 40px" class="contain animated bounce">
-
-                                                            <div class="alert"></div>
-                                                            <div id="img_contain"><img id="blah" align="middle"
-                                                                                       src="{% if edit %}{{ select_training.picture.url }}{% endif %}"
-                                                                                       alt="your image" title=""></div>
-                                                            <div class="input-group">
-                                                                <div class="custom-file">
-                                                                    <input type="file" id="inputGroupFile01" value="{% if edit %}{{ select_training.picture.url }}{% endif %}" class="imgInp custom-file-input" name="picture">
-                                                                    <label class="custom-file-label"
-                                                                           for="inputGroupFile01">انتخاب
-                                                                        فایل</label>
+                                                            <div class="row">
+                                                                <div class="col-3">
+                                                                    <lable>زمان شروع</lable>
+                                                                    <input class="form-control" type="time"
+                                                                           style="direction: rtl"
+                                                                           value=""
+                                                                           placeholder=""
+                                                                           name="open">
                                                                 </div>
-                                                            </div>
+                                                                <div class="col-3">
+                                                                    <lable>زمان پایان</lable>
+                                                                    <input placeholder="تاریخ پایان کلاس"
+                                                                           class="form-control"
+                                                                           type="time"
+                                                                           value=""
+                                                                           name="close">
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <lable>قیمت</lable>
+                                                                    <input class="form-control" type="text"
+                                                                           style="direction: rtl"
+                                                                           value=""
+                                                                           placeholder=""
+                                                                           name="price">
+                                                                </div>
 
 
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group m-form__group row">
-                                                        <label class="col-xl-12 col-lg-6 col-form-label">دسته بندی ورزشی
-                                                            خود را وارد کنید
-                                                            <span style="color: red;font-size: 22px">*</span> </label>
-                                                        <div class="col-xl-9 col-lg-9">
-                                                            <select style="border-radius: 10px" name="category_id"
-                                                                    class="form-control m-input">
-                                                                <option selected value="{% if edit %}{{ select_training.category_id.id }}{% endif %}">{% if edit %}{{ select_training.category_id.name }}{% else %}
-                                                                    دسته مورد نظر را انتخاب کنید
+                                                                <div class="col-3">
+                                                                    <lable>روز</lable>
+                                                                    <select style="border-radius: 10px"
+                                                                            name="day"
+                                                                            class="form-control">
+
+                                                                        <option selected value="">روز مربوطه
+                                                                        </option>
+
+                                                                        <option value="shanbe">شنبه
+                                                                        </option>
+
+                                                                        <option value="yeshanbe">یکشنبه
+                                                                        </option>
+
+                                                                        <option value="doshanbe">دوشنبه
+                                                                        </option>
+
+                                                                        <option value="seshanbe">سه شنبه
+                                                                        </option>
+
+                                                                        <option value="charshanbe">چهار شنبه
+                                                                        </option>
+
+                                                                        <option value="panjshanbe">پنج شنبه
+                                                                        </option>
+
+                                                                        <option value="jome">جمعه
+                                                                        </option>
+
+                                                                    </select>
+                                                                </div>
+
+                                                                <!--begin: Form Actions -->
+                                                                {% if error %}
+                                                                    <div class="alert-danger">{{ message }}</div>
                                                                 {% endif %}
-                                                                </option>
-                                                                {% for category in categories %}
-                                                                    <option value="{{ category.id }}">{{ category.name }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                                <div class="m-portlet__foot m-portlet__foot--fit m--margin-top-40">
+                                                                    <div class="m-form__actions m-form__actions">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6 m--align-right">
 
-                                                    <div class="form-group m-form__group row">
-                                                        <label class="col-xl-12 col-lg-6 col-form-label">توضیحات سالن
-                                                            <span style="color: red;font-size: 22px">*</span> </label>
-                                                        <div class="col-xl-12 col-lg-12">
-                                                            <textarea placeholder="توضیحات سالن را با دقت وارد نمایید"
-                                                                      class="form-control"
-                                                                      name="text">{% if edit %}{{ select_training.text }}{% endif %}</textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group m-form__group row">
-                                                        <label class="col-xl-12 col-lg-6 col-form-label">جنسیت را انتخاب
-                                                            کنید
-                                                            <span style="color: red;font-size: 22px">*</span> </label>
-                                                        <div class="col-xl-12 col-lg-12">
-                                                            <div class="radio">
-                                                                <label><input style="position: absolute;right: -25px"
-                                                                              type="radio" name="sex">زن</label>
-                                                            </div>
-                                                            <div class="radio">
-                                                                <label><input checked style="position: absolute;right: -25px"
-                                                                              type="radio" name="sex">مرد</label>
-                                                            </div>
-                                                            <div class="radio">
-                                                                <label><input style="position: absolute;right: -25px"
-                                                                              type="radio" name="sex">مختلط</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                                                <input type="submit" value="اضافه یا تغییر"
+                                                                                       style="width: 100%;text-align: center;padding: 20px;display: block"
+                                                                                       class="btn btn-success m-btn m-btn--custom m-btn--icon"
+                                                                                       name="save_form">
+
+                                                                            </div>
+                                                                            <div  class="col-lg-6 m--align-right">
+                                                                                <input type="submit" value="پاک کردن"
+                                                                                       style="width: 100%;text-align: center;padding: 20px;display: block"
+                                                                                       class="btn btn-success m-btn m-btn--custom m-btn--icon"
+                                                                                       name="delete_form">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
 
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <style>
-                                            .select2-container {
-                                                width: 100% !important;
-                                            }
-
-                                            .m-form .m-form__group {
-                                                margin-top: 40px;
-                                            }
-
-                                        </style>
-
-
-                                    </div>
-
-                                    <!--end: Form Body -->
-
-                                    <!--begin: Form Actions -->
-                                    <div class="m-portlet__foot m-portlet__foot--fit m--margin-top-40">
-                                        <div class="m-form__actions m-form__actions">
-                                            <div class="row">
-                                                <div class="col-lg-12 m--align-right">
-
-                                                    <input type="submit" value="ثبت کلاس"
-                                                           style="width: 100%;text-align: center;padding: 20px;display: block"
-                                                           class="btn btn-warning m-btn m-btn--custom m-btn--icon"
-                                                           name="save_form">
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <!--end: Form Actions -->
+                                                                <!--end: Form Actions -->
                                 </form>
+                                <br>
+                                <div style="width: 92%;margin-right: 50px;margin-top: 50px" class="reserveTable ">
+                                    <div class="reservePage active" data-week="0">
+                                        <div class="row headRow">
+                                            <div class="col headCol"></div>
+                                            {% for day,dic in day_of_week.items %}
+                                                {% if day == 'shanbe' %}
+                                                    <div class="col" data-day="1"> شنبه</div>{% endif %}
+                                                {% if day == 'yeshanbe' %}
+                                                    <div class="col" data-day="2"> یکشنبه</div>{% endif %}
+                                                {% if day == 'doshanbe' %}
+                                                    <div class="col" data-day="3"> دوشنبه</div>{% endif %}
+                                                {% if day == 'seshanbe' %}
+                                                    <div class="col" data-day="4"> سه شنبه</div>{% endif %}
+                                                {% if day == 'charshanbe' %}
+                                                    <div class="col" data-day="5"> چهارشنبه</div>{% endif %}
+                                                {% if day == 'panjshanbe' %}
+                                                    <div class="col" data-day="6"> پنج شنبه</div>{% endif %}
+                                                {% if day == 'jome' %}
+                                                    <div class="col" data-day="7"> جمعه</div>{% endif %}
+                                            {% endfor %}
+                                            <div class="clear"></div>
+                                        </div>
+
+                                        {% for x in hours_open %}
+
+                                            <div class="row" style="border:dashed">
+                                                <div class="col headCol">{{ x.open|iran }} تا {{ x.close|iran }}</div>
+                                                {% for day , date in day_of_week.items %}
+                                                    {% if day == 'shanbe' %}
+
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'shanbe' %}
+                                                                {% for key ,value in shanbe.items %}
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'shanbe' and hour.open == x.open or key == x.id and hour.day == 'shanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                                        <div class="col">
+
+
+                                                                            <div style=""
+                                                                                 class="col">{{ hour.price }}</div>
+
+
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in shanbe_t.items %}
+                                                            {% for ke ,val in shanbe.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate">خالی
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    {% endif %}
+
+                                                    {% if day == 'yeshanbe' %}
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'yeshanbe' %}
+                                                                {% for key ,value in yeshanbe.items %}
+
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'yeshanbe' and hour.open == x.open or key == x.id and hour.day == 'yeshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                                        <div class="col">
+
+                                                                            <div class="col">{{ hour.price }}
+
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in yeshanbe_t.items %}
+                                                            {% for ke ,val in yeshanbe.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate">خالی</div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    {% endif %}
+
+
+                                                    {% if day == 'doshanbe' %}
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'doshanbe' %}
+                                                                {% for key ,value in doshanbe.items %}
+
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'doshanbe' and hour.open == x.open or key == x.id and hour.day == 'doshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                                        <div class="col">
+
+
+                                                                            <div class="col">{{ hour.price }}
+                                                                            </div>
+
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in doshanbe_t.items %}
+                                                            {% for ke ,val in doshanbe.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate">خالی
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
+                                                    {% if day == 'seshanbe' %}
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'seshanbe' %}
+                                                                {% for key ,value in seshanbe.items %}
+
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'seshanbe' and hour.open == x.open or key == x.id and hour.day == 'seshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                                        <div class="col">
+
+                                                                            <div class="col">{{ hour.price }}</div>
+
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in seshanbe_t.items %}
+                                                            {% for ke ,val in seshanbe.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate" data-dayid="22"
+                                                                         data-timeid="38"
+                                                                         data-price="65000"
+                                                                         data-time="38"
+                                                                         data-day="1" data-start="3" data-end="9"
+                                                                         data-date="1398/2/14">خالی
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
+
+                                                    {% if day == 'charshanbe' %}
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'charshanbe' %}
+                                                                {% for key ,value in charshanbe.items %}
+
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'charshanbe' and hour.open == x.open or key == x.id and hour.day == 'charshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                                        <div class="col">
+
+                                                                            <div class="col">{{ hour.price }}
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in charshanbe_t.items %}
+                                                            {% for ke ,val in charshanbe.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate">خالی
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
+
+                                                    {% if day == 'panjshanbe' %}
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'panjshanbe' %}
+                                                                {% for key ,value in panjshanbe.items %}
+
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'panjshanbe' and hour.open == x.open or key == x.id and hour.day == 'panjshanbe' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+                                                                        <div class="col">
+
+                                                                            <div class="col">{{ hour.price }}</div>
+
+                                                                        </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in panjshanbe_t.items %}
+                                                            {% for ke ,val in panjshanbe.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate">خالی</div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
+
+                                                    {% if day == 'jome' %}
+
+                                                        {% for hour in hours %}
+                                                            {% if hour.day == 'jome' %}
+                                                                {% for key ,value in jome.items %}
+
+                                                                    {% if key == x.id and value == True and date|todate > now|todate and hour.day == 'jome' and hour.open == x.open or key == x.id and hour.day == 'jome' and value == True and date|todate == now|todate and hour.open > now|totime and hour.open == x.open %}
+
+                                                                        <div class="col">{{ hour.price }}</div>
+
+
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for key , value in jome_t.items %}
+                                                            {% for ke ,val in jome.items %}
+                                                                {% if ke == x.id and val == True and key == x.id and value == True %}
+                                                                    <div class="col late pastDate">خالی</div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
+
+                                                {% endfor %}
+
+                                                <div class="clear"></div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+
+                                </div>
+
+                                <!--end: Form Body -->
 
 
                             </div>
@@ -931,35 +1034,13 @@ License: You must have a valid license purchased only from themeforest(the above
 
                     <!--End::Main Portlet-->
                 </div>
-                <div class="col-xl-3">
-                    <div style="box-shadow: 0 0 50px rgba(34,36,38,0.15)!important;background-color: #e9e9e9"
-                         class="m-portlet">
 
-                        <div style="padding: 10px" class="container">
-                            <h3 style="color: #EF3159">سوالات متداول</h3>
-                            <hr>
-                            <details style="margin-top: 40px" class="default square">
-                                <summary>Click to open</summary>
-                                <p>If your browser supports this element, it should allow you to expand and collapse
-                                    these details.</p>
-                            </details>
-                            <details class="primary square">
-                                <summary>Click to open</summary>
-                                <p>If your browser supports this element, it should allow you to expand and collapse
-                                    these details.</p>
-                            </details>
-                            <details class="success">
-                                <summary>Click to open</summary>
-                                <p>If your browser supports this element, it should allow you to expand and collapse
-                                    these details.</p>
-                            </details>
-                        </div>
-
-                    </div>
-                </div>
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 

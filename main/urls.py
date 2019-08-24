@@ -29,7 +29,6 @@ urlpatterns = [
 	path('classes_list/',views.Classes_List,name = 'classes_list'),
 
 	path('dashboard/',views.Dashboard,name = 'dashboard'),
-	path('dashboard/create_gym/',views.Create_Gym , name = 'create_gym'),
 	path('dashboard/delete_role_group/',views.Delete_Role_Group,name = 'delete_role_group'),
 	path('dashboard/edit_profile/',views.Edit_Profile_Teacher,name = 'edit_profile'),
 	path('dashboard/all_users/',views.All_Users,name = 'all_users'),
@@ -45,10 +44,13 @@ urlpatterns = [
 	path('dashboard/requests/', views.Requests, name='requests'),
 	path('dashboard/classes/', views.Salon_Dar_Classes, name='salon_dar_classes'),
 	path('dashboard/user_classes/', views.User_Classes, name='user_classes'),
-	path('dashboard/select_gym/', views.Select_Gym, name='select_gym_add_class'),
+	path('dashboard/select_gym_add_class/', views.Select_Gym, name='select_gym_add_class'),
 	path('dashboard/add_class/<slug>/', views.Add_Class, name='add_class'),
 	path('dashboard/edit_class/<slug>/', views.Edit_class, name='edit_class'),
 	path('dashboard/add_gym/', views.Add_Gym, name='add_gym'),
+	path('dashboard/add_hour/<slug>/', views.Hour_Add, name='add_hour'),
+	path('dashboard/select_gym_add_hour/', views.Select_Gym_add_hour, name='select_gym_add_hour'),
+
 
 	path('teachers/<slug>/', views.Coach_Profile, name='coach_profile'),
 

@@ -146,10 +146,11 @@ def Index(request):
 		else:
 			favorites = {'Amir:D': 'Amir:D'}
 
-		training_classes = Training_Class.objects.filter(gym_id__area_id__city_id__name = user_city)
+		training_classes = Training_Class.objects.filter(gym_id__area_id__city_id__name=user_city)
 		training_classes_count = training_classes.count()
-		gyms = Gym.objects.filter(area_id__city_id__name=user_city).exclude(category_id__name='استخر')  # salon haye dar ostan user login karde
-		pools = Gym.objects.filter(area_id__city_id__name=user_city,category_id__name='استخر')
+		gyms = Gym.objects.filter(area_id__city_id__name=user_city).exclude(
+			category_id__name='استخر')  # salon haye dar ostan user login karde
+		pools = Gym.objects.filter(area_id__city_id__name=user_city, category_id__name='استخر')
 		counter_comments = {}
 
 		categories = Category.objects.all()
@@ -167,8 +168,8 @@ def Index(request):
 				   'gyms': gyms,
 				   'name': name,
 				   'counter_comments': counter_comments,
-				   'training_classes_count':training_classes_count,
-				   'training_classes':training_classes,
+				   'training_classes_count': training_classes_count,
+				   'training_classes': training_classes,
 				   'areas': areas,
 				   'provinces': provinces,
 				   'cities': cities,
@@ -180,7 +181,7 @@ def Index(request):
 				   'tenis': tenis,
 				   'volybal': volybal,
 				   'gyms_count': gyms_count,
-				   'pools':pools,
+				   'pools': pools,
 				   }
 		return render(request, 'index.html', context)
 
@@ -209,15 +210,15 @@ def Index(request):
 			counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
 
 		context = {
-			'training_classes':training_classes,
-			'training_classes_count':training_classes_count,
+			'training_classes': training_classes,
+			'training_classes_count': training_classes_count,
 			'areas': areas,
 			'provinces': provinces,
 			'cities': cities,
 			'gyms': gyms,
 			'counter_comments': counter_comments,
 			'categories': categories,
-			'pools':pools,
+			'pools': pools,
 			'bascketbal': bascketbal,
 			'footbal': footbal,
 			'footsal': footsal,
@@ -230,7 +231,6 @@ def Index(request):
 
 
 def Gym_List(request):
-
 	if request.method == 'POST' and 'gym_name' in request.POST:
 		name = request.POST['name']
 		gyms = Gym.objects.filter(name__contains=name)
@@ -238,7 +238,6 @@ def Gym_List(request):
 		counter_comments = {}
 
 		selected = 'همه سالن ها'
-
 
 		categories = Category.objects.all()
 		areas = Area.objects.all()
@@ -272,8 +271,9 @@ def Gym_List(request):
 		category = request.GET.get('category', '')
 		sex = request.GET.get('sex', '')
 
-
-		gyms = Gym.objects.filter(area_id__name__contains=area,area_id__city_id__name__contains=city,area_id__city_id__province_id__name__contains=province,sex__contains=sex,category_id__name__contains=category)
+		gyms = Gym.objects.filter(area_id__name__contains=area, area_id__city_id__name__contains=city,
+								  area_id__city_id__province_id__name__contains=province, sex__contains=sex,
+								  category_id__name__contains=category)
 		counter_comments = {}
 
 		selected = 'همه سالن ها'
@@ -308,7 +308,7 @@ def Gym_List(request):
 			'cities': cities,
 			'categories': categories,
 			'gyms': gyms_list,
-			'selected':selected,
+			'selected': selected,
 		}
 
 		return render(request, 'gym_list.html', context)
@@ -360,8 +360,6 @@ def Select_Category(request, category):
 	areas = Area.objects.all()
 	provinces = Province.objects.all()
 	cities = City.objects.all()
-
-
 
 	paginator = Paginator(gyms, 10)
 	page = request.GET.get('page')
@@ -1978,18 +1976,17 @@ def Work_Request(request):
 
 		for rol in roles_user:
 			if rol.name == 'آموزش پرورش':
-				ticket_list1 = MyUser.objects.filter(role__name='مربی',group__name ='آموزش پرورش',city = user_logged.city)
-		if roles_user_count == 0 :
+				ticket_list1 = MyUser.objects.filter(role__name='مربی', group__name='آموزش پرورش',
+													 city=user_logged.city)
+		if roles_user_count == 0:
 			ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
-
-
 
 		name = user_logged.name
 		if request.method == 'POST':
 			name = request.POST['name']
 			family = request.POST['family_name']
 			email = request.POST['email']
-			title = request.POST['subject'] # title haman id 'girande ast
+			title = request.POST['subject']  # title haman id 'girande ast
 			text = request.POST['text']
 			tf = TicketForm(request.POST)
 			if tf.is_valid():
@@ -2006,7 +2003,7 @@ def Work_Request(request):
 			tf = TicketForm()
 
 			context = {
-				'roles_user_count':roles_user_count,
+				'roles_user_count': roles_user_count,
 				'tf': tf,
 				'ticket_list1': ticket_list1,
 			}
@@ -2039,7 +2036,6 @@ def Work_Request(request):
 			context = {
 				'tf': tf,
 
-
 			}
 			return render(request, 'worker.html', context)
 
@@ -2068,9 +2064,10 @@ def Classes_List(request):
 			classes = Training_Class.objects.filter(gym_id__area_id__city_id__province_id__name=user_province)
 			teachers = classes.select_related('coach_id').distinct('coach_id')
 
-
-			classes = Training_Class.objects.filter(gym_id__area_id__name__contains=area, gym_id__area_id__city_id__name__contains=city,
-													gym_id__area_id__city_id__province_id__name__contains=province, sex__contains=sex,
+			classes = Training_Class.objects.filter(gym_id__area_id__name__contains=area,
+													gym_id__area_id__city_id__name__contains=city,
+													gym_id__area_id__city_id__province_id__name__contains=province,
+													sex__contains=sex,
 													category_id__name__contains=category)
 			paginator = Paginator(classes, 10)
 			page = request.GET.get('page')
@@ -2082,7 +2079,6 @@ def Classes_List(request):
 			categories = Training_Class.objects.select_related('category_id').all().distinct('category_id')
 
 			counter_comments = {}
-
 
 			context = {
 				'classes': classes_list,
@@ -2097,13 +2093,10 @@ def Classes_List(request):
 
 		else:
 
-
-
 			areas = Area.objects.all()
 			provinces = Province.objects.all()
 			cities = City.objects.all()
 			categories = Training_Class.objects.select_related('category_id').all().distinct('category_id')
-
 
 			counter_comments = {}
 
@@ -2112,7 +2105,6 @@ def Classes_List(request):
 			page = request.GET.get('page')
 			classes_list = paginator.get_page(page)
 
-
 			teachers = classes.select_related('coach_id').distinct('coach_id')
 			for clas in classes:
 				counter_comments[clas.gym_id.name] = Comment.objects.filter(gym_id__name=clas.gym_id.name).count()
@@ -2120,11 +2112,11 @@ def Classes_List(request):
 			context = {
 				'classes': classes_list,
 				'counter_comments': counter_comments,
-				'areas':areas,
-				'provinces':provinces,
-				'cities':cities,
-				'teachers':teachers,
-				'categories':categories,
+				'areas': areas,
+				'provinces': provinces,
+				'cities': cities,
+				'teachers': teachers,
+				'categories': categories,
 			}
 			return render(request, 'teaching.html', context)
 	else:
@@ -2137,8 +2129,8 @@ def Classes_List(request):
 			classes = Training_Class.objects.all()
 			teachers = classes.select_related('coach_id').distinct('coach_id')
 
-
-			classes = Training_Class.objects.filter(gym_id__area_id__name__contains=area, gym_id__area_id__city_id__name__contains=city,
+			classes = Training_Class.objects.filter(gym_id__area_id__name__contains=area,
+													gym_id__area_id__city_id__name__contains=city,
 													gym_id__area_id__city_id__province_id__name__contains=province,
 													category_id__name__contains=category)
 			paginator = Paginator(classes, 10)
@@ -2152,7 +2144,6 @@ def Classes_List(request):
 
 			counter_comments = {}
 
-
 			context = {
 				'classes': classes_list,
 				'counter_comments': counter_comments,
@@ -2162,7 +2153,7 @@ def Classes_List(request):
 				'teachers': teachers,
 				'categories': categories,
 			}
-			return render(request, 'teaching.html',context)
+			return render(request, 'teaching.html', context)
 		counter_comments = {}
 		classes = Training_Class.objects.all()
 		for clas in classes:
@@ -2176,7 +2167,6 @@ def Classes_List(request):
 		page = request.GET.get('page')
 		classes_list = paginator.get_page(page)
 
-
 		categories = Training_Class.objects.select_related('category_id').all().distinct('category_id')
 		teachers = Training_Class.objects.select_related('coach_id').all().distinct('coach_id')
 
@@ -2187,7 +2177,7 @@ def Classes_List(request):
 			'provinces': provinces,
 			'cities': cities,
 			'teachers': teachers,
-			'categories':categories,
+			'categories': categories,
 
 		}
 		return render(request, 'teaching.html', context)
@@ -2324,23 +2314,20 @@ def Dashboard(request):
 				return render(request, 'role_panel/dashboard.html', context)
 			elif role.name == 'مربی':
 
-
 				training_classes = Training_Class.objects.filter(coach_id__user_id=user_logged_in)
-				student_count = MyUser.objects.filter(students__coach_id__user_id = user_logged_in).count()
+				student_count = MyUser.objects.filter(students__coach_id__user_id=user_logged_in).distinct('id').count()
 				training_classes_count = training_classes.count()
 				paginator = Paginator(training_classes, 10)
 				page = request.GET.get('page')
 				training_classes_list = paginator.get_page(page)
 
-
-
 				context = {
-					'student_count':student_count,
-					'training_classes':training_classes_list,
+					'student_count': student_count,
+					'training_classes': training_classes_list,
 					'user_logged_in': user_logged_in,
 					'roles_user': roles_user,
 					'roles_user_count': roles_user_count,
-					'training_classes_count':training_classes_count,
+					'training_classes_count': training_classes_count,
 				}
 				return render(request, 'role_panel/teacher_dashboard.html', context)
 		orders = Order.objects.filter(myuser_id=user_logged_in)
@@ -2472,7 +2459,7 @@ def All_Users(request):
 							return redirect('Main:all_users')
 				context = {
 					'users': user_list,
-					'rols':rols,
+					'rols': rols,
 					'groups': groups,
 					'roles_user_count': roles_user_count,
 					'roles_user': roles_user,
@@ -2489,7 +2476,8 @@ def All_Users(request):
 				if request.method == 'GET' and 'search_form' in request.GET:
 					national_number = request.GET['national_number']
 					phone_number = request.GET['phone_number']
-					users = MyUser.objects.filter(Q( city=user_logged_in.city) & Q(national_number=national_number) | Q( city=user_logged_in.city) &Q(phone_number=phone_number))
+					users = MyUser.objects.filter(Q(city=user_logged_in.city) & Q(national_number=national_number) | Q(
+						city=user_logged_in.city) & Q(phone_number=phone_number))
 					paginator = Paginator(users, 10)
 					page = request.GET.get('page')
 					user_list = paginator.get_page(page)
@@ -2617,11 +2605,6 @@ def All_Users(request):
 		return redirect('/Accounts/login/?next=/dashboard/all_users')
 
 
-def Create_Gym(request):
-	context = {}
-	return render(request, 'new_gym.html', context)
-
-
 def Delete_Role_Group(request):
 	if request.user.is_authenticated:
 		user_phone_number = request.user
@@ -2640,7 +2623,8 @@ def Delete_Role_Group(request):
 				if request.method == 'GET' and 'search_form' in request.GET:
 					national_number = request.GET['national_number']
 					phone_number = request.GET['phone_number']
-					users = MyUser.objects.filter(Q(city=user_logged_in.city) & Q(national_number = national_number ) | Q(city=user_logged_in.city) & Q(phone_number=phone_number))
+					users = MyUser.objects.filter(Q(city=user_logged_in.city) & Q(national_number=national_number) | Q(
+						city=user_logged_in.city) & Q(phone_number=phone_number))
 					rols = Role.objects.filter(name='آموزش پرورش')
 					groups = Group.objects.filter(name='آموزش پرورش')
 					context = {
@@ -2651,8 +2635,6 @@ def Delete_Role_Group(request):
 						'roles_user': roles_user
 					}
 					return render(request, 'role_panel/deletuser.html', context)
-
-
 
 				if request.method == 'POST' and 'delete_form' in request.POST:
 					if request.POST.getlist('roll'):
@@ -2720,7 +2702,9 @@ def Delete_Role_Group(request):
 				if request.method == 'GET' and 'search_form' in request.GET:
 					national_number = request.GET['national_number']
 					phone_number = request.GET['phone_number']
-					users = MyUser.objects.filter(Q(city=user_logged_in.city) & Q(group__name='آموزش پرورش') & Q(national_number = national_number ) | Q(city=user_logged_in.city) & Q(phone_number=phone_number) & Q(group__name='آموزش پرورش') )
+					users = MyUser.objects.filter(Q(city=user_logged_in.city) & Q(group__name='آموزش پرورش') & Q(
+						national_number=national_number) | Q(city=user_logged_in.city) & Q(
+						phone_number=phone_number) & Q(group__name='آموزش پرورش'))
 					rols = Role.objects.filter(name='آموزش پرورش')
 					groups = Group.objects.filter(name='آموزش پرورش')
 					context = {
@@ -2731,7 +2715,6 @@ def Delete_Role_Group(request):
 						'roles_user': roles_user
 					}
 					return render(request, 'role_panel/deletuser.html', context)
-
 
 				if request.method == 'POST' and 'delete_form' in request.POST:
 					if request.POST.getlist('roll'):
@@ -3209,7 +3192,7 @@ def Requests(request):
 				return render(request, 'role_panel/requests.html', context)
 
 			elif role.name == 'آموزش پرورش' or role.name == 'مسئول منطقه':
-				requests = Ticket.objects.filter(title='amoozesh',myuser_id__city=user_logged_in.city)
+				requests = Ticket.objects.filter(title='amoozesh', myuser_id__city=user_logged_in.city)
 				context = {
 					'roles_user_count': roles_user_count,
 					'roles_user': roles_user,
@@ -3303,7 +3286,7 @@ def Students(request):
 		for role in roles_user:
 			if role.name == 'مربی':
 				training_classes = Training_Class.objects.filter(coach_id__user_id=user_logged_in)
-				for training_class in training_classes:
+				for training_class in training_classes: #2D array
 					st = MyUser.objects.filter(students=training_class)
 					for student in st:
 						users.append(student.phone_number)
@@ -3339,23 +3322,23 @@ def Select_Gym(request):
 					try:
 						select_gym = Gym.objects.get(id=gym_id)
 					except:
-						return render(request , 'role_panel/select-gym-new-class.html',context={
-							'error':True,
-							'message':'لطفا سالن را به درستی انتخاب کنید.'
+						return render(request, 'role_panel/select-gym-new-class.html', context={
+							'error': True,
+							'message': 'لطفا سالن را به درستی انتخاب کنید.'
 						})
-					return redirect('Main:add_class' , select_gym.id)
+					return redirect('Main:add_class', select_gym.id)
 				gyms = Gym.objects.filter(area_id__city_id__name=user_logged_in.city)
 				coaches = Coach_Profile.objects.all()
 				categories = Category.objects.all()
 
 				context = {
-					'roles_user_count':roles_user_count,
-					'roles_user':roles_user,
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
 					'coaches': coaches,
 					'gyms': gyms,
 					'categories': categories,
 				}
-				return render(request,'role_panel/select-gym-new-class.html', context)
+				return render(request, 'role_panel/select-gym-new-class.html', context)
 
 			elif role.name == 'superuser':
 				if request.method == 'POST' and 'gym_id' in request.POST:
@@ -3364,13 +3347,13 @@ def Select_Gym(request):
 					try:
 						select_gym = Gym.objects.get(id=gym_id)
 					except:
-						return render(request , 'role_panel/select-gym-new-class.html',context={
+						return render(request, 'role_panel/select-gym-new-class.html', context={
 							'roles_user_count': roles_user_count,
 							'roles_user': roles_user,
-							'error':True,
-							'message':'لطفا سالن را به درستی انتخاب کنید.'
+							'error': True,
+							'message': 'لطفا سالن را به درستی انتخاب کنید.'
 						})
-					return redirect('Main:add_class' , select_gym.id)
+					return redirect('Main:add_class', select_gym.id)
 
 				gyms = Gym.objects.all()
 				coaches = Coach_Profile.objects.all()
@@ -3383,22 +3366,20 @@ def Select_Gym(request):
 					'gyms': gyms,
 					'categories': categories,
 				}
-				return render(request,'role_panel/select-gym-new-class.html', context)
+				return render(request, 'role_panel/select-gym-new-class.html', context)
 
-			else :
+			else:
 				return redirect('Main:dashboard')
 	else:
 		return redirect('Accounts/login/?next=/dashboard/select_gym/')
 
 
-
-def Add_Class(request,slug):
+def Add_Class(request, slug):
 	if request.user.is_authenticated:
 		user_logged_in = MyUser.objects.get(phone_number=request.user)
 		roles_user = Role.objects.filter(user_id__exact=user_logged_in)
 		roles_user_count = 0
 		roles_user_count = roles_user.count()
-
 
 		for role in roles_user:
 			if role.name == 'superuser':
@@ -3415,33 +3396,81 @@ def Add_Class(request,slug):
 					text = request.POST['text']
 					sex = request.POST['sex']
 
-					start_date = datetime.strptime(start_date,'%Y-%m-%d')
-					end_date = datetime.strptime(end_date,'%Y-%m-%d')
-					coach_id = Coach_Profile.objects.get(id = coach_id)
-					gym_id = Gym.objects.get(id = slug)
-					category_id = Category.objects.get(id = category_id)
-					hour_id = Hour.objects.get(id = hour_id)
+					start_date = datetime.strptime(start_date, '%Y-%m-%d')
+					end_date = datetime.strptime(end_date, '%Y-%m-%d')
+					coach_id = Coach_Profile.objects.get(id=coach_id)
+					gym_id = Gym.objects.get(id=slug)
+					category_id = Category.objects.get(id=category_id)
+					hour_id = Hour.objects.get(id=hour_id)
+					day = hour_id.day
+					numday = None
 
+					if day == 'doshanbe':
+						numday = 0
+					elif day == 'seshanbe':
+						numday = 1
+					elif day == 'charshanbe':
+						numday = 2
+					elif day == 'panjshanbe':
+						numday = 3
+					elif day == 'jome':
+						numday = 4
+					elif day == 'shanbe':
+						numday = 5
+					elif day == 'yeshanbe':
+						numday == 6
 
+					cstart_date = start_date
+					cend_date = end_date
+					amir = True
+					while (amir):
+						if cstart_date <= cend_date:
 
-					Training_Class.objects.create(name = name ,coach_id=coach_id,gym_id=gym_id,number_of_session=number_of_session,price=price,
-												  date_start=start_date,date_expire=end_date,
-												  category_id=category_id,picture=picture,hour_id = hour_id,text=text,sex=sex)
+							if cstart_date.weekday() == numday:
+								try:
+									Order.objects.get(order_date=cstart_date,
+													  gym_id=gym_id, hour_id=hour_id,
+													  )
+								except:
+									gyms = Gym.objects.all()
+									coaches = Coach_Profile.objects.all()
+									categories = Category.objects.all()
+									hours = Hour.objects.filter(gym_id__id=slug).order_by('open')
+									context = {
+										'error': True,
+										'message': 'تایم های انتخابی از قبل رزرو شده اند.',
+										'roles_user_count': roles_user_count,
+										'roles_user': roles_user,
+										'hours': hours,
+										'coaches': coaches,
+										'gyms': gyms,
+										'categories': categories,
+									}
+									return render(request, 'role_panel/new-class.html', context)
+							cstart_date = cstart_date + timedelta(days=1)
+						else:
+							amir = False
 
-					return redirect('Main:add_class',slug)
+					Training_Class.objects.create(name=name, coach_id=coach_id, gym_id=gym_id,
+												  number_of_session=number_of_session, price=price,
+												  date_start=start_date, date_expire=end_date,
+												  category_id=category_id, picture=picture, hour_id=hour_id, text=text,
+												  sex=sex)
+
+					return redirect('Main:add_class', slug)
 
 				gyms = Gym.objects.all()
 				coaches = Coach_Profile.objects.all()
 				categories = Category.objects.all()
-				hours = Hour.objects.filter(gym_id__id = slug).order_by('open')
+				hours = Hour.objects.filter(gym_id__id=slug).order_by('open')
 
 				context = {
-					'roles_user_count':roles_user_count,
-					'roles_user':roles_user,
-					'hours':hours,
-					'coaches':coaches,
-					'gyms':gyms,
-					'categories':categories,
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
+					'hours': hours,
+					'coaches': coaches,
+					'gyms': gyms,
+					'categories': categories,
 				}
 				return render(request, 'role_panel/new-class.html', context)
 			elif role.name == 'مربی':
@@ -3465,6 +3494,55 @@ def Add_Class(request,slug):
 					category_id = Category.objects.get(id=category_id)
 					hour_id = Hour.objects.get(id=hour_id)
 
+					day = hour_id.day
+					numday = None
+
+					if day == 'doshanbe':
+						numday = 0
+					elif day == 'seshanbe':
+						numday = 1
+					elif day == 'charshanbe':
+						numday = 2
+					elif day == 'panjshanbe':
+						numday = 3
+					elif day == 'jome':
+						numday = 4
+					elif day == 'shanbe':
+						numday = 5
+					elif day == 'yeshanbe':
+						numday == 6
+
+					cstart_date = start_date
+					cend_date = end_date
+					amir = True
+					while (amir):
+						if cstart_date <= cend_date:
+
+							if cstart_date.weekday() == numday:
+								try:
+									Order.objects.get(order_date=cstart_date,
+													  gym_id=gym_id, hour_id=hour_id,
+													  )
+								except:
+									gyms = Gym.objects.all()
+									coaches = Coach_Profile.objects.all()
+									categories = Category.objects.all()
+									hours = Hour.objects.filter(gym_id__id=slug).order_by('open')
+									context = {
+										'error': True,
+										'message': 'تایم های انتخابی از قبل رزرو شده اند.',
+										'roles_user_count': roles_user_count,
+										'roles_user': roles_user,
+										'hours': hours,
+										'coaches': coaches,
+										'gyms': gyms,
+										'categories': categories,
+									}
+									return render(request, 'role_panel/new-class.html', context)
+							cstart_date = cstart_date + timedelta(days=1)
+						else:
+							amir = False
+
 					Training_Class.objects.create(name=name, coach_id=coach_id, gym_id=gym_id,
 												  number_of_session=number_of_session, price=price,
 												  date_start=start_date, date_expire=end_date,
@@ -3474,7 +3552,7 @@ def Add_Class(request,slug):
 					return redirect('Main:add_class', slug)
 
 				gyms = Gym.objects.all()
-				coaches = Coach_Profile.objects.filter(user_id = user_logged_in)
+				coaches = Coach_Profile.objects.filter(user_id=user_logged_in)
 				categories = Category.objects.all()
 				hours = Hour.objects.filter(gym_id__id=slug).order_by('open')
 
@@ -3492,16 +3570,15 @@ def Add_Class(request,slug):
 			else:
 				return redirect('Main:dashboard')
 
-
 		context = {
 			'roles_user_count': roles_user_count,
 			'roles_user': roles_user,
 
 		}
-		return render(request,'role_panel/select-gym-new-class.html',context)
+		return render(request, 'role_panel/select-gym-new-class.html', context)
 
 
-def Edit_class(request,slug):
+def Edit_class(request, slug):
 	if request.user.is_authenticated:
 		user_logged_in = MyUser.objects.get(phone_number=request.user)
 		roles_user = Role.objects.filter(user_id__exact=user_logged_in)
@@ -3530,7 +3607,7 @@ def Edit_class(request,slug):
 					gym_id = Gym.objects.get(id=select_training.gym_id.id)
 					category_id = Category.objects.get(id=category_id)
 					hour_id = Hour.objects.get(id=hour_id)
-					select_training = Training_Class.objects.get(id = slug)
+					select_training = Training_Class.objects.get(id=slug)
 					select_training.name = name
 					select_training.coach_id = coach_id
 					select_training.gym_id = gym_id
@@ -3546,26 +3623,27 @@ def Edit_class(request,slug):
 					select_training.save()
 					return redirect('Main:edit_class', slug)
 
-				select_training = Training_Class.objects.get(id = slug)
+				select_training = Training_Class.objects.get(id=slug)
 
 				gyms = Gym.objects.all()
-				coaches = Coach_Profile.objects.filter(user_id = user_logged_in)
+				coaches = Coach_Profile.objects.filter(user_id=user_logged_in)
 				categories = Category.objects.all()
 				hours = Hour.objects.filter(gym_id=select_training.gym_id).order_by('open')
-				start = datetime.strftime(select_training.date_start , '%Y-%m-%d')
+				start = datetime.strftime(select_training.date_start, '%Y-%m-%d')
 				end = datetime.strftime(select_training.date_expire, '%Y-%m-%d')
 
 				context = {
-					'start':start,
-					'end':end,
-					'select_training':select_training,
+					'start': start,
+					'end': end,
+					'select_training': select_training,
 					'hours': hours,
 					'coaches': coaches,
 					'gyms': gyms,
 					'categories': categories,
-					'edit':True,
+					'edit': True,
 				}
 				return render(request, 'role_panel/new-class.html', context)
+
 
 def Add_Gym(request):
 	if request.user.is_authenticated:
@@ -3583,15 +3661,15 @@ def Add_Gym(request):
 					picture = request.FILES['picture']
 					status = request.POST['status']
 					phone = request.POST['phone']
-					description= request.POST['text']
+					description = request.POST['text']
 					sex = request.POST['sex']
 					user_id = request.POST['user_id']
 					category_id = request.POST['category_id']
 
-
-					area_id = Area.objects.get(id = area_id)
-					user_id = MyUser.objects.get (id = user_id)
-					select_gym = Gym(name=name,area_id=area_id,address = address, picture=picture ,status=status,phone=phone,description=description,sex = sex,user_id=user_id)
+					area_id = Area.objects.get(id=area_id)
+					user_id = MyUser.objects.get(id=user_id)
+					select_gym = Gym(name=name, area_id=area_id, address=address, picture=picture, status=status,
+									 phone=phone, description=description, sex=sex, user_id=user_id)
 					select_gym.save()
 
 					category_list = request.POST.getlist('category_id')
@@ -3626,9 +3704,7 @@ def Add_Gym(request):
 							select_gym.facility_id.add(facility_select)
 							select_gym.save()
 
-
 					select_gym.save()
-
 
 					# areas = Area.objects.filter(city_id__name=user_logged_in.city)
 					# users = MyUser.objects.filter(phone_number=request.user)
@@ -3733,14 +3809,14 @@ def Add_Gym(request):
 				facilities = Facility.objects.all()
 
 				context = {
-					'roles_user_count':roles_user_count,
-					'roles_user':roles_user,
-					'areas':areas,
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
+					'areas': areas,
 					'users': users,
-					'categories':categories,
-					'facilities':facilities,
+					'categories': categories,
+					'facilities': facilities,
 				}
-				return render(request,'role_panel/new_gym.html',context)
+				return render(request, 'role_panel/new_gym.html', context)
 			elif role.name == 'آموزش پرورش':
 				if request.method == 'POST' and 'save_form' in request.POST:
 					name = request.POST['name']
@@ -3810,16 +3886,277 @@ def Add_Gym(request):
 					return redirect('Main:add_gym')
 
 				areas = Area.objects.filter(city_id__name=user_logged_in.city)
-				users = MyUser.objects.filter(phone_number = request.user)
+				users = MyUser.objects.filter(phone_number=request.user)
 				categories = Category.objects.all()
 				facilities = Facility.objects.all()
 
 				context = {
-					'roles_user_count':roles_user_count,
-					'roles_user':roles_user,
-					'areas':areas,
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
+					'areas': areas,
 					'users': users,
-					'categories':categories,
-					'facilities':facilities,
+					'categories': categories,
+					'facilities': facilities,
 				}
-				return render(request,'role_panel/new_gym.html',context)
+				return render(request, 'role_panel/new_gym.html', context)
+
+
+def Select_Gym_add_hour(request):
+	if request.user.is_authenticated:
+		user_logged_in = MyUser.objects.get(phone_number=request.user)
+		roles_user = Role.objects.filter(user_id__exact=user_logged_in)
+		roles_user = Role.objects.filter(user_id__exact=user_logged_in)
+		roles_user_count = 0
+		roles_user_count = roles_user.count()
+
+		for role in roles_user:
+			if role.name == 'مربی':
+				if request.method == 'POST' and 'gym_id' in request.POST:
+					gym_id = request.POST['gym_id']
+					select_gym = None
+					try:
+						select_gym = Gym.objects.get(id=gym_id)
+					except:
+						return render(request, 'role_panel/select-gym-new-class.html', context={
+							'error': True,
+							'message': 'لطفا سالن را به درستی انتخاب کنید.'
+						})
+					return redirect('Main:add_hour', select_gym.id)
+				gyms = Gym.objects.filter(area_id__city_id__name=user_logged_in.city)
+				coaches = Coach_Profile.objects.all()
+				categories = Category.objects.all()
+
+				context = {
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
+					'coaches': coaches,
+					'gyms': gyms,
+					'categories': categories,
+				}
+				return render(request, 'role_panel/select-gym-new-class.html', context)
+
+			elif role.name == 'superuser':
+				if request.method == 'POST' and 'gym_id' in request.POST:
+					gym_id = request.POST['gym_id']
+					select_gym = None
+					try:
+						select_gym = Gym.objects.get(id=gym_id)
+					except:
+						return render(request, 'role_panel/select-gym-new-class.html', context={
+							'roles_user_count': roles_user_count,
+							'roles_user': roles_user,
+							'error': True,
+							'message': 'لطفا سالن را به درستی انتخاب کنید.'
+						})
+					return redirect('Main:add_hour', select_gym.id)
+
+				gyms = Gym.objects.all()
+				coaches = Coach_Profile.objects.all()
+				categories = Category.objects.all()
+
+				context = {
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
+					'coaches': coaches,
+					'gyms': gyms,
+					'categories': categories,
+				}
+				return render(request, 'role_panel/select-gym-new-class.html', context)
+
+			else:
+				return redirect('Main:dashboard')
+	else:
+		return redirect('Accounts/login/?next=/dashboard/select_gym/')
+
+
+def Hour_Add(request, slug):
+	if request.user.is_authenticated:
+		user_logged_in = MyUser.objects.get(phone_number=request.user)
+		roles_user = Role.objects.filter(user_id__exact=user_logged_in)
+		roles_user_count = 0
+		roles_user_count = roles_user.count()
+
+		for role in roles_user:
+			if role.name == 'superuser':
+				if request.method == 'POST' and 'save_form' in request.POST:
+					open = request.POST['open']
+					close = request.POST['close']
+					price = request.POST['price']
+					day = request.POST['day']
+					gym_id = Gym.objects.get(id=slug)
+
+					try:
+						hour = Hour.objects.get(day=day , open=open)
+						hour.close = close
+						hour.price = price
+						hour.save()
+
+					except:
+						Hour.objects.create(open=open, close=close, price=price, day=day, gym_id=gym_id)
+				if request.method == 'POST' and 'delete_form' in request.POST:
+					open = request.POST['open']
+					close = request.POST['close']
+					price = request.POST['price']
+					day = request.POST['day']
+					gym_id = Gym.objects.get(id=slug)
+					try:
+						hour = Hour.objects.get(gym_id = gym_id,day=day , open=open,close=close)
+						hour.delete()
+					except:
+						pass
+
+		select_gym = Gym.objects.get(id=slug)
+		hour_day_distinct = Hour.objects.filter(Q(gym_id__id=slug)).distinct('day')
+
+		hours = Hour.objects.filter(Q(gym_id__id=slug))
+		hours_open = Hour.objects.filter(Q(gym_id__id=slug)).distinct('open')
+		open = Hour.objects.filter(Q(gym_id__id=slug))
+
+		now = datetime.today()
+		orders = Order.objects.filter(Q(gym_id__id=slug) & Q(order_date__gte=now.date()))
+		start_week = now + timedelta(weeks=4)
+		if now.weekday() == 0:  # shanbe
+			start_week = start_week - timedelta(days=2)
+		elif now.weekday() == 1:  # yekshanbe
+			start_week = start_week - timedelta(days=3)
+		elif now.weekday() == 2:  # doahanbe
+			start_week = start_week - timedelta(days=4)
+		elif now.weekday() == 3:  # seshanbe
+			start_week = start_week - timedelta(days=5)
+		elif now.weekday() == 4:  # charshanbe
+			start_week = start_week - timedelta(days=6)
+		elif now.weekday() == 5:  # panjshanbe
+			start_week = start_week
+		elif now.weekday() == 6:  # jome
+			start_week = start_week - timedelta(days=1)
+
+		day_of_week = {"shanbe": start_week,
+					   "yeshanbe": start_week + timedelta(days=1), "doshanbe": start_week + timedelta(days=2),
+					   "seshanbe": start_week + timedelta(days=3), "charshanbe": start_week + timedelta(days=4),
+					   "panjshanbe": start_week + timedelta(days=5), "jome": start_week + timedelta(days=6)
+					   }
+
+		orders_count = Order.objects.filter(Q(gym_id__slug=slug) & Q(order_date__gte=now.date())).count()
+
+		# shanbe
+		shanbe = {}
+
+		# yeshanbe
+		yeshanbe = {}
+
+		# doshanbe
+		doshanbe = {}
+
+		# seshanbe
+		seshanbe = {}
+
+		# charshanbe
+		charshanbe = {}
+
+		# panjshanbe
+		panjshanbe = {}
+
+		# jome
+		jome = {}
+
+		condition = {}
+
+
+
+		for x in hours_open:
+			shanbe[x.id] = True
+			yeshanbe[x.id] = True
+			doshanbe[x.id] = True
+			seshanbe[x.id] = True
+			charshanbe[x.id] = True
+			panjshanbe[x.id] = True
+			jome[x.id] = True
+
+
+		shanbe_t = {}
+		for x in hours_open:
+			shanbe_t[x.id] = True
+			for hour in hours:
+				for key, value in shanbe.items():
+					if key == x.id and value == True and hour.day == 'shanbe' and hour.open == x.open :
+						shanbe_t[x.id] = False
+
+		yeshanbe_t = {}
+		for x in hours_open:
+			yeshanbe_t[x.id] = True
+			for hour in hours:
+				for key, value in yeshanbe.items():
+					if key == x.id and value == True and hour.day == 'yeshanbe' and hour.open == x.open :
+						yeshanbe_t[x.id] = False
+
+		doshanbe_t = {}
+		for x in hours_open:
+			doshanbe_t[x.id] = True
+			for hour in hours:
+				for key, value in doshanbe.items():
+					if key == x.id and value == True and hour.day == 'doshanbe' and hour.open == x.open :
+						doshanbe_t[x.id] = False
+
+		seshanbe_t = {}
+		for x in hours_open:
+			seshanbe_t[x.id] = True
+			for hour in hours:
+				for key, value in seshanbe.items():
+					if key == x.id and value == True and hour.day == 'seshanbe' and hour.open == x.open :
+						seshanbe_t[x.id] = False
+
+		charshanbe_t = {}
+		for x in hours_open:
+			charshanbe_t[x.id] = True
+			for hour in hours:
+				for key, value in charshanbe.items():
+					if key == x.id and value == True and hour.day == 'charshanbe' and hour.open == x.open :
+						charshanbe_t[x.id] = False
+
+		panjshanbe_t = {}
+		for x in hours_open:
+			panjshanbe_t[x.id] = True
+			for hour in hours:
+				for key, value in panjshanbe.items():
+					if key == x.id and value == True and hour.day == 'panjshanbe' and hour.open == x.open :
+						panjshanbe_t[x.id] = False
+
+		jome_t = {}
+		for x in hours_open:
+			jome_t[x.id] = True
+			for hour in hours:
+				for key, value in jome.items():
+					if key == x.id and value == True and hour.day == 'jome' and hour.open == x.open :
+						jome_t[x.id] = False
+
+
+		context = {
+			'roles_user_count':roles_user_count,
+			'roles_user':roles_user,
+			'day_of_week': day_of_week,
+			'now': now,
+			'select_gym': select_gym,
+			'hours_open': hours_open,
+			'hours': hours,
+			'orders_count': orders_count,
+			'orders': orders,
+			'shanbe': shanbe,
+			'shanbe_t': shanbe_t,
+			'yeshanbe': yeshanbe,
+			'yeshanbe_t': yeshanbe_t,
+			'doshanbe': doshanbe,
+			'doshanbe_t': doshanbe_t,
+			'seshanbe': seshanbe,
+			'seshanbe_t': seshanbe_t,
+			'charshanbe': charshanbe,
+			'charshanbe_t': charshanbe_t,
+			'panjshanbe': panjshanbe,
+			'panjshanbe_t': panjshanbe_t,
+			'jome': jome,
+			'jome_t': jome_t,
+			'start_week': start_week,
+
+		}
+
+
+		return render(request, 'role_panel/hour_add.html', context)

@@ -1,10 +1,36 @@
 {% extends 'partial/header.html' %}
 {% load static %}
 {% block title %}
-{{ select_gym.name }}
+    {{ select_gym.name }}
 {% endblock %}
 {% block link %}
-{% include 'partial/index-header.html' %}
+{#    {% include 'partial/index-header.html' %}#}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main-css/fonts/icomoon/style.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'main-css/css/listing.css' %}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href='http://www.fontonline.ir/css/BYekan.css' rel='stylesheet' type='text/css'>
+
+
+    <link rel="stylesheet" href="{% static 'main-css/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main-css/css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'main-css/css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="{% static 'main-css/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'main-css/css/owl.theme.default.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'main-css/css/bootstrap-datepicker.css' %}">
+
+    <link rel="stylesheet" href="{% static 'main-css/fonts/flaticon/font/flaticon.css' %}">
+
+    <link rel="stylesheet" href="{% static 'main-css/css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'main-css/css/rangeslider.css' %}">
+
+    <link rel="stylesheet" href="{% static 'main-css/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main-css/css/single.css' %}">
 {% endblock %}
 {% block body %}
     <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url({{ select_gym.picture.url }});"
@@ -35,7 +61,8 @@
 
                     <div class="mb-4">
                         <div class="slide-one-item home-slider owl-carousel">
-                            <div style="height: 200px"><img src="{{ select_gym.picture.url }}" alt="Image" class="img-fluid"></div>
+                            <div style="height: 200px"><img src="{{ select_gym.picture.url }}" alt="Image"
+                                                            class="img-fluid"></div>
                             <div><img src="{{ select_gym.picture.url }}" alt="Image" class="img-fluid"></div>
                             <div><img src="{{ select_gym.picture.url }}" alt="Image" class="img-fluid"></div>
                             <div><img src="{{ select_gym.picture.url }}" alt="Image" class="img-fluid"></div>
@@ -48,54 +75,50 @@
                         }
                     </style>
                     <h4 style="text-align: right" class="h5 mb-4 text-black">امکانات این مجموعه</h4>
+
                     <div class="propertyDesc">
-
-                            <ul>
-                                {% for facility in facilities %}
-                            {% if facility.gym_id.name == select_gym.name %} {#emkanat salon montakhab#}
-                                {%if facility.facility_id.name == 'اجاره توپ' %}
-                                    <li><i class="fas fa-futbol"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                        <ul>
+                            {% for facility in select_gym.facility_id.all %}
+                                {#emkanat salon montakhab#}
+                                {% if facility.name == 'اجاره توپ' %}
+                                    <li><i class="fas fa-futbol"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'سرویس بهداشتی' %}
-                                    <li><i class="fas fa-toilet"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'سرویس بهداشتی' %}
+                                    <li><i class="fas fa-toilet"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'دوش' %}
-                                    <li><i class="fas fa-shower"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'دوش' %}
+                                    <li><i class="fas fa-shower"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'پارکینگ اختصاصی' %}
-                                    <li><i class="fas fa-parking"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'پارکینگ اختصاصی' %}
+                                    <li><i class="fas fa-parking"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'بوفه' %}
-                                    <li><i class="fas fa-utensils"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'بوفه' %}
+                                    <li><i class="fas fa-utensils"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'کمد' %}
-                                    <li><i class="fas fa-door-closed"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'کمد' %}
+                                    <li><i class="fas fa-door-closed"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'تهویه هوا' %}
-                                    <li><i class="fas fa-wind"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'تهویه هوا' %}
+                                    <li><i class="fas fa-wind"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'آب سرد کن' %}
-                                    <li><i class="fas fa-tint"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'آب سرد کن' %}
+                                    <li><i class="fas fa-tint"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'جایگاه تماشاگر' %}
-                                    <li><i class="fas fa-users"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'جایگاه تماشاگر' %}
+                                    <li><i class="fas fa-users"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-                                {% if facility.facility_id.name == 'رختکن' %}
-                                    <li><i class="fas fa-tshirt"></i><strong>&nbsp;{{ facility.facility_id.name }}</strong></li>
+                                {% if facility.name == 'رختکن' %}
+                                    <li><i class="fas fa-tshirt"></i><strong>&nbsp;{{ facility.name }}</strong></li>
                                 {% endif %}
-
-
-                            {% endif %}
-
-                                {% endfor %}
-                            </ul>
-                       </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <br>
                     <section style="text-align: center" class="container">
                         <a style="border-radius: 10px" class="btn btn-success"
-                           id="example-modal--label" href="{% url 'Main:reservation' select_gym.slug %}">مشاهده سانس ها <i class="fa fa-male"></i></a>
+                           id="example-modal--label" href="{% url 'Main:reservation' select_gym.slug %}">مشاهده سانس ها
+                            <i class="fa fa-male"></i></a>
                     </section>
-
-
 
 
                 </div>
@@ -139,55 +162,55 @@
             <div class="row mt-5">
 
                 {% for salon in gyms %}
-                <div class="col-lg-6">
+                    <div class="col-lg-6">
 
-                    <div class="d-block d-md-flex listing">
-                        <a href="{% url 'Main:gym_single' salon.slug %}" class="img d-block"
-                           style="background-image: url('{{ salon.picture.url }}')"></a>
-                        <div class="lh-content">
-                            <span class="category">{{ salon.area_id.city_id.province_id.name }}</span>
-                            <a href="#" class="bookmark"><span class="icon-heart"></span></a>
-                            <h3 style="text-align: right"><a href="{% url 'Main:gym_single' salon.slug %}">{{ salon.name }}</a></h3>
-                            <address style="text-align: right">{{ salon.address }}</address>
-                            <span style="text-align: right" class="review">{% for name,dic  in counter_comments.items %}{% if name == salon.name %} {{ dic }} نظر {% endif %}{% endfor %}</span>
+                        <div class="d-block d-md-flex listing">
+                            <a href="{% url 'Main:gym_single' salon.slug %}" class="img d-block"
+                               style="background-image: url('{{ salon.picture.url }}')"></a>
+                            <div class="lh-content">
+                                <span class="category">{{ salon.area_id.city_id.province_id.name }}</span>
+                                <a href="#" class="bookmark"><span class="icon-heart"></span></a>
+                                <h3 style="text-align: right"><a
+                                        href="{% url 'Main:gym_single' salon.slug %}">{{ salon.name }}</a></h3>
+                                <address style="text-align: right">{{ salon.address }}</address>
+                                <span style="text-align: right"
+                                      class="review">{% for name,dic  in counter_comments.items %}
+                                    {% if name == salon.name %} {{ dic }} نظر {% endif %}{% endfor %}</span>
 
-                            <p style="text-align: right" class="mb-0">
+                                <p style="text-align: right" class="mb-0">
 
-                                <span class="icon-star text-secondary"></span>
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-warning"></span>
-                            </p>
+                                    <span class="icon-star text-secondary"></span>
+                                    <span class="icon-star text-warning"></span>
+                                    <span class="icon-star text-warning"></span>
+                                    <span class="icon-star text-warning"></span>
+                                    <span class="icon-star text-warning"></span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
+                    </div>
                 {% endfor %}
 
-                </div>
             </div>
         </div>
+    </div>
 
 
-{% include 'partial/footer.html' %}
-</div>
+    {% include 'partial/footer.html' %}
 
-<script src="{% static 'main-css/js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery-migrate-3.0.1.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery-ui.js' %}"></script>
-<script src="{% static 'main-css/js/popper.min.js' %}"></script>
-<script src="{% static 'main-css/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'main-css/js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery.stellar.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery.countdown.min.js' %}"></script>
-<script src="{% static 'main-css/js/jquery.magnific-popup.min.js' %}"></script>
-<script src="{% static 'main-css/js/bootstrap-datepicker.min.js' %}"></script>
-<script src="{% static 'main-css/js/aos.js' %}"></script>
-<script src="{% static 'main-css/js/rangeslider.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery-migrate-3.0.1.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery-ui.js' %}"></script>
+    <script src="{% static 'main-css/js/popper.min.js' %}"></script>
+    <script src="{% static 'main-css/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'main-css/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery.stellar.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'main-css/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'main-css/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'main-css/js/aos.js' %}"></script>
+    <script src="{% static 'main-css/js/rangeslider.min.js' %}"></script>
 
-<script src="{% static 'main-css/js/main.js' %}"></script>
+    <script src="{% static 'main-css/js/main.js' %}"></script>
 
-</body>
-</html>
 {% endblock %}

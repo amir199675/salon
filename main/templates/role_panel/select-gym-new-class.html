@@ -311,11 +311,17 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             </li>
                                                             <li class="m-menu__item  m-menu__item "
                                                                 aria-haspopup="true">
-                                                                <a href="add_event.html" class="m-menu__link ">
+                                                                <a href="{% url 'Main:add_gym' %}" class="m-menu__link ">
                                                                     <span class="m-menu__item-here"></span>
                                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                                 </a>
                                                             </li>
+                                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:select_gym_add_hour' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
+                                                </a>
+                                            </li>
                                                         </ul>
                                                     {% elif role_user.name == 'آموزش پرورش' %}
                                                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
@@ -361,11 +367,17 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             </li>
                                                             <li class="m-menu__item  m-menu__item "
                                                                 aria-haspopup="true">
-                                                                <a href="add_event.html" class="m-menu__link ">
+                                                                <a href="{% url 'Main:add_gym' %}" class="m-menu__link ">
                                                                     <span class="m-menu__item-here"></span>
                                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
                                                                 </a>
                                                             </li>
+                                                        <li class="m-menu__item  m-menu__item " aria-haspopup="true">
+                                                <a href="{% url 'Main:select_gym_add_hour' %}" class="m-menu__link ">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
+                                                </a>
+                                            </li>
                                                         </ul>
                                                     {% elif role_user.name == 'سالن دار' %}
                                                         <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
@@ -455,10 +467,18 @@ License: You must have a valid license purchased only from themeforest(the above
                                                             </li>
                                                             <li class="m-menu__item  m-menu__item "
                                                                 aria-haspopup="true">
-                                                                <a href="{% url 'Main:add_facility' %}"
+                                                                <a href="{% url 'Main:add_gym' %}"
                                                                    class="m-menu__link ">
                                                                     <span class="m-menu__item-here"></span>
                                                                     <span class="m-menu__link-text">ساخت سالن جدید</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="m-menu__item  m-menu__item "
+                                                                aria-haspopup="true">
+                                                                <a href="{% url 'Main:select_gym_add_hour' %}"
+                                                                   class="m-menu__link ">
+                                                                    <span class="m-menu__item-here"></span>
+                                                                    <span class="m-menu__link-text">مدیریت سانس ها</span>
                                                                 </a>
                                                             </li>
                                                         </ul>
@@ -715,7 +735,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <div class="row">
                                                     <div class="col-lg-12 m--align-right">
 
-                                                        <input type="submit" value="انتخاب سالن جهت اضافه کردن کلاس"
+                                                        <input type="submit" value="انتخاب سالن"
                                                                style="width: 100%;text-align: center;padding: 20px;display: block"
                                                                class="btn btn-warning m-btn m-btn--custom m-btn--icon"
                                                                name="select_gym">
