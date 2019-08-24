@@ -22,6 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'd#j=xug=#l0qy5$lybh@%uk8a(as2)@3-f4pz9sqfddcwu*tox'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = False
 DEBUG = False
 
 ALLOWED_HOSTS = ['www.salon-yab.ir','salon-yab.ir','http://salon-yab.ir/','http://salon-yab.ir/','130.185.76.161']

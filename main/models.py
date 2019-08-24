@@ -167,7 +167,7 @@ class Hour(models.Model):
     sans = models.CharField(max_length=32, null=True, blank=True, choices=STATUS_SANS)
 
     class Meta:
-        unique_together = ('open','day',)
+        unique_together = ('open','day','gym_id')
 
     def __str__(self):
         return str(self.open)+' '+self.day+' '+self.gym_id.name
