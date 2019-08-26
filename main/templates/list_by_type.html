@@ -1,7 +1,7 @@
 {% extends 'partial/header.html' %}
 {% load static %}
 {% block title %}
-    لیست سالن های {{ category }}
+    لیست سالن ها
 {% endblock %}
 {% block link %}
     {% include 'partial/index-header.html' %}
@@ -19,7 +19,7 @@
 
                     <div class="row justify-content-center mt-5">
                         <div class="col-md-8 text-center">
-                            <h1>لیست تمام سالن ها</h1>
+                            <h1>{{ selected }}</h1>
                         </div>
                     </div>
 
@@ -30,182 +30,193 @@
     </div>
 
     <div class="site-section">
-    <div class="container">
-    <div class="row">
-    <div class="col-lg-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
 
-        <div class="row">
+                    <div class="row">
 
 
-            {% for gym in gyms %}
-                <div class="col-lg-6">
+                        {% for gym in gyms %}
+                            <div class="col-lg-6">
 
-                    <div class="d-block d-md-flex listing vertical">
-                        <a href="#" class="img d-block"
-                           style="background-image: url({{ gym.picture.url }})"></a>
-                        <div class="lh-content">
+                                <div class="d-block d-md-flex listing vertical">
+                                    <a href="#" class="img d-block"
+                                       style="background-image: url({{ gym.picture.url }});height: 230px;width: 192.7px"></a>
+                                    <div class="lh-content">
                                         <span style="text-align: right"
                                               class="category">{{ gym.area_id.city_id.province_id.name }}</span>
-                            <a href="#" class="bookmark"><span class="icon-heart"></span></a>
-                            <h3 style="text-align: right"><a
-                                    href="{% url 'Main:gym_single' gym.slug %}">{{ gym.name }}</a></h3>
-                            <address style="text-align: right">{{ gym.address }}</address>
-                            <span class="review">{% for key , value in counter_comments.items %}
-                                {% if key == gym.name %}({{ value }}){% endif %}{% endfor %}</span>
+                                        <a href="#" class="bookmark"><span class="icon-heart"></span></a>
+                                        <h3 style="text-align: right"><a
+                                                href="{% url 'Main:gym_single' gym.slug %}">{{ gym.name }}</a></h3>
+                                        <address style="text-align: right">{{ gym.address }}</address>
+                                        <span class="review">{% for key , value in counter_comments.items %}
+                                            {% if key == gym.name %}({{ value }}){% endif %}{% endfor %}</span>
 
-                            <p style="text-align: right" class="mb-0">
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-warning"></span>
-                                <span class="icon-star text-secondary"></span>
-                            </p>
+                                        <p style="text-align: right" class="mb-0">
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-warning"></span>
+                                            <span class="icon-star text-secondary"></span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+
+                    <div class="col-12 mt-5 text-center">
+                        <div class="custom-pagination">
+
+                            {% if gyms.has_next %}
+                                <a href="?page={{ gyms.number }}">{{ gyms.number }}</a>
+                                <a href="?page={{ gyms.next_page_number }}">{{ gyms.next_page_number }}</a>
+
+                                <span class="more-page">...</span>
+                                <a href="?page={{ gyms.paginator.num_pages }}">{{ gyms.paginator.num_pages }}</a>
+                            {% endif %}
+                            {% if gyms.has_previous %}
+
+                                <a href="?page={{ gyms.previous_page_number }}">{{ gyms.previous_page_number }}</a>
+                                <span class="more-page">...</span>
+                                <a href="?page={{ gyms.paginator.num_pages }}">{{ gyms.paginator.num_pages }}</a>
+                            {% endif %}
                         </div>
                     </div>
 
                 </div>
-            {% endfor %}
+                <div class="col-lg-3 ml-auto">
+
+                    <div class="mb-5">
+                        <h3 style="text-align: right" class="h5 text-black mb-3">فیلتر</h3>
+                        <form action="{% url 'Main:gym_list' %}" method="get" id="select_province">
+
+                            <div class="form-group">
+                                <div class="select-wrap">
+                                    <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+
+                                    {% csrf_token %}
+
+                                    <select class="form-control rounded" name="province" id="">
+                                        <option style="text-align: right;direction: rtl" value="">استان ها</option>
+                                        {% for province in provinces %}
+                                            <option style="text-align: right;direction: rtl" name="province"
+                                                    value="{{ province.name }}">{{ province.name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                                <div class="select-wrap">
+                                    <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                    <select class="form-control rounded" name="city" id="">
+                                        <option style="text-align: right;direction: rtl" value="">شهرها</option>
+                                        {% for city in cities %}
+                                            <option style="text-align: right;direction: rtl"
+                                                    value="{{ city.name }}">{{ city.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="select-wrap">
+                                    <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                    <select class="form-control rounded" name="area" id="">
+                                        <option style="text-align: right;direction: rtl" value="">منطقه</option>
+                                        {% for area in areas %}
+                                            <option style="text-align: right;direction: rtl"
+                                                    value="{{ area.name }}">{{ area.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="select-wrap">
+                                    <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                    <select class="form-control rounded" name="category" id="">
+                                        <option value="">همه دسته ها</option>
+                                        {% for category in categories %}
+                                            <option value="{{ category.name }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <style>
+                                    .select-wrap, .wrap-icon {
+                                        margin-top: 10px;
+                                    }
+                                </style>
 
 
-        </div>
+                            </div>
+                            <div class="form-group">
+                                <!-- select-wrap, .wrap-icon -->
+                                <div class="wrap-icon">
+                                    <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
+                                    <select class="form-control rounded" name="sex" id="">
+                                        <option disabled selected value="">جنسیت</option>
+                                        <option value="مرد">مرد</option>
+                                        <option value="زن">زن</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-lg-12 ml-auto text-right">
+                                    <input type="submit" value="جستجو کنید" name="search_gym"
+                                           class="btn btn-primary btn-block rounded">
+                                </div>
+                        </form>
+                    </div>
 
-        <div class="col-12 mt-5 text-center">
-            <div class="custom-pagination">
 
-                {% if gyms.has_next %}
-                    <a href="?page={{ gyms.number }}">{{ gyms.number }}</a>
-                    <a href="?page={{ gyms.next_page_number }}">{{ gyms.next_page_number }}</a>
+                    <!--<div class="mb-5">-->
+                    <!--<form action="#" method="post">-->
+                    <!--<div class="form-group">-->
+                    <!--<p>Category 'Real Estate' is selected</p>-->
+                    <!--<p>More filters</p>-->
+                    <!--</div>-->
+                    <!--<div class="form-group">-->
+                    <!--<ul class="list-unstyled">-->
+                    <!--<li>-->
+                    <!--<label for="option1">-->
+                    <!--<input type="checkbox" id="option1">-->
+                    <!--Residential-->
+                    <!--</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                    <!--<label for="option2">-->
+                    <!--<input type="checkbox" id="option2">-->
+                    <!--Commercial-->
+                    <!--</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                    <!--<label for="option3">-->
+                    <!--<input type="checkbox" id="option3">-->
+                    <!--Industrial-->
+                    <!--</label>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                    <!--<label for="option4">-->
+                    <!--<input type="checkbox" id="option4">-->
+                    <!--Land-->
+                    <!--</label>-->
+                    <!--</li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--</form>-->
+                    <!--</div>-->
 
-                    <span class="more-page">...</span>
-                    <a href="?page={{ gyms.paginator.num_pages }}">{{ gyms.paginator.num_pages }}</a>
-                {% endif %}
-                {% if gyms.has_previous %}
 
-                    <a href="?page={{ gyms.previous_page_number }}">{{ gyms.previous_page_number }}</a>
-                    <span class="more-page">...</span>
-                    <a href="?page={{ gyms.paginator.num_pages }}">{{ gyms.paginator.num_pages }}</a>
-                {% endif %}
+                </div>
+
             </div>
         </div>
-
     </div>
-    <div class="col-lg-3 ml-auto">
-
-        <div class="mb-5">
-            <h3 style="text-align: right" class="h5 text-black mb-3">فیلتر</h3>
-            <form action="{% url 'Main:gym_list' %}" method="get" id="select_province">
-
-                <div class="form-group">
-                    <div class="select-wrap">
-                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-
-                        {% csrf_token %}
-
-                        <select class="form-control rounded" name="province" id="">
-                            <option style="text-align: right;direction: rtl" value="">استان ها</option>
-                            {% for province in provinces %}
-                                <option style="text-align: right;direction: rtl" name="province"
-                                        value="{{ province.name }}">{{ province.name }}</option>
-                            {% endfor %}
-                        </select>
-
-                    </div>
-                    <div class="select-wrap">
-                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                        <select class="form-control rounded" name="city" id="">
-                            <option style="text-align: right;direction: rtl" value="">شهرها</option>
-                            {% for city in cities %}
-                                <option style="text-align: right;direction: rtl"
-                                        value="{{ city.name }}">{{ city.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="select-wrap">
-                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                        <select class="form-control rounded" name="area" id="">
-                            <option style="text-align: right;direction: rtl" value="">منطقه</option>
-                            {% for area in areas %}
-                                <option style="text-align: right;direction: rtl"
-                                        value="{{ area.name }}">{{ area.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="select-wrap">
-                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                        <select class="form-control rounded" name="category" id="">
-                            <option value="">همه دسته ها</option>
-                            {% for category in categories %}
-                                <option value="{{ category.name }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <style>
-                        .select-wrap, .wrap-icon {
-                            margin-top: 10px;
-                        }
-                    </style>
 
 
-                </div>
-                <div class="form-group">
-                    <!-- select-wrap, .wrap-icon -->
-                    <div class="wrap-icon">
-                        <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                        <select class="form-control rounded" name="sex" id="">
-                            <option disabled selected value="">جنسیت</option>
-                            <option value="مرد">مرد</option>
-                            <option value="زن">زن</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row align-items-center">
-                    <div class="col-lg-12 ml-auto text-right">
-                        <input type="submit" value="جستجو کنید" name="search_gym"
-                               class="btn btn-primary btn-block rounded">
-                    </div>
-            </form>
-        </div>
 
 
-        <!--<div class="mb-5">-->
-        <!--<form action="#" method="post">-->
-        <!--<div class="form-group">-->
-        <!--<p>Category 'Real Estate' is selected</p>-->
-        <!--<p>More filters</p>-->
-        <!--</div>-->
-        <!--<div class="form-group">-->
-        <!--<ul class="list-unstyled">-->
-        <!--<li>-->
-        <!--<label for="option1">-->
-        <!--<input type="checkbox" id="option1">-->
-        <!--Residential-->
-        <!--</label>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<label for="option2">-->
-        <!--<input type="checkbox" id="option2">-->
-        <!--Commercial-->
-        <!--</label>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<label for="option3">-->
-        <!--<input type="checkbox" id="option3">-->
-        <!--Industrial-->
-        <!--</label>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<label for="option4">-->
-        <!--<input type="checkbox" id="option4">-->
-        <!--Land-->
-        <!--</label>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--</div>-->
-        <!--</form>-->
-        <!--</div>-->
 
 
-        {% include 'partial/footer.html' %}
+    {% include 'partial/footer.html' %}
     </div>
 
     <script src="{% static 'main-css/js/jquery-3.3.1.min.js' %}"></script>

@@ -408,8 +408,6 @@ def Favorite(request):
 def Gym_Single(request, slug):
 	select_gym = Gym.objects.get(slug=slug)
 	gyms = Gym.objects.filter(area_id__city_id__province_id__name=select_gym.area_id.city_id.province_id)
-	facilities = Gym_Facility.objects.all()
-	just_faci = Facility.objects.all()
 
 	counter_comments = {}
 	for gym in gyms:
@@ -419,8 +417,6 @@ def Gym_Single(request, slug):
 		'gyms': gyms,
 		'select_gym': select_gym,
 		'counter_comments': counter_comments,
-		'facilities': facilities,
-		'just_faci': just_faci
 
 	}
 
@@ -2492,6 +2488,7 @@ def All_Users(request):
 					return render(request, 'role_panel/alluser.html', context)
 
 				if request.method == 'POST':
+
 					for group in groups:
 						if group.name in request.POST:
 							user_list = request.POST.getlist('select')
@@ -3986,7 +3983,7 @@ def Hour_Add(request, slug):
 					gym_id = Gym.objects.get(id=slug)
 
 					try:
-						hour = Hour.objects.get(day=day , open=open)
+						hour = Hour.objects.get(gym_id=gym_id, day=day , open=open)
 						hour.close = close
 						hour.price = price
 						hour.save()
@@ -4160,3 +4157,6 @@ def Hour_Add(request, slug):
 
 
 		return render(request, 'role_panel/hour_add.html', context)
+
+def Ghavanin(request):
+	return render (request , 'ghavanin.html',context={})

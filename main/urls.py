@@ -13,6 +13,7 @@ urlpatterns = [
 
 	path('gyms_list/',views.Gym_List,name='gym_list'),
 	path('gyms_list/<category>/',views.Select_Category,name='select_category'),
+	path('قوانین_و_مقررات/',views.Ghavanin,name='ghavanin'),
 
 	path('favorite/',views.Favorite,name='favorite_list'),
 

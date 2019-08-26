@@ -120,15 +120,6 @@ class Slid(models.Model):
 
 
 
-
-class Gym_Category(models.Model):
-    gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.gym_id.name + ' ' + self.category_id.name
-
-
 class Hour(models.Model):
     STATUS_SANS = (
         ('One', 'one'),
@@ -172,15 +163,6 @@ class Hour(models.Model):
     def __str__(self):
         return str(self.open)+' '+self.day+' '+self.gym_id.name
 
-
-class Gym_Facility(models.Model):
-    gym_id = models.ForeignKey(Gym, on_delete=models.CASCADE)
-    facility_id = models.ForeignKey(Facility, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.gym_id.name + ' ' + self.facility_id.name
-
-
 class Group(models.Model):
     id = models.AutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -192,14 +174,6 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Group_MyUser(models.Model):
-    myuser_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    group_id = models.ForeignKey(Group, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.myuser_id.name + ' ' + self.group_id.name
 
 
 class Role(models.Model):
@@ -354,14 +328,6 @@ class Training_Class(models.Model):
         super(Training_Class, self).save(*args, **kwargs)
 
 
-
-class Training_Class_MyUser(models.Model):
-    training_class_id = models.ForeignKey(Training_Class, on_delete=models.CASCADE)
-    myuser_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.myuser_id.name + ' ' + self.training_class_id.name
-
 #
 # @receiver(post_save,sender = Province)
 # def create_city(sender,instance,created,**kwargs):
@@ -454,16 +420,13 @@ def add_to_gp(sender,instance,action,reverse,pk_set,**kwargs):
     if action == "post_add":
         user = pk_set
         role = Role.objects.get(name='آموزش پرورش')
-        try:
+        if instance.name == 'آموزش پرورش':
             for use in user:
-                m = MyUser.objects.get(pk=use)
-                group = Group.objects.get(user_id=MyUser.objects.get(pk = use))
-
-        except:
-            for use in user:
-                m = MyUser.objects.get(pk=use)
-                group = Group.objects.get(name = 'آموزش پرورش')
-                group.user_id.add(use)
+                try:
+                        group = Group.objects.get(name='آموزش و پرورش' ,user_id=MyUser.objects.get(pk = use))
+                except:
+                        group = Group.objects.get(name = 'آموزش و پرورش')
+                        group.user_id.add(use)
 
     if action == "post_remove":
 
@@ -471,7 +434,7 @@ def add_to_gp(sender,instance,action,reverse,pk_set,**kwargs):
 
         try:
             for use in user:
-                group = Group.objects.get(user_id__pk=use,name = 'آموزش پرورش')
+                group = Group.objects.get(user_id__pk=use,name = 'آموزش و پرورش')
                 group.user_id.remove(use)
                 group.save()
         except:
