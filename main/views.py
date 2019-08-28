@@ -1953,6 +1953,146 @@ def Accept(request, slug):
 
 		return render(request, 'modal_reserv.html', context)
 
+def Add_Ticket(request):
+	if request.user.is_authenticated:
+
+		user_phone_number = request.user
+
+		user_logged = MyUser.objects.get(phone_number=user_phone_number)
+		roles_user = None
+		roles_user_count = 0
+		try:
+			roles_user = Role.objects.filter(user_id=user_logged)
+			roles_user_count = roles_user.count()
+		except Role.DoesNotExist:
+			roles_user = None
+
+		ticket_list1 = None
+
+		for rol in roles_user:
+			if rol.name == 'آموزش پرورش':
+				ticket_list1 = Coach_Profile.objects.filter(user_id__group__name='آموزش و پرورش',
+													 user_id__city=user_logged.city)
+
+				if roles_user_count == 0:
+					ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
+
+				name = user_logged.name
+				if request.method == 'POST':
+					name = request.POST['name']
+					family = request.POST['family_name']
+					email = request.POST['email']
+					title = request.POST['subject']  # title haman id 'girande ast
+					text = request.POST['text']
+
+					worker_req = Ticket.objects.create(name=name, family_name=family, myuser_id=user_logged,
+													   email=email,
+													   title=title, text=text)
+					worker_req.save()
+
+					return redirect('Main:add_ticket')
+				else:
+
+
+					context = {
+						'roles_user_count': roles_user_count,
+						'roles_user': roles_user,
+						'ticket_list1': ticket_list1,
+					}
+					return render(request, 'role_panel/ticket.html', context)
+			elif rol.name == 'مربی':
+
+
+				if roles_user_count == 0:
+					ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
+
+				name = user_logged.name
+				if request.method == 'POST':
+					name = request.POST['name']
+					family = request.POST['family_name']
+					email = request.POST['email']
+					title = request.POST['subject']  # title haman id 'girande ast
+					text = request.POST['text']
+
+					worker_req = Ticket.objects.create(name=name, family_name=family, myuser_id=user_logged,
+													   email=email,
+													   title=title, text=text)
+					worker_req.save()
+
+					return redirect('Main:add_ticket')
+				else:
+
+
+					context = {
+						'roles_user_count': roles_user_count,
+						'roles_user': roles_user,
+						'ticket_list1': ticket_list1,
+					}
+					return render(request, 'role_panel/ticket.html', context)
+			elif rol.name == 'مسئول منطقه':
+
+
+				if roles_user_count == 0:
+					ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
+
+				name = user_logged.name
+				if request.method == 'POST':
+					name = request.POST['name']
+					family = request.POST['family_name']
+					email = request.POST['email']
+					title = request.POST['subject']  # title haman id 'girande ast
+					text = request.POST['text']
+					tf = TicketForm(request.POST)
+					if tf.is_valid():
+						worker_req = Ticket.objects.create(name=name, family_name=family, myuser_id=user_logged,
+														   email=email,
+														   title=title, text=text)
+						worker_req.save()
+
+						return redirect('Main:add_ticket')
+				else:
+
+
+					context = {
+						'roles_user_count': roles_user_count,
+						'roles_user': roles_user,
+						'ticket_list1': ticket_list1,
+					}
+					return render(request, 'role_panel/ticket.html', context)
+
+
+			else:
+				if request.method == 'POST':
+					tf = TicketForm(request.POST)
+					if tf.is_valid():
+						name = request.POST['name']
+						family = request.POST['family_name']
+						email = request.POST['email']
+						title = request.POST['subject']  # title haman id 'girande ast
+						text = request.POST['text']
+						tf = TicketForm(request.POST)
+
+						worker_req = Ticket.objects.create(name=name, family_name=family,
+														   email=email,
+														   title=title, text=text)
+						worker_req.save()
+
+						context = {
+
+						}
+						return render(request, 'role_panel/ticket.html', context)
+				else:
+
+
+					context = {
+						'roles_user_count':roles_user_count,
+						'roles_user':roles_user
+					}
+					return render(request, 'role_panel/ticket.html', context)
+
+
+
+
 
 def Work_Request(request):
 	if request.user.is_authenticated:
@@ -3428,14 +3568,13 @@ def Add_Class(request, slug):
 									Order.objects.get(order_date=cstart_date,
 													  gym_id=gym_id, hour_id=hour_id,
 													  )
-								except:
 									gyms = Gym.objects.all()
 									coaches = Coach_Profile.objects.all()
 									categories = Category.objects.all()
 									hours = Hour.objects.filter(gym_id__id=slug).order_by('open')
 									context = {
 										'error': True,
-										'message': 'تایم های انتخابی از قبل رزرو شده اند.',
+										'message': 'چند تایم های انتخابی از قبل رزرو شده اند.',
 										'roles_user_count': roles_user_count,
 										'roles_user': roles_user,
 										'hours': hours,
@@ -3444,6 +3583,8 @@ def Add_Class(request, slug):
 										'categories': categories,
 									}
 									return render(request, 'role_panel/new-class.html', context)
+								except:
+									pass
 							cstart_date = cstart_date + timedelta(days=1)
 						else:
 							amir = False
@@ -3520,7 +3661,6 @@ def Add_Class(request, slug):
 									Order.objects.get(order_date=cstart_date,
 													  gym_id=gym_id, hour_id=hour_id,
 													  )
-								except:
 									gyms = Gym.objects.all()
 									coaches = Coach_Profile.objects.all()
 									categories = Category.objects.all()
@@ -3536,6 +3676,8 @@ def Add_Class(request, slug):
 										'categories': categories,
 									}
 									return render(request, 'role_panel/new-class.html', context)
+								except:
+									pass
 							cstart_date = cstart_date + timedelta(days=1)
 						else:
 							amir = False
@@ -3548,7 +3690,7 @@ def Add_Class(request, slug):
 
 					return redirect('Main:add_class', slug)
 
-				gyms = Gym.objects.all()
+				gyms = Gym.objects.filter(area_id__name=user_logged_in.area)
 				coaches = Coach_Profile.objects.filter(user_id=user_logged_in)
 				categories = Category.objects.all()
 				hours = Hour.objects.filter(gym_id__id=slug).order_by('open')
