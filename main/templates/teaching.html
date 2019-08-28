@@ -40,14 +40,14 @@
                             <div class="col-lg-6">
 
                                 <div class="d-block d-md-flex listing vertical">
-                                    <a href="listings-single.html" class="img d-block"
-                                       style="background-image: url('images/09659990011717971060.jpg')"></a>
+                                    <a href="{% url 'Main:training_single' class.slug  %}" class="img d-block"
+                                       style="background-image: url({{ class.picture.url }})"></a>
                                     <div class="lh-content">
                                         <span style="text-align: right"
                                               class="category">{{ class.gym_id.area_id.city_id.name }}</span>
-                                        <a href="#" class="bookmark"><span class="icon-heart"></span></a>
+
                                         <h3 style="text-align: right"><a href="#">{{ class.name }}</a></h3>
-                                        <address style="text-align: right">{{ class.gym_id.address }}</address>
+                                        <address style="text-align: right" >{{ class.gym_id.address }}</address>
                                         <span class="review">{% for name,dic  in counter_comments.items %}
                                             {% if name == class.gym_id.name %} {{ dic }} نظر
                                             {% endif %}{% endfor %}</span>

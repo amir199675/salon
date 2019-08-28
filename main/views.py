@@ -1632,9 +1632,12 @@ def Accept(request, slug):
 		s_order_date = request.POST['date']
 		s_total_price = request.POST['totalprice']
 		s_paid_money = request.POST['paidmoney']
-
 		s_order_date = s_order_date.replace(',', '')
 		s_order_date = s_order_date.replace('.', '')
+		if 'Sept' in s_order_date:
+			s_order_date = s_order_date.replace('t', '')
+
+
 
 		try:
 			order_date = datetime.strptime(s_order_date, '%B %d %Y')
@@ -2176,14 +2179,6 @@ def Work_Request(request):
 			return render(request, 'worker.html', context)
 
 
-def Coacher_Page(request, slug):
-	training_class = Training_Class.objects.get(slug=slug)
-
-	context = {
-		'training_class': training_class
-	}
-	return render(request, 'coachpage.html', context)
-
 
 def Classes_List(request):
 	if request.user.is_authenticated:
@@ -2317,6 +2312,25 @@ def Classes_List(request):
 
 		}
 		return render(request, 'teaching.html', context)
+
+def Training_Single(request,slug):
+	if request.user.is_authenticated:
+		select_training = Training_Class.objects.get(slug=slug)
+		user_phone_number = request.user
+		user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+		context = {
+			'user_logged_in':user_logged_in,
+			'select_training': select_training
+		}
+		return render(request, 'coachpage.html', context)
+
+	if request.method == 'POST' and 'reserve' in request.POST:
+		return redirect('/Accounts/login/?next=/training_class_single/'+slug)
+	select_training = Training_Class.objects.get(slug=slug)
+	context = {
+		'select_training': select_training
+	}
+	return render(request, 'coachpage.html', context)
 
 
 def Dashboard(request):

@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
+{% if amir %}
+<h1>Transaction failed or canceled by user<br>please click <a href="{% url 'Main:training_single' slug %}">here</a></h1>
+{% else %}
 <h1>Transaction failed or canceled by user<br>please click <a href="{% url 'Main:reservation' slug %}">here</a></h1>
+{% endif %}
 </body>
 </html>

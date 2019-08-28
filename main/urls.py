@@ -14,10 +14,9 @@ urlpatterns = [
 	path('gyms_list/',views.Gym_List,name='gym_list'),
 	path('gyms_list/<category>/',views.Select_Category,name='select_category'),
 	path('قوانین_و_مقررات/',views.Ghavanin,name='ghavanin'),
-
 	path('favorite/',views.Favorite,name='favorite_list'),
-
 	path('gym_single/<slug>/',views.Gym_Single,name = 'gym_single'),
+	path('training_class_single/<slug>/',views.Training_Single,name = 'training_single'),
 
 	path('first_week_reservation/<slug>/', views.First_Week_Reservation, name='reservation'),
 	path('second_week_reservation/<slug>/',views.Second_Week_Reservation,name = 'next_week'),

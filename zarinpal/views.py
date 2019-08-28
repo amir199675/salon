@@ -4,7 +4,7 @@ from zeep import Client
 from main.models import *
 from Account.models import MyUser
 from datetime import datetime
-from main.models import Gym
+from main.models import Gym , Training_Class
 
 
 MERCHANT = '3ee469e4-cb8d-11e8-8e1b-000c295eb8fc'
@@ -102,3 +102,42 @@ def verify(request):
 
         return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
 
+def request_class(request):
+    if request.method == 'POST':
+        select_training = request.POST['select_training']
+        user = request.POST['user']
+        select_training = Training_Class.objects.get(id = select_training)
+        global select_user
+        select_user = MyUser.objects.get(id=user)
+        amount = select_training.price
+
+        result = client.service.PaymentRequest(MERCHANT, amount, description, email, mobile, CallbackURL)
+        if result.Status == 100:
+            try:
+                select_training = Training_Class.objects.get(id = select_training)
+                global select_training_id
+                select_training_id = select_training.id
+            except:
+                return HttpResponse('اشکال در رزرو کلاس پیش آمده. لطفا مجددا امتحان فرمایید یا با پشتیبانی در میان بگذارید.')
+            return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
+
+
+
+def verify_class(request):
+    training = Training_Class.objects.get(id=select_training_id)
+    if request.GET.get('Status') == 'OK':
+        training = Training_Class.objects.get(id=select_training_id)
+        training.user_id.add(select_user)
+        training.save()
+        result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], amount)
+        # return redirect('Main:reservation' ,  order.gym_id.slug)
+        if result.Status == 100:
+            return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
+        elif result.Status == 101:
+            return HttpResponse('Transaction submitted : ' + str(result.Status))
+        else:
+
+            return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
+    else:
+        return render(request,'transmition/faild.html',context={'slug':training.slug,
+                                                                'amir':True})
