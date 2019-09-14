@@ -101,8 +101,8 @@ DATABASES = {
 		'NAME': "salonyab",
 		'PASSWORD': 'j+AXw.79',
 		# 'USER': 'postgres',
-		'USER': 'amir',
-		
+		'USER': 'postgres',
+
 		'PORT': 5432
 	}
 }
