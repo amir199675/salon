@@ -208,7 +208,42 @@ def Login(request):
 
 def Send_Password(request):
 
+    if request.method == 'POST' and 'login_form' in request.POST:
+        phone_number = request.POST['phone_number']
+        password = request.POST['password']
+        user = authenticate(username=phone_number, password=password)
 
+        if user is not None:
+            if user.is_active and user.is_code_active:
+                login(request, user)
+                if 'next' in request.POST:
+                    return redirect(request.POST['next'])
+                request.session['user_phone_number'] = phone_number
+                return redirect('Main:index')
+            else:
+                message = 'کد فعال سازی را دوباره درخواست نمایید'
+                context = {
+                    'login': True,
+                    'message':message,
+                    'error':True
+                }
+                return render(request, 'register/index.html', context)
+        else:
+
+            uf = MyUserForm()
+            provinces = Province.objects.all()
+            cities = City.objects.all()
+            areas = Area.objects.values('name').distinct()
+
+            context = {
+                'uf': uf,
+                'provinces': provinces,
+                'cities': cities,
+                'areas': areas,
+                'message': 'مشخصات خود را به طور صحیح وارد کنید.',
+                'error': True
+            }
+            return render(request, 'register/index.html', context)
     if request.method == 'POST' and 'register_form' in request.POST:
 
         uf = MyUserForm(request.POST)
@@ -361,9 +396,11 @@ def Send_Password(request):
             r = requests.post(url='https://RestFulSms.com/api/VerificationCode', headers=headers, data=data)
 
             context = {
-
+                'error':True,
+                'message':'پسورد شما شماره ایست که دریافت کرده اید.'
             }
-            return render(request, 'register/taeed_pass.html', context)
+            return render(request, 'register/index.html', context)
+
         else:
             uf = MyUserForm()
             provinces = Province.objects.all()
