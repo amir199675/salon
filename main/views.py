@@ -1637,8 +1637,6 @@ def Accept(request, slug):
 		if 'Sept' in s_order_date:
 			s_order_date = s_order_date.replace('t', '')
 
-
-
 		try:
 			order_date = datetime.strptime(s_order_date, '%B %d %Y')
 		except:
@@ -1652,6 +1650,7 @@ def Accept(request, slug):
 		#                              status='Reserving')
 
 		select_gym = Gym.objects.get(slug=slug)
+
 		hour_day_distinct = Hour.objects.filter(Q(gym_id__slug=slug)).distinct('day')
 
 		hours = Hour.objects.filter(Q(gym_id__slug=slug))
@@ -1911,6 +1910,53 @@ def Accept(request, slug):
 
 		next_key = True
 		back_key = False
+		user_phone_number = request.user
+
+		user_logged = MyUser.objects.get(phone_number=user_phone_number)
+		roles_user = None
+		roles_user_count = 0
+		try:
+			roles_user = Role.objects.filter(user_id=user_logged)
+			roles_user_count = roles_user.count()
+		except Role.DoesNotExist:
+			roles_user = None
+
+		for rol in roles_user:
+			if rol.name == 'superuser':
+
+				order = Order.objects.create(order_date=order_date,
+											 gym_id=select_gym,
+											 myuser_id=user_logged,
+											 hour_id=Hour.objects.get(id=s_hour_id),
+											 total_price=s_total_price,
+											 paid_money=s_paid_money,
+											 status='Reserved',
+											 description='رزرو شده توسظ سوپر یوزر')
+				return redirect('Main:reservation' ,select_gym.slug)
+
+			elif rol.name == 'مسئول منطقه' and request.user.city == select_gym.area_id.city_id.name:
+
+				order = Order.objects.create(order_date=order_date,
+											 gym_id=select_gym,
+											 myuser_id=user_logged,
+											 hour_id=Hour.objects.get(id=s_hour_id),
+											 total_price=s_total_price,
+											 paid_money=s_paid_money,
+											 status='Reserved',
+											 description='رزرو شده توسظ مسئول منطقه')
+				return redirect('Main:reservation' ,select_gym.slug)
+
+			elif rol.name == 'سالن دار' and select_gym.user_id == request.user:
+				order = Order.objects.create(order_date=order_date,
+											 gym_id=select_gym,
+											 myuser_id=user_logged,
+											 hour_id=Hour.objects.get(id=s_hour_id),
+											 total_price=s_total_price,
+											 paid_money=s_paid_money,
+											 status='Reserved',
+											 description='رزرو شده توسظ سالن دار')
+				return redirect('Main:reservation', select_gym.slug)
+
 
 		context = {
 			'day_of_week': day_of_week,
@@ -1956,6 +2002,7 @@ def Accept(request, slug):
 
 		return render(request, 'modal_reserv.html', context)
 
+
 def Add_Ticket(request):
 	if request.user.is_authenticated:
 
@@ -1975,7 +2022,7 @@ def Add_Ticket(request):
 		for rol in roles_user:
 			if rol.name == 'آموزش پرورش':
 				ticket_list1 = Coach_Profile.objects.filter(user_id__group__name='آموزش و پرورش',
-													 user_id__city=user_logged.city)
+															user_id__city=user_logged.city)
 
 				if roles_user_count == 0:
 					ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
@@ -1995,7 +2042,6 @@ def Add_Ticket(request):
 
 					return redirect('Main:add_ticket')
 				else:
-
 
 					context = {
 						'roles_user_count': roles_user_count,
@@ -2005,7 +2051,6 @@ def Add_Ticket(request):
 					return render(request, 'role_panel/ticket.html', context)
 			elif rol.name == 'مربی':
 
-
 				if roles_user_count == 0:
 					ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
 
@@ -2025,7 +2070,6 @@ def Add_Ticket(request):
 					return redirect('Main:add_ticket')
 				else:
 
-
 					context = {
 						'roles_user_count': roles_user_count,
 						'roles_user': roles_user,
@@ -2033,7 +2077,6 @@ def Add_Ticket(request):
 					}
 					return render(request, 'role_panel/ticket.html', context)
 			elif rol.name == 'مسئول منطقه':
-
 
 				if roles_user_count == 0:
 					ticket_list1 = Training_Class.objects.filter(user_id=user_logged)
@@ -2054,7 +2097,6 @@ def Add_Ticket(request):
 
 						return redirect('Main:add_ticket')
 				else:
-
 
 					context = {
 						'roles_user_count': roles_user_count,
@@ -2086,15 +2128,11 @@ def Add_Ticket(request):
 						return render(request, 'role_panel/ticket.html', context)
 				else:
 
-
 					context = {
-						'roles_user_count':roles_user_count,
-						'roles_user':roles_user
+						'roles_user_count': roles_user_count,
+						'roles_user': roles_user
 					}
 					return render(request, 'role_panel/ticket.html', context)
-
-
-
 
 
 def Work_Request(request):
@@ -2177,7 +2215,6 @@ def Work_Request(request):
 
 			}
 			return render(request, 'worker.html', context)
-
 
 
 def Classes_List(request):
@@ -2313,19 +2350,20 @@ def Classes_List(request):
 		}
 		return render(request, 'teaching.html', context)
 
-def Training_Single(request,slug):
+
+def Training_Single(request, slug):
 	if request.user.is_authenticated:
 		select_training = Training_Class.objects.get(slug=slug)
 		user_phone_number = request.user
 		user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
 		context = {
-			'user_logged_in':user_logged_in,
+			'user_logged_in': user_logged_in,
 			'select_training': select_training
 		}
 		return render(request, 'coachpage.html', context)
 
 	if request.method == 'POST' and 'reserve' in request.POST:
-		return redirect('/Accounts/login/?next=/training_class_single/'+slug)
+		return redirect('/Accounts/login/?next=/training_class_single/' + slug)
 	select_training = Training_Class.objects.get(slug=slug)
 	context = {
 		'select_training': select_training
@@ -3437,7 +3475,7 @@ def Students(request):
 		for role in roles_user:
 			if role.name == 'مربی':
 				training_classes = Training_Class.objects.filter(coach_id__user_id=user_logged_in)
-				for training_class in training_classes: #2D array
+				for training_class in training_classes:  # 2D array
 					st = MyUser.objects.filter(students=training_class)
 					for student in st:
 						users.append(student.phone_number)
@@ -4139,7 +4177,7 @@ def Hour_Add(request, slug):
 					gym_id = Gym.objects.get(id=slug)
 
 					try:
-						hour = Hour.objects.get(gym_id=gym_id, day=day , open=open)
+						hour = Hour.objects.get(gym_id=gym_id, day=day, open=open)
 						hour.close = close
 						hour.price = price
 						hour.save()
@@ -4153,7 +4191,7 @@ def Hour_Add(request, slug):
 					day = request.POST['day']
 					gym_id = Gym.objects.get(id=slug)
 					try:
-						hour = Hour.objects.get(gym_id = gym_id,day=day , open=open,close=close)
+						hour = Hour.objects.get(gym_id=gym_id, day=day, open=open, close=close)
 						hour.delete()
 					except:
 						pass
@@ -4214,8 +4252,6 @@ def Hour_Add(request, slug):
 
 		condition = {}
 
-
-
 		for x in hours_open:
 			shanbe[x.id] = True
 			yeshanbe[x.id] = True
@@ -4225,13 +4261,12 @@ def Hour_Add(request, slug):
 			panjshanbe[x.id] = True
 			jome[x.id] = True
 
-
 		shanbe_t = {}
 		for x in hours_open:
 			shanbe_t[x.id] = True
 			for hour in hours:
 				for key, value in shanbe.items():
-					if key == x.id and value == True and hour.day == 'shanbe' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'shanbe' and hour.open == x.open:
 						shanbe_t[x.id] = False
 
 		yeshanbe_t = {}
@@ -4239,7 +4274,7 @@ def Hour_Add(request, slug):
 			yeshanbe_t[x.id] = True
 			for hour in hours:
 				for key, value in yeshanbe.items():
-					if key == x.id and value == True and hour.day == 'yeshanbe' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'yeshanbe' and hour.open == x.open:
 						yeshanbe_t[x.id] = False
 
 		doshanbe_t = {}
@@ -4247,7 +4282,7 @@ def Hour_Add(request, slug):
 			doshanbe_t[x.id] = True
 			for hour in hours:
 				for key, value in doshanbe.items():
-					if key == x.id and value == True and hour.day == 'doshanbe' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'doshanbe' and hour.open == x.open:
 						doshanbe_t[x.id] = False
 
 		seshanbe_t = {}
@@ -4255,7 +4290,7 @@ def Hour_Add(request, slug):
 			seshanbe_t[x.id] = True
 			for hour in hours:
 				for key, value in seshanbe.items():
-					if key == x.id and value == True and hour.day == 'seshanbe' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'seshanbe' and hour.open == x.open:
 						seshanbe_t[x.id] = False
 
 		charshanbe_t = {}
@@ -4263,7 +4298,7 @@ def Hour_Add(request, slug):
 			charshanbe_t[x.id] = True
 			for hour in hours:
 				for key, value in charshanbe.items():
-					if key == x.id and value == True and hour.day == 'charshanbe' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'charshanbe' and hour.open == x.open:
 						charshanbe_t[x.id] = False
 
 		panjshanbe_t = {}
@@ -4271,7 +4306,7 @@ def Hour_Add(request, slug):
 			panjshanbe_t[x.id] = True
 			for hour in hours:
 				for key, value in panjshanbe.items():
-					if key == x.id and value == True and hour.day == 'panjshanbe' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'panjshanbe' and hour.open == x.open:
 						panjshanbe_t[x.id] = False
 
 		jome_t = {}
@@ -4279,13 +4314,12 @@ def Hour_Add(request, slug):
 			jome_t[x.id] = True
 			for hour in hours:
 				for key, value in jome.items():
-					if key == x.id and value == True and hour.day == 'jome' and hour.open == x.open :
+					if key == x.id and value == True and hour.day == 'jome' and hour.open == x.open:
 						jome_t[x.id] = False
 
-
 		context = {
-			'roles_user_count':roles_user_count,
-			'roles_user':roles_user,
+			'roles_user_count': roles_user_count,
+			'roles_user': roles_user,
 			'day_of_week': day_of_week,
 			'now': now,
 			'select_gym': select_gym,
@@ -4311,8 +4345,8 @@ def Hour_Add(request, slug):
 
 		}
 
-
 		return render(request, 'role_panel/hour_add.html', context)
 
+
 def Ghavanin(request):
-	return render (request , 'ghavanin.html',context={})
+	return render(request, 'ghavanin.html', context={})
