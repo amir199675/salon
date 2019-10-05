@@ -1622,6 +1622,7 @@ def Fourth_Week_Reservation(request, slug):
 
 
 def Accept(request, slug):
+
 	if request.method == 'POST' and 'description' in request.POST:
 		s_day = request.POST['day']
 		s_status = request.POST['status']
@@ -1958,6 +1959,7 @@ def Accept(request, slug):
 				return redirect('Main:reservation', select_gym.slug)
 
 
+
 		context = {
 			'day_of_week': day_of_week,
 			'now': now,
@@ -2001,6 +2003,8 @@ def Accept(request, slug):
 		}
 
 		return render(request, 'modal_reserv.html', context)
+
+
 
 
 def Add_Ticket(request):
