@@ -409,11 +409,16 @@ def Gym_Single(request, slug):
 	select_gym = Gym.objects.get(slug=slug)
 	gyms = Gym.objects.filter(area_id__city_id__province_id__name=select_gym.area_id.city_id.province_id)
 
+	lan = 51.65259
+	lon = 32.68056
+
 	counter_comments = {}
 	for gym in gyms:
 		counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
 
 	context = {
+		'lan':lan,
+		'lon':lon,
 		'gyms': gyms,
 		'select_gym': select_gym,
 		'counter_comments': counter_comments,
