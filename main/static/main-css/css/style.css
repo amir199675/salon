@@ -2003,3 +2003,10 @@ padding-top: 1rem !important;
   display: block;
   z-index: 2;
 }
+.icon-keyboard_arrow_down:before{
+  display: none !important;
+}
+select {
+  direction: rtl;
+  padding-right: 41px;
+}
