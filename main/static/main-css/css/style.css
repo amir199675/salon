@@ -2010,3 +2010,22 @@ select {
   direction: rtl;
   padding-right: 41px;
 }
+a#example-modal--label{
+    width: 100%;
+}
+.fa-map:before{
+    margin-left: 15px;
+}
+#myModal > div > div > div.modal-body > form > input[type=text]:nth-child(12) {
+    height: 50px;
+    border-radius: 19px;
+    padding: 15px;
+    border: 1px solid #30e3ca;
+}
+.modal-footer {
+    margin-top: 20px;
+    margin-left: -159px;
+}
+button#an-hover{
+    background:#30e3ca ;
+}
