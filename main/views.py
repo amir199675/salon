@@ -454,7 +454,7 @@ def Gym_Single(request, slug):
 
 
 		else:
-			return redirect('Accounts/login/?next=/')
+			return redirect('/Accounts/login/?next='+request.get_full_path_info())
 	gyms = Gym.objects.filter(area_id__city_id__province_id__name=select_gym.area_id.city_id.province_id)
 
 	lan = 51.65259
