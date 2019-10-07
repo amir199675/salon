@@ -144,18 +144,21 @@
 
 
                         <div id="map"
-                             style="width: 300px; height: 300px; background: #eee; border: 2px solid #aaa; border-radius: 3px"></div>
+                             style="width: 300px; height: 300px; background: #eee; border: 2px solid #aaa;"></div>
 
                         <script type="text/javascript">
-                            var accessToken = 'f4a20a36e6ea821981d392316379b034ede2f91a'; // You can get an access token by filling out the demo account form in https://www.cedarmaps.com/#demo
-                            var map = CedarMaps.map(accessToken, {
-                                style: 'style://streets-light', //or style://streets-dark
-                                container: 'map',
-                                center: [51.391827, 35.694875],
+                            var myMap = new L.Map('map', {
+                                key: 'web.hOXyrf1G8ZKMt02YkhZXAECC8q2q0xshmqQOFRuN',
+                                maptype: 'neshan',
+                                poi: true,
+                                traffic: false,
+
+                                center: [{{ lon }}, {{ lan }}],
                                 zoom: 12,
-                                markerType:'red'
+                                marker: 'red'
                             });
                             var marker = new CedarMaps.gl.Marker().setLngLat([51.391827, 35.694875]).addTo(map)
+
                         </script>
 
                     </div>
