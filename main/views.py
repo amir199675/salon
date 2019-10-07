@@ -231,13 +231,33 @@ def Index(request):
 
 
 def Gym_List(request):
+
+	if request.method == 'POST' and 'favorite' in request.POST:
+		if request.user.is_authenticated:
+			user = request.user
+			fav = request.POST['fav']
+			try:
+				favorite = Favourite.objects.get(myuser_id=MyUser.objects.get(phone_number=user),
+												 gym_id=Gym.objects.get(id=fav))
+
+				favorite.delete()
+				return redirect('Main:gym_list')
+			except:
+				favorite = Favourite.objects.create(myuser_id=MyUser.objects.get(phone_number=user),
+													gym_id=Gym.objects.get(id=fav))
+				favorite.save()
+				return redirect('Main:gym_list')
+
+		else:
+			return redirect('Accounts/login/?next=/')
+
 	if request.method == 'POST' and 'gym_name' in request.POST:
 		name = request.POST['name']
 		gyms = Gym.objects.filter(name__contains=name)
 
 		counter_comments = {}
 
-		selected = 'همه سالن ها'
+		selected = 'سالن های مورد نظر'
 
 		categories = Category.objects.all()
 		areas = Area.objects.all()
@@ -313,6 +333,8 @@ def Gym_List(request):
 
 		return render(request, 'gym_list.html', context)
 
+
+
 	counter_comments = {}
 
 	categories = Category.objects.all()
@@ -323,7 +345,12 @@ def Gym_List(request):
 	provinces = Province.objects.all()
 	cities = City.objects.all()
 
-	gyms = Gym.objects.all()
+	gyms = None
+	if request.user.is_authenticated:
+		gyms = Gym.objects.filter(area_id__city_id__name=request.user.city)
+	else:
+		gyms = Gym.objects.all()
+
 	paginator = Paginator(gyms, 10)
 	page = request.GET.get('page')
 	gyms_list = paginator.get_page(page)
@@ -407,6 +434,27 @@ def Favorite(request):
 
 def Gym_Single(request, slug):
 	select_gym = Gym.objects.get(slug=slug)
+
+	if request.method == 'POST' and 'favorite' in request.POST:
+
+		if request.user.is_authenticated:
+			user = request.user
+			fav = request.POST['fav']
+			try:
+				favorite = Favourite.objects.get(myuser_id=MyUser.objects.get(phone_number=user),
+												 gym_id=Gym.objects.get(id=fav))
+				favorite.delete()
+
+				return redirect('Main:gym_single', select_gym.slug)
+			except:
+				favorite = Favourite.objects.create(myuser_id=MyUser.objects.get(phone_number=user),
+													gym_id=Gym.objects.get(id=fav))
+				favorite.save()
+				return redirect('Main:gym_single', select_gym.slug)
+
+
+		else:
+			return redirect('Accounts/login/?next=/')
 	gyms = Gym.objects.filter(area_id__city_id__province_id__name=select_gym.area_id.city_id.province_id)
 
 	lan = 51.65259
@@ -417,8 +465,8 @@ def Gym_Single(request, slug):
 		counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
 
 	context = {
-		'lan':lan,
-		'lon':lon,
+		'lan': lan,
+		'lon': lon,
 		'gyms': gyms,
 		'select_gym': select_gym,
 		'counter_comments': counter_comments,
@@ -1627,7 +1675,6 @@ def Fourth_Week_Reservation(request, slug):
 
 
 def Accept(request, slug):
-
 	if request.method == 'POST' and 'description' in request.POST:
 		s_day = request.POST['day']
 		s_status = request.POST['status']
@@ -1938,7 +1985,7 @@ def Accept(request, slug):
 											 paid_money=s_paid_money,
 											 status='Reserved',
 											 description='رزرو شده توسظ سوپر یوزر')
-				return redirect('Main:reservation' ,select_gym.slug)
+				return redirect('Main:reservation', select_gym.slug)
 
 			elif rol.name == 'مسئول منطقه' and request.user.city == select_gym.area_id.city_id.name:
 
@@ -1950,7 +1997,7 @@ def Accept(request, slug):
 											 paid_money=s_paid_money,
 											 status='Reserved',
 											 description='رزرو شده توسظ مسئول منطقه')
-				return redirect('Main:reservation' ,select_gym.slug)
+				return redirect('Main:reservation', select_gym.slug)
 
 			elif rol.name == 'سالن دار' and select_gym.user_id == request.user:
 				order = Order.objects.create(order_date=order_date,
@@ -1962,8 +2009,6 @@ def Accept(request, slug):
 											 status='Reserved',
 											 description='رزرو شده توسظ سالن دار')
 				return redirect('Main:reservation', select_gym.slug)
-
-
 
 		context = {
 			'day_of_week': day_of_week,
@@ -2008,8 +2053,6 @@ def Accept(request, slug):
 		}
 
 		return render(request, 'modal_reserv.html', context)
-
-
 
 
 def Add_Ticket(request):

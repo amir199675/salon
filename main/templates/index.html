@@ -227,8 +227,22 @@
                                     <img style="width: 349.99px;height: 233.33px" src="{{ salon.picture.url }}" alt="{{ salon.name }}" class="img-fluid">
                                 </div>
                                 <div class="listing-item-content">
-                                    <a href="#" class="bookmark" data-toggle="tooltip" data-placement="left"
-                                       title="Bookmark"><span class="icon-heart"></span></a>
+                                    <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" hidden value="{{ salon.id }}" name="fav">
+
+                                    <button class="bookmark" type="submit" name="favorite"><span class="
+
+
+
+
+
+
+
+
+                                            {% for favorite in favorites %}{% if salon.id == favorite.gym_id.id %}icon-heart{% else %}icon-add{% endif %}{% endfor %}"></span>
+                                    </button>
+                                </form>
                                     <a class="px-3 mb-3 category"
                                        href="{% url 'Main:gym_single' salon.slug %}">{{ salon.address }}</a>
                                     <h2 style="text-align: center" class="mb-1"><a
@@ -249,8 +263,22 @@
                                     <img style="width: 540px;height: 337.5px" src="{{ salon.picture.url }}" alt="Image" class="img-fluid">
                                 </div>
                                 <div class="listing-item-content">
-                                    <a href="#" class="bookmark" data-toggle="tooltip" data-placement="left"
-                                       title="Bookmark"><span class="icon-heart"></span></a>
+                                    <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" hidden value="{{ salon.id }}" name="fav">
+
+                                    <button class="bookmark" type="submit" name="favorite"><span class="
+
+
+
+
+
+
+
+
+                                            {% for favorite in favorites %}{% if salon.id == favorite.gym_id.id %}icon-heart{% else %}icon-add{% endif %}{% endfor %}"></span>
+                                    </button>
+                                </form>
                                     <a class="px-3 mb-3 category"
                                        href="{% url 'Main:gym_single' salon.slug %}">{{ salon.address }}</a>
                                     <h2 style="text-align: center" class="mb-1"><a
@@ -342,7 +370,7 @@
                 {% for training_class in training_classes %}
 
                     <div class="item">
-                        <a href="#">
+                        <a href="{% url 'Main:training_single' training_class.slug %}">
                             <img width="270px" height="192.85px" src="{{ training_class.picture.url }}" alt="{{ training_class.name }}">
                             <div class="text" style="padding:5px;background-color:#ebffe4;direction:rtl;text-align: right; width: 100%" >
                                 <div class="text" >{{ training_class.coach_id.user_id.name }}<br> <span>{{ training_class.gym_id.name }}</span></div>
@@ -413,7 +441,22 @@
                                style="background-image: url({{ pool.picture.url }})"></a>
                             <div class="lh-content">
                                 <span class="category">مشهد</span>
-                                <a href="#" class="bookmark"><span class="icon-heart"></span></a>
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" hidden value="{{ pool.id }}" name="fav">
+
+                                    <button class="bookmark" type="submit" name="favorite"><span class="
+
+
+
+
+
+
+
+
+                                            {% for favorite in favorites %}{% if pool.id == favorite.gym_id.id %}icon-heart{% else %}icon-add{% endif %}{% endfor %}"></span>
+                                    </button>
+                                </form>
                                 <h3 style="text-align: right"><a href="listings-single.html">سالن فرهیختگان</a></h3>
                                 <address style="text-align: right">مشهد خیابان فلان کوچه بهمان</address>
                                 <span style="text-align: right" class="review">(3 نظر)</span>
