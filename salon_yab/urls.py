@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include , re_path
+from .views import enamad
 from main.tasks import scheduler
 
 app_name = 'Api'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('438578.txt', enamad),
     path('',include('main.urls',namespace='Main')),
     path('Accounts/',include('Account.urls',namespace='Account')),
     re_path(r'^api-auth/',include('rest_framework.urls',namespace='rest_framework')),
