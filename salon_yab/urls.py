@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include , re_path
-from .views import enamad
+from .views import enamad ,SSL
 from main.tasks import scheduler
 
 app_name = 'Api'
@@ -28,6 +28,7 @@ urlpatterns = [
     re_path(r'^api-auth/',include('rest_framework.urls',namespace='rest_framework')),
     re_path(r'^api/',include('main.urls',namespace='rest_framework')),
     path('',include('zarinpal.urls',namespace='zarinpal')),
+    path('.well-known/acme-challenge/dG5bXrZ1wTlVnZvyPF58ZeK3DNJqLtYLLop32NvT7Zo',SSL,name='ssl'),
 
 
 ]
