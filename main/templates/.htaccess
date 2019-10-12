@@ -1,0 +1,3 @@
+RewriteEngine On RewriteCond %{22} 80 RewriteRule ^(.*)$
+https://www.salon-yab.ir/$1 [R,L]
+
