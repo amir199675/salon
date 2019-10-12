@@ -28,7 +28,7 @@ urlpatterns = [
     re_path(r'^api-auth/',include('rest_framework.urls',namespace='rest_framework')),
     re_path(r'^api/',include('main.urls',namespace='rest_framework')),
     path('',include('zarinpal.urls',namespace='zarinpal')),
-    path('.well-known/acme-challenge/dG5bXrZ1wTlVnZvyPF58ZeK3DNJqLtYLLop32NvT7Zo',SSL,name='ssl'),
+    path('.well-known/acme-challenge/_bvZ2ittLcjrofArYcGNZr0nB0EOhbbzHdOvOUP-DpE',SSL,name='ssl'),
 
 
 ]
