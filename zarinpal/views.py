@@ -75,7 +75,7 @@ def send_request(request):
         }
         result = client.service.SalePaymentRequest(request_data)
         # return HttpResponse(result)
-        if result.Status == 100:
+        if result.Status == 0:
             try:
                 order = Order.objects.create(order_date=order_date,
                                              gym_id=Gym.objects.get(id=s_gym_id),
