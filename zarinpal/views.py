@@ -74,7 +74,7 @@ def send_request(request):
             'CallBackUrl': callback_url
         }
         result = client.service.SalePaymentRequest(request_data)
-        return HttpResponse(result)
+        # return HttpResponse(result)
         if result.Status == 100:
             try:
                 order = Order.objects.create(order_date=order_date,
@@ -91,7 +91,7 @@ def send_request(request):
                 return HttpResponse('این سانس توسط کاربر دیگری درحال رزرو است... لطفا بعدا امتحان کنید!')
 
 
-            return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
+            return redirect('https://pec.shaparak.ir/NewIPG/?token='+str(result.Token))
         else:
 
             return HttpResponse('Error code: ' + str(result.Status))
