@@ -74,7 +74,7 @@ def send_request(request):
             'CallBackUrl': callback_url
         }
         result = client.service.SalePaymentRequest(request_data)
-        return HttpResponse(result.Status)
+        return HttpResponse(result)
         if result.Status == 100:
             try:
                 order = Order.objects.create(order_date=order_date,
