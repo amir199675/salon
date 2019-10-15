@@ -69,7 +69,7 @@ def send_request(request):
         # return HttpResponse(callback_url)
         request_data = {
             'LoginAccount': MERCHANT,
-            'OrderId': 5,
+            'OrderId': s_hour_id,
             'Amount': 1000,
             'CallBackUrl': callback_url
         }
