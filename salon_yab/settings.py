@@ -25,7 +25,7 @@ SECRET_KEY = 'd#j=xug=#l0qy5$lybh@%uk8a(as2)@3-f4pz9sqfddcwu*tox'
 DEBUG = False
 # DEBUG = True
 
-ALLOWED_HOSTS = ['www.salon-yab.ir','salon-yab.ir','http://salon-yab.ir/','http://salon-yab.ir/','130.185.76.161']
+ALLOWED_HOSTS = ['www.salon-yab.ir','salon-yab.ir','https://salon-yab.ir/','https://salon-yab.ir/','130.185.76.161']
 # ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = '../../dashboard/'

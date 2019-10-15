@@ -65,14 +65,16 @@ def send_request(request):
             order_date = datetime.strptime(s_order_date, '%B %d %Y')
         except:
             order_date = datetime.strptime(s_order_date, '%b %d %Y')
-        callback_url = str(request.build_absolute_uri(reverse('Account:login',).replace('http://','https://')))
+        callback_url = str(request.build_absolute_uri('/Accounts/login/').replace('http://', 'https://'))
+        # return HttpResponse(callback_url)
         request_data = {
             'LoginAccount': MERCHANT,
             'OrderId': 5,
             'Amount': 1000,
-            'CallBackUrl': 'https://google.com'
+            'CallBackUrl': callback_url
         }
-        result = send_reques('SalePaymentRequest', request_data)
+        result = client.service.SalePaymentRequest(request_data)
+        return HttpResponse(result.Status)
         if result.Status == 100:
             try:
                 order = Order.objects.create(order_date=order_date,
