@@ -119,7 +119,7 @@ def send_request(request):
 
 @csrf_exempt
 def verify(request):
-    if request.POST.get('Status') == 0 and request.POST.get('RRN') > 0 :
+    if int(request.POST.get('status'))== 0 and int(request.POST.get('RRN')) > 0 :
         order = Order.objects.get(id=order_id)
         order.status = 'Reserved'
         order.save()
