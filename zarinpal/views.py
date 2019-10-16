@@ -16,10 +16,20 @@ mobile = '09123456789'  # Optional
 CallbackURL = 'http://localhost:8000/dashboard/' # Important: need to edit for realy server.
 
 
+
+
+
 def send_reques(method, data):
     ws_method = getattr(client.service, method)
     result = ws_method(data)
     return result
+
+import random
+
+def RandForOrderId():
+    while(True):
+        number = random.randint(100000,999999)
+        return number
 
 
 def send_request(request):
@@ -69,11 +79,20 @@ def send_request(request):
         # return HttpResponse(callback_url)
         request_data = {
             'LoginAccount': MERCHANT,
-            'OrderId': s_hour_id,
-            'Amount': 1000,
+            'OrderId': RandForOrderId(),
+            'Amount': amount,
             'CallBackUrl': callback_url
         }
+
         result = client.service.SalePaymentRequest(request_data)
+        while(result.Status == -112):
+            request_data = {
+                'LoginAccount': MERCHANT,
+                'OrderId': RandForOrderId(),
+                'Amount': amount,
+                'CallBackUrl': callback_url
+            }
+            result = client.service.SalePaymentRequest(request_data)
         # return HttpResponse(result)
         if result.Status == 0:
             try:
