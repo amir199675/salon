@@ -73,7 +73,7 @@ def send_request(request):
             order_date = datetime.strptime(s_order_date, '%B %d %Y')
         except:
             order_date = datetime.strptime(s_order_date, '%b %d %Y')
-        callback_url = str(request.build_absolute_uri('verify/').replace('http://', 'https://'))
+        callback_url = str(request.build_absolute_uri('/verify/').replace('http://', 'https://'))
         # return HttpResponse(callback_url)
         request_data = {
             'LoginAccount': MERCHANT,
