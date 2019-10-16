@@ -6,6 +6,8 @@ from Account.models import MyUser
 from datetime import datetime
 from main.models import Gym , Training_Class
 import logging
+from django.views.decorators.csrf import csrf_protect
+
 
 logger = logging.getLogger("django")
 
@@ -115,6 +117,8 @@ def send_request(request):
 
             return HttpResponse('Error code: ' + str(result.Status))
 
+
+@csrf_protect
 def verify(request):
     order = Order.objects.all().first()
     # return HttpResponse(order)
