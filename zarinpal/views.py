@@ -116,7 +116,9 @@ def send_request(request):
             return HttpResponse('Error code: ' + str(result.Status))
 
 def verify(request):
-    logger.debug(request.POST)
+
+    if request.method == 'POST':
+        return HttpResponse('ah')
     if int(request.POST.get('status')) != -138:
     # if request.GET.get('Status') == 'OK':
     #     order = Order.objects.get(id=order_id)
