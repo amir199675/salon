@@ -117,6 +117,7 @@ def send_request(request):
 
 def verify(request):
     logger.debug(request.POST)
+    if int(request.POST.get('status')) != -138:
     # if request.GET.get('Status') == 'OK':
     #     order = Order.objects.get(id=order_id)
     #     order.status = 'Reserved'
@@ -135,9 +136,9 @@ def verify(request):
     #     order.delete()
     #
     #     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
-    order = Order.objects.get(id=order_id)
-    order.delete()
-    return HttpResponse('ama')
+        order = Order.objects.get(id=order_id)
+        order.delete()
+        return HttpResponse('ama')
     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
 
 def request_class(request):
