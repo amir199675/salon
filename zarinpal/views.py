@@ -114,24 +114,28 @@ def send_request(request):
             return HttpResponse('Error code: ' + str(result.Status))
 
 def verify(request):
-    if request.GET.get('Status') == 'OK':
-        order = Order.objects.get(id=order_id)
-        order.status = 'Reserved'
-        order.save()
-        result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], amount)
-        # return redirect('Main:reservation' ,  order.gym_id.slug)
-        if result.Status == 100:
-            return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
-        elif result.Status == 101:
-            return HttpResponse('Transaction submitted : ' + str(result.Status))
-        else:
+    # if request.GET.get('Status') == 'OK':
+    #     order = Order.objects.get(id=order_id)
+    #     order.status = 'Reserved'
+    #     order.save()
+    #     result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], amount)
+    #     # return redirect('Main:reservation' ,  order.gym_id.slug)
+    #     if result.Status == 100:
+    #         return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
+    #     elif result.Status == 101:
+    #         return HttpResponse('Transaction submitted : ' + str(result.Status))
+    #     else:
+    #
+    #         return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
+    # else:
+    #     order = Order.objects.get(id=order_id)
+    #     order.delete()
+    #
+    #     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
+    order = Order.objects.get(id=order_id)
+    order.delete()
 
-            return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
-    else:
-        order = Order.objects.get(id=order_id)
-        order.delete()
-
-        return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
+    return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
 
 def request_class(request):
     if request.method == 'POST':
