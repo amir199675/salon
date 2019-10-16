@@ -134,7 +134,7 @@ def verify(request):
     #     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
     order = Order.objects.get(id=order_id)
     order.delete()
-
+    return HttpResponse('ama')
     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
 
 def request_class(request):
