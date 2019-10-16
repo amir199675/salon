@@ -13,7 +13,6 @@ amount = 1000  # Toman / Required
 description = "کد تخفیفی اعمال نشده است"  # Required
 email = 'email@example.com'  # Optional
 mobile = '09123456789'  # Optional
-CallbackURL = 'http://localhost:8000/dashboard/' # Important: need to edit for realy server.
 
 
 
@@ -67,7 +66,6 @@ def send_request(request):
                                         amount = int(amount) - int(coupon.amount)
                                         description = "کد تخفیف شما اعمال گردید"
         slug = gym.slug
-        CallbackURL = 'http://127.0.0.1:8000'
 
         s_order_date = s_order_date.replace(',', '')
         s_order_date = s_order_date.replace('.', '')
@@ -75,7 +73,7 @@ def send_request(request):
             order_date = datetime.strptime(s_order_date, '%B %d %Y')
         except:
             order_date = datetime.strptime(s_order_date, '%b %d %Y')
-        callback_url = str(request.build_absolute_uri('/Accounts/login/').replace('http://', 'https://'))
+        callback_url = str(request.build_absolute_uri('verify/').replace('http://', 'https://'))
         # return HttpResponse(callback_url)
         request_data = {
             'LoginAccount': MERCHANT,
