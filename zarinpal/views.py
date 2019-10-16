@@ -5,7 +5,9 @@ from main.models import *
 from Account.models import MyUser
 from datetime import datetime
 from main.models import Gym , Training_Class
+import logging
 
+logger = logging.getLogger("django")
 
 MERCHANT = 'pyB7u84G0DD6G15Vkm45'
 client = Client('https://pec.shaparak.ir/NewIPGServices/Sale/SaleService.asmx?wsdl')
@@ -114,6 +116,7 @@ def send_request(request):
             return HttpResponse('Error code: ' + str(result.Status))
 
 def verify(request):
+    logger.debug(request.POST)
     # if request.GET.get('Status') == 'OK':
     #     order = Order.objects.get(id=order_id)
     #     order.status = 'Reserved'
