@@ -75,13 +75,13 @@ def send_request(request):
             order_date = datetime.strptime(s_order_date, '%B %d %Y')
         except:
             order_date = datetime.strptime(s_order_date, '%b %d %Y')
-        callback_url = str(request.build_absolute_uri('/verify/').replace('http://', 'https://'))
+        callback_url = str(request.build_absolute_uri('/verify/'))
         # return HttpResponse(callback_url)
         request_data = {
             'LoginAccount': MERCHANT,
             'OrderId': RandForOrderId(),
             'Amount': amount,
-            'CallBackUrl': callback_url
+            'CallBackUrl': 'https://salon-yab.ir/verify/'
         }
 
         result = client.service.SalePaymentRequest(request_data)
@@ -116,10 +116,12 @@ def send_request(request):
             return HttpResponse('Error code: ' + str(result.Status))
 
 def verify(request):
-
-    if request.method == 'POST':
-        return HttpResponse('ah')
-    if int(request.POST.get('status')) != -138:
+    order = Order.objects.all().first()
+    # return HttpResponse(order)
+    # if request.method == 'POST':
+    #     return HttpResponse('ah')
+    if request.POST.get('status') == -138:
+        return HttpResponse('aaaaa')
     # if request.GET.get('Status') == 'OK':
     #     order = Order.objects.get(id=order_id)
     #     order.status = 'Reserved'
@@ -138,9 +140,9 @@ def verify(request):
     #     order.delete()
     #
     #     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
-        order = Order.objects.get(id=order_id)
-        order.delete()
-        return HttpResponse('ama')
+    #     order = Order.objects.get(id=order_id)
+    #     order.delete()
+    #     return HttpResponse('ama')
     return render(request,'transmition/faild.html',context={'slug':order.gym_id.slug})
 
 def request_class(request):
