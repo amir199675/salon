@@ -100,24 +100,21 @@
 
                                     {% csrf_token %}
 
-                                    <select class="form-control rounded" name="province" id="">
-                                        <option style="text-align: right;direction: rtl" value="">استان ها</option>
-                                        {% for province in provinces %}
-                                            <option style="text-align: right;direction: rtl" name="province"
-                                                    value="{{ province.name }}">{{ province.name }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    <select style="direction: rtl" class="form-control rounded" id="Ostan" runat="server" onchange="Func(this.value)">
+
+                                                    <option selected disabled value="">استان ها</option>
+                                                    {% for province in provinces %}
+                                                    <option value="{% for city in cities %}{% if city.province_id.id == province.id %}{{ city.name }},{% endif %}{% endfor %}">{{ province.name }}</option>
+                                                    {% endfor %}
+
+                                                </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                 </div>
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                                    <select class="form-control rounded" name="city" id="">
-                                        <option style="text-align: right;direction: rtl" value="">شهرها</option>
-                                        {% for city in cities %}
-                                            <option style="text-align: right;direction: rtl"
-                                                    value="{{ city.name }}">{{ city.name }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    <select style="direction: rtl"  class="form-control rounded" id="Shahrestan" runat="server" >
+                                            <option selected disabled value="">شهرستان ها</option>
+                                        </select>
                                 </div>
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
@@ -166,7 +163,20 @@
                             </div>
                         </form>
 
-
+                    <script>
+                                    function Func(Shahrestanha) {
+                                        var _Shahrestan = document.getElementById("Shahrestan");
+                                        _Shahrestan.options.length = 0;
+                                        if(Shahrestanha != "") {
+                                            var arr = Shahrestanha.split(",");
+                                            for(i = 0; i < arr.length; i++) {
+                                                if(arr[i] != "") {
+                                                    _Shahrestan.options[_Shahrestan.options.length]=new Option(arr[i],arr[i]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
                     </div>
 
 

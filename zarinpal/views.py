@@ -68,6 +68,7 @@ def send_request(request):
                                     if user == user_logged:
                                         amount = int(amount) - int(coupon.amount)
                                         description = "کد تخفیف شما اعمال گردید"
+
         slug = gym.slug
 
         s_order_date = s_order_date.replace(',', '')

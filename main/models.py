@@ -227,6 +227,7 @@ class Coupon(models.Model):
     usage_limit = models.IntegerField()
     minimum_amount = models.IntegerField()
     user_id = models.ManyToManyField(MyUser,related_name='myuser',null=True,blank=True)
+    hour_id = models.ManyToManyField(Hour,related_name='hour',null=True,blank=True)
     gym_id = models.ManyToManyField(Gym, related_name='gym' , null=True,blank=True)
     group_id = models.ManyToManyField(Group,related_name='group',null=True,blank=True)
 
