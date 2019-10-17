@@ -236,7 +236,6 @@ def Gym_List(request):
 		if request.user.is_authenticated:
 			user = request.user
 			fav = request.POST['fav']
-			favorites = Favourite.objects.all()
 			try:
 				favorite = Favourite.objects.get(myuser_id=MyUser.objects.get(phone_number=user),
 												 gym_id=Gym.objects.get(id=fav))
@@ -288,11 +287,13 @@ def Gym_List(request):
 
 	if request.method == 'GET' and 'search_gym' in request.GET:
 		province = request.GET.get('province', '')
+		cities = province.split(',')
+		x = Province.objects.get(cities__name=cities[0])
+		province = x.name
 		city = request.GET.get('city', '')
 		area = request.GET.get('area', '')
 		category = request.GET.get('category', '')
 		sex = request.GET.get('sex', '')
-
 		gyms = Gym.objects.filter(area_id__name__contains=area, area_id__city_id__name__contains=city,
 								  area_id__city_id__province_id__name__contains=province, sex__contains=sex,
 								  category_id__name__contains=category)

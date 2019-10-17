@@ -107,7 +107,7 @@
 
                                     {% csrf_token %}
 
-                                    <select style="direction: rtl" class="form-control rounded" id="Ostan" runat="server" onchange="Func(this.value)">
+                                    <select style="direction: rtl" name="province" class="form-control rounded" id="Ostan" runat="server" onchange="Func(this.value)">
 
                                                     <option selected disabled value="">استان ها</option>
                                                     {% for province in provinces %}
@@ -119,7 +119,7 @@
                                 </div>
                                 <div class="select-wrap">
                                     <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
-                                    <select style="direction: rtl"  class="form-control rounded" id="Shahrestan" runat="server" >
+                                    <select name="city" style="direction: rtl"  class="form-control rounded" id="Shahrestan" runat="server" >
                                             <option selected disabled value="">شهرستان ها</option>
                                         </select>
                                 </div>
