@@ -50,7 +50,7 @@
                                             {% csrf_token %}
                                             <input type="text" hidden value="{{ gym.id }}" name="fav">
 
-                                            <button class="bookmark" type="submit" name="favorite"><span {% for favorite in favorites %}{% if salon.id == favorite.gym_id.id %} style="color:darkred" class="icon-heart"{% endif %}{% endfor %} {% for favorite in favorites %}{% if salon.id != favorite.gym_id.id %} style="color:navajowhite" class="icon-heart"{% endif %}{% endfor %}></span>
+                                            <button class="bookmark" type="submit" name="favorite"><span {% for favorite in favorites %}{% if gym.id == favorite.gym_id.id %} style="color:darkred" class="icon-heart"{% endif %}{% endfor %} {% for favorite in favorites %}{% if gym.id != favorite.gym_id.id %} style="color:navajowhite" class="icon-heart"{% endif %}{% endfor %}></span>
                                             </button>
                                         </form>
                                         <h3 style="text-align: right"><a

@@ -236,6 +236,7 @@ def Gym_List(request):
 		if request.user.is_authenticated:
 			user = request.user
 			fav = request.POST['fav']
+			favorites = Favourite.objects.all()
 			try:
 				favorite = Favourite.objects.get(myuser_id=MyUser.objects.get(phone_number=user),
 												 gym_id=Gym.objects.get(id=fav))
@@ -254,6 +255,7 @@ def Gym_List(request):
 	if request.method == 'POST' and 'gym_name' in request.POST:
 		name = request.POST['name']
 		gyms = Gym.objects.filter(name__contains=name)
+		favorites = Favourite.objects.all()
 
 		counter_comments = {}
 
@@ -272,7 +274,7 @@ def Gym_List(request):
 			counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
 
 		context = {
-
+			'favorites':favorites,
 			'counter_comments': counter_comments,
 			'areas': areas,
 			'provinces': provinces,
@@ -295,6 +297,7 @@ def Gym_List(request):
 								  area_id__city_id__province_id__name__contains=province, sex__contains=sex,
 								  category_id__name__contains=category)
 		counter_comments = {}
+		favorites = Favourite.objects.all()
 
 		selected = 'همه سالن ها'
 		if area != '':
@@ -321,7 +324,7 @@ def Gym_List(request):
 			counter_comments[gym.name] = Comment.objects.filter(gym_id__name=gym.name).count()
 
 		context = {
-
+			'favorites':favorites,
 			'counter_comments': counter_comments,
 			'areas': areas,
 			'provinces': provinces,
@@ -344,6 +347,7 @@ def Gym_List(request):
 	areas = Area.objects.all()
 	provinces = Province.objects.all()
 	cities = City.objects.all()
+	favorites = Favourite.objects.all()
 
 	gyms = None
 	if request.user.is_authenticated:
@@ -361,7 +365,7 @@ def Gym_List(request):
 	selected = 'همه سالن ها'
 
 	context = {
-
+		'favorites':favorites,
 		'counter_comments': counter_comments,
 		'areas': areas,
 		'provinces': provinces,
