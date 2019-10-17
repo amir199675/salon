@@ -288,8 +288,13 @@ def Gym_List(request):
 	if request.method == 'GET' and 'search_gym' in request.GET:
 		province = request.GET.get('province', '')
 		cities = province.split(',')
-		x = Province.objects.get(cities__name=cities[0])
-		province = x.name
+		try:
+			x = Province.objects.get(cities__name=cities[0])
+			province = x.name
+		except:
+			province = ''
+
+
 		city = request.GET.get('city', '')
 		area = request.GET.get('area', '')
 		category = request.GET.get('category', '')

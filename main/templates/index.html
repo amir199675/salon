@@ -103,7 +103,7 @@
                                     <div class="select-wrap">
                                         <span class="icon"><span class="icon-keyboard_arrow_down"></span></span>
                                         <select style="direction: rtl" name="city"  class="form-control rounded" id="Shahrestan" runat="server" >
-                                            <option selected disabled value="">شهرستان ها</option>
+                                            <option selected value="">شهرستان ها</option>
                                         </select>
 
                                     </div>
@@ -118,7 +118,7 @@
 
                                                 <select name="province" style="direction: rtl" class="form-control rounded" id="Ostan" runat="server" onchange="Func(this.value)">
 
-                                                    <option selected disabled value="">استان ها</option>
+                                                    <option selected value="">استان ها</option>
                                                     {% for province in provinces %}
                                                     <option value="{% for city in cities %}{% if city.province_id.id == province.id %}{{ city.name }},{% endif %}{% endfor %}">{{ province.name }}</option>
                                                     {% endfor %}
