@@ -2459,7 +2459,7 @@ def Dashboard(request):
 				users_counter = MyUser.objects.all().count()
 				orders_counter = Order.objects.all().count()
 				roles = Role.objects.all()
-				teachers_counter = Role.objects.filter(name='مربی').count()
+				teachers_counter = Role.objects.get(name='مربی').user_id.count()
 				context = {
 					'gyms': gyms_list,
 					'user_counter': users_counter,
@@ -2592,6 +2592,34 @@ def Dashboard(request):
 
 	else:
 		return redirect('/Accounts/login/?next=/dashboard')
+
+def Reserved_Gyms(request):
+	if request.user.is_authenticated:
+		user_phone_number = request.user
+		user_logged_in = MyUser.objects.get(phone_number=user_phone_number)
+		roles_user_count = 0
+		try:
+			roles_user = Role.objects.filter(user_id=user_logged_in)
+			roles_user_count = roles_user.count()
+		except Role.DoesNotExist:
+			roles_user = None
+		for role in roles_user:
+			if role.name == 'superuser':
+				orders = Order.objects.all().order_by('-created')
+				context = {
+					'roles_user':roles_user,
+					'roles_user_count':roles_user_count,
+					'orders':orders
+				}
+				return render(request,'role_panel/reserved-gyms.html',context)
+			elif role.name == 'سالن دار':
+				orders = Order.objects.filter(gym_id__user_id = user_logged_in)
+				context = {
+					'roles_user':roles_user,
+					'roles_user_count':roles_user_count,
+					'orders':orders
+				}
+				return render(request,'role_panel/reserved-gyms.html',context)
 
 
 def Salon_Dar_Classes(request):

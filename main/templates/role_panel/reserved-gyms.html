@@ -1,7 +1,8 @@
 {% extends 'role_panel/partial/dashboard_header.html' %}
 {% load static %}
+{% load main_tags %}
 {% block title %}
-    داشبور
+    سلان های رزرو شده
 {% endblock %}
 {% block body %}
 
@@ -113,7 +114,7 @@
                                     <div class="m-widget24">
                                         <div class="m-widget24__item">
                                             <h4 class="m-widget24__title">
-                                                <a href="{% url 'Main:reserved_gyms' %}">تعداد سفارش ها</a>
+                                                تعداد سفارش ها
                                             </h4><br>
                                             <span class="m-widget24__desc">
 				            تعداد کل سفارش های گرفته شده
@@ -140,19 +141,22 @@
                 <!--Begin::Section-->
                 <table style="width: 100%" class="flat-table flat-table-2">
                     <thead>
-                    <th>اسم سالن</th>
-                    <th>نوع سالن</th>
-                    <th>آدرس</th>
-                    <th>تلفن</th>
+                    <th>رزرو کننده</th>
+                    <th>تلفن رزرو کننده</th>
+                    <th>سالن مربوطه</th>
+                    <th>تایم رزرو شده</th>
+                    <th>تلفن سالن</th>
+                    <th>وضعیت رزرو</th>
                     </thead>
                     <tbody>
-                    {% for gym in gyms %}
+                    {% for order in orders %}
                         <tr>
-                            <td>{{ gym.name }}</td>
-
-                            <td>{% for category in gym.category_id.all %} {{ category.name }} , {% endfor %}</td>
-                            <td>{{ gym.area_id.city_id.province_id }},{{ gym.area_id.city_id }},{{ gym.address }}</td>
-                            <td>{{ gym.phone }}</td>
+                            <td>{{ order.myuser_id.name}}</td>
+                            <td>{{ order.myuser_id.phone_number }}</td>
+                            <td>{{ order.gym_id.name }}({{ order.gym_id.area_id.name }},{{ order.gym_id.area_id.city_id.name }},{{ order.gym_id.area_id.city_id.province_id.name }})</td>
+                            <td>{{ order.order_date|tojalali }}</td>
+                            <td>{{ order.gym_id.phone }}</td>
+                            <td>{{ order.status }}</td>
                         </tr>
 
 
