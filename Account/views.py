@@ -103,7 +103,28 @@ def Login(request):
                         'message': 'این شماره یا شماره ملی قبلا در سیستم ثبت شده است.'
                     }
                     return render(request, 'register/index.html', context)
-
+            else:
+                user = MyUser.objects.create(name=name, phone_number=phone_number, national_number=national_number,
+                                             province=province, city=city, area=area,
+                                             activation_code=random_string_mobile())
+                user.set_password(password)
+                user.save()
+                uf = MyUserForm()
+                context = {
+                    'uf': uf,
+                    'provinces': provinces,
+                    'signup': True,
+                    'modal': True
+                }
+                data = {'UserApiKey': '578cdf057764feb86880e3d2', 'SecretKey': '13491375amirelyas'}
+                r = requests.post('https://RestFulSms.com/api/Token', data=data)  # get TokenApi
+                amir = json.loads(r.text)
+                amir = amir['TokenKey']
+                headers = {'x-sms-ir-secure-token': amir}
+                data = {'code': user.activation_code, 'MobileNumber': user.phone_number}
+                r = requests.post(url='https://RestFulSms.com/api/VerificationCode', headers=headers,
+                                  data=data)
+                return render(request, 'register/index.html', context)
                 # context = {
                 #     'error':True,
                 #     'message':'این شماره و این شماره ملی قبلا ثبت شده است.'

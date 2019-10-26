@@ -42,8 +42,9 @@
                     </thead>
                     <tbody>
                     {% for request in requests %}
+
                         <tr>
-                            <td>{{ request.name }}</td>
+                            <td><a href="{% url 'Main:reply_ticket' request.id %}">{{ request.name }}</a></td>
                             <td>{{ request.myuser_id.phone_number }}</td>
                             <td>{{ request.created|tojalali }}</td>
                             {% for role in roles_user %}

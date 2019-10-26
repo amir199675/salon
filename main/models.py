@@ -1,6 +1,6 @@
 from django.db import models
 from Account.models import MyUser
-from django.db.models.signals import post_save , m2m_changed , post_delete
+from django.db.models.signals import post_save , m2m_changed , post_delete , pre_save
 from django.dispatch import receiver
 from datetime import datetime , timedelta
 
@@ -262,21 +262,41 @@ class Order(models.Model):
     def __str__(self):
         return self.myuser_id.name + ' ' + self.status + ' ' + self.hour_id.day
 
-
-class Ticket(models.Model):
-    id = models.AutoField(primary_key=True)
+class Room(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255)
-    family_name = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class Ticket(models.Model):
+    STATUS = (
+        ('customer','customer'),
+        ('admin','admin')
+    )
+    id = models.AutoField(primary_key=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=255,null=True,blank=True)
+    family_name = models.CharField(max_length=255,null=True,blank=True)
+    title = models.CharField(max_length=255,null=True,blank=True)
     text = models.TextField()
     myuser_id = models.ForeignKey(MyUser, on_delete=models.SET_NULL, null=True, blank=True)
-    status = models.TextField(null=True, blank=True)
-    email = models.EmailField()
+    room_id = models.ForeignKey(Room,null=True,blank=True,on_delete=models.CASCADE,related_name='ticket_room')
+    status = models.CharField(max_length=32,choices=STATUS,null=True, blank=True)
+    email = models.EmailField(null=True,blank=True)
 
-from PIL import Image
 
+@receiver(pre_save,sender = Ticket)
+def AddRoom (sender,instance, **kwargs):
+    ticket = instance
+    if instance.room_id :
+        pass
+    else:
+        room = Room.objects.create(name = ticket.title)
+        ticket.room_id = room
+        ticket.save()
 
 class Coach_Profile(models.Model):
     id = models.AutoField(primary_key=True)

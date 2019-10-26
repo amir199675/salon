@@ -27,7 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['www.salon-yab.ir','salon-yab.ir','https://salon-yab.ir/','https://salon-yab.ir/','130.185.76.161']
 # ALLOWED_HOSTS = []
-
+#
 LOGIN_REDIRECT_URL = '../../dashboard/'
 
 AUTH_USER_MODEL = 'Account.MyUser'

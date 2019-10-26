@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, render_to_response, HttpResponseRedirect, reverse, HttpResponse
+from django.http import Http404
 from .models import *
 from Account.models import MyUser
 from django.contrib.auth import authenticate, login, user_logged_in
@@ -3433,7 +3434,7 @@ def Requests(request):
 		for role in roles_user:
 			requests = None
 			if role.name == 'superuser':
-				requests = Ticket.objects.all()
+				requests = Ticket.objects.all().order_by('-created')
 
 				context = {
 					'roles_user_count': roles_user_count,
@@ -3466,7 +3467,87 @@ def Requests(request):
 			}
 			return render(request, 'role_panel/requests.html', context)
 
+def Reply_Ticket(request,id):
+	if request.user.is_authenticated:
+		user_logged_in = MyUser.objects.get(id__exact=request.user.id)
 
+		roles_user = Role.objects.filter(user_id__exact=user_logged_in)
+		roles_user_count = 0
+		roles_user_count = roles_user.count()
+		for role in roles_user:
+			if role.name == 'superuser' or role.name == 'آموزش پرورش' or role.name == 'مربی' or role.name == 'مسئول منطفه':
+				select_room = Ticket.objects.get(id=id).room_id
+				if role.name == 'superuser':
+					tickets = Ticket.objects.filter(room_id=select_room).order_by('-created')
+					if request.method == 'POST':
+						text = request.POST['text']
+						ticket = Ticket.objects.create(room_id=select_room,text=text,status='customer',myuser_id=request.user)
+						return redirect('Main:reply_ticket',id)
+					context = {
+						'roles_user_count':roles_user_count,
+						'roles_user':roles_user,
+						'tickets':tickets,
+					}
+					return render(request,'role_panel/reply-to-ticket.html',context)
+				elif role.name == 'مسئول منطقه':
+					# return HttpResponse(select_room.ticket_room.select_related('myuser_id').first().myuser_id == request.user)
+
+					if select_room.ticket_room.select_related().first().myuser_id == request.user :
+						sender = request.user
+						tickets = Ticket.objects.filter(room_id=select_room).order_by('-created')
+						if request.method == 'POST':
+							text = request.POST['text']
+							ticket = Ticket.objects.create(room_id=select_room, text=text, status='admin',myuser_id=request.user)
+							return redirect('Main:reply_ticket', id)
+						context = {
+							'sender':sender,
+
+							'roles_user_count': roles_user_count,
+							'roles_user': roles_user,
+							'tickets': tickets,
+						}
+						return render(request, 'role_panel/reply-to-ticket.html', context)
+					elif select_room.ticket_room.select_related().first().title == 'مسئول منطقه':
+						sender = request.user
+						if select_room.ticket_room.select_related().first().myuser_id.area == user_logged_in.area:
+							tickets = Ticket.objects.filter(room_id=select_room).order_by('-created')
+							if request.method == 'POST':
+								text = request.POST['text']
+								ticket = Ticket.objects.create(room_id=select_room, text=text, status='customer',
+															   myuser_id=request.user)
+								return redirect('Main:reply_ticket', id)
+							context = {
+								'sender': sender,
+
+								'roles_user_count': roles_user_count,
+								'roles_user': roles_user,
+								'tickets': tickets,
+							}
+							return render(request, 'role_panel/reply-to-ticket.html', context)
+
+						raise Http404
+
+		if roles_user_count == 0 :
+			select_room = Ticket.objects.get(id=id).room_id
+			if select_room.ticket_room.select_related('myuser_id').first().myuser_id == request.user :
+
+				tickets = Ticket.objects.filter(room_id=select_room).order_by('-created')
+				if request.method == 'POST':
+					text = request.POST['text']
+					ticket = Ticket.objects.create(room_id=select_room, text=text, status='customer')
+					return redirect('Main:reply_ticket', id)
+				context = {
+
+					'simple_user':True,
+					'roles_user_count': roles_user_count,
+					'roles_user': roles_user,
+					'tickets': tickets,
+				}
+				return render(request, 'role_panel/reply-to-ticket.html', context)
+			else:
+				raise Http404
+	else:
+		return redirect('/Accounts/login/?next=/dashboard/reply_ticket/{}/'.format(id))
 def Edit_Profile_Teacher(request):
 	if request.user.is_authenticated:
 		user_logged_in = MyUser.objects.get(id__exact=request.user.id)

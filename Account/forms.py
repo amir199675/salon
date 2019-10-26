@@ -13,11 +13,11 @@ class MyUserForm(forms.ModelForm):
                'data-msg': 'Please enter at least 4 chars', 'name': 'name', }))
 
     phone_number = forms.CharField(widget=forms.TextInput(
-        attrs={'style': 'padding-right: 50px', 'class': 'class1 input100', 'placeholder': '      شماره تلفن همراه',
+        attrs={'style': 'padding-right: 50px', 'class': 'class1 input100', 'placeholder': '      شماره تلفن همراه','maxlength':"11" ,'minlength':"11",
                'data-msg': 'Please enter at least 4 chars', 'name': 'mobile', }))
 
     national_number = forms.CharField(widget=forms.TextInput(
-        attrs={'style': 'padding-right: 50px', 'class': 'class1 input100', 'placeholder': '      کد ملی',
+        attrs={'style': 'padding-right: 50px', 'class': 'class1 input100', 'placeholder': '      کد ملی','maxlength':"10" ,'minlength':"10",
                'data-msg': 'Please enter at least 4 chars', 'name': 'national_number', }))
 
     province = forms.CharField(widget=forms.TextInput(

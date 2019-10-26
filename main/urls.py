@@ -51,6 +51,7 @@ urlpatterns = [
 	path('dashboard/add_hour/<slug>/', views.Hour_Add, name='add_hour'),
 	path('dashboard/select_gym_add_hour/', views.Select_Gym_add_hour, name='select_gym_add_hour'),
 	path('dashboard/send_ticket/', views.Add_Ticket, name='add_ticket'),
+	path('dashboard/reply_ticket/<id>/', views.Reply_Ticket, name='reply_ticket'),
 
 	path('teachers/<slug>/', views.Coach_Profile, name='coach_profile'),
 
